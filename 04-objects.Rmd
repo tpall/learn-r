@@ -1,0 +1,152 @@
+R objects
+---------
+
+An R object is anything that can be assigned a value (data, functions, graphs, analytic results, and more). 
+Every object has a class attribute telling R how to handle it. 
+Common R data structures are: vectors (numerical, character, logical), matrices, data frames, and lists.
+The basic data structure in R is the vector.
+
+### Class of object
+An R vector is characterized by a mode that describes its contents: logical, numeric, complex, character.
+
+An R data structure is characterized by a class that describes its structure: matrix, array, factor, time-series, data frame, and list.
+
+To determine the class of your object use `class(object)` - prints the class attribute of an object.
+
+```{r}
+myobject <- list(1,"a")
+class(myobject) # gives the data structure of object 'myobject'
+```
+
+### R expressions
+Syntactically correct R expressions (`y <- x * 10`) will be referred to as statements.
+R uses the symbol `<-` for assignments, rather than the typical `=` sign.
+
+Here we create a vector named `x` containing five random numbers from a standard normal distribution.
+```{r}
+x <- rnorm(5)
+x
+y <- x * 10 # here we multiply numeric vector x by 10
+y
+```
+
+### Assigning value to object
+
+`a` is an object containing character "b": 
+```{r}
+a <- "b"
+a
+```
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">In <a href="https://twitter.com/hashtag/rstats?src=hash">#rstats</a>, it&#39;s surprisingly important to realise that names have objects; objects don&#39;t have names <a href="https://t.co/bEMO1YVZX0">pic.twitter.com/bEMO1YVZX0</a></p>&mdash; Hadley Wickham (@hadleywickham) <a href="https://twitter.com/hadleywickham/status/732288980549390336">May 16, 2016</a>
+</blockquote>
+
+
+You can overwrite objects (assign a new value to it):
+```{r}
+a <- c("poodle","sheltie") # c(1,2) is a vector 
+a # a now contains two values: "poodle" and "sheltie"
+```
+
+![Poodle as innocent victim of overwriting @daily torygraph.](http://www.dailytorygraph.com/wp-content/uploads/2016/03/IMG_2139-700x525.jpg)
+
+You can copy objects under new name: 
+```{r}
+b <- a
+b
+```
+
+You can use output of `function 1` as input to `function 2`:
+```{r}
+foo <- function(x) x^4 # function 1
+foo(x = 2)
+d <- sqrt(foo(2)) # function 'sqrt' calculates square root
+d
+```
+
+> Never use a function name as object name -- `c` vs. `c()`. You rewrite that function in your environment and you get into trouble!
+
+### Coercing
+
+```{r}
+a <- "42"
+a
+class(a)
+
+b <- as.numeric(a)
+b
+class(b)
+
+b <- as.factor(a)
+b
+class(b)
+```
+
+
+To coerce the factor `ss` with two levels `10` and `20` into numbers you must convert it to character first: 
+```{r}
+ss <- as.factor(c(10,20))
+ss
+# lets see what happens if we try to convert ss directly to numeric
+as.numeric(ss)
+
+as.numeric(as.character(ss))
+```
+
+Factor variables are encoded as integers in their underlying representation. So a variable like "poodle" and "sheltie" will be encoded as 1 and 2 in the underlying representation [more about factors and stringsAsFactors option when importing a data.frame](http://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/).
+
+Factors are used to group data by their levels for analysis (e.g. linear model: `lm()`) & graphing. 
+Nominal variables are categorical, without an implied order. 
+
+```{r}
+diabetes <- c("Type1", "Type2", "Type1", "Type1") # diabetes is a factor with 2 levels
+diabetes # a character vector
+class(diabetes)
+
+diabetes <- factor(diabetes) # coerce to factor
+diabetes # factors
+class(diabetes)
+```
+
+Encoding `diabetes` vector as a factor stores this vector as `r as.numeric(diabetes)` and associates it with 1 = Type1 and 2 = Type2 internally (the assignment is alphabetical).
+Any analyses performed on the vector diabetes will treat the variable as nominal and select the statistical methods appropriate for this level of measurement.    
+
+
+Ordinal variables imply order but not amount. 
+`Status (poor, improved, excellent)`. 
+For vectors representing ordinal variables, add `ordered = TRUE` to the `factor()` function. 
+
+```{r}
+status <- c("Poor", "Improved", "Excellent", "Poor")
+status
+```
+
+For ordered factors, override the alphabetic default by specifying levels. 
+
+```{r}
+status <- factor(status, ordered = TRUE, levels = c("Poor", "Improved", "Excellent")) # Assigns the levels as 1 = Poor, 2 = Improved, 3 = Excellent. 
+status
+```
+
+Continuous variables have order & amount (`class: numeric or integer`). 
+Numeric variables can be re-coded as factors. 
+If sex was coded as 1 for male and 2 for female in the original data, 
+
+```{r}
+sex <- sample(c(1,2), 21, replace = TRUE) # lets generate data
+sex
+```
+
+then, `factor()` converts the variable to an unordered factor.    
+The order of the labels must match the order of the levels. 
+Sex would be treated as categorical, the labels "Male" and "Female" would appear in the output instead of 1 and 2
+
+```{r}
+sex <- factor(sex, levels = c(1, 2), labels = c("Male", "Female"))
+sex
+```
+
+
+
+

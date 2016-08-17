@@ -1,0 +1,310 @@
+Data structures 
+---------------
+
++ **Atomic vectors** are arrays that contain a single data type (logical, real, complex, character). 
+Each of the following is a one-dimensional atomic vector: 
+
+```{r}
+passed <- c(TRUE,TRUE,FALSE,TRUE)
+class(passed)
+ages <- c(15, 18, 25, 14, 19, 21)
+class(ages)
+namez <- c("Bob", "Ted", "Carol", "Alice") # names is R function!
+class(namez)  
+```
+
+A scalar is an atomic vector with a single element. 
+So `k <- 2` is a shortcut for `k <- c(2)`.
+
++ A **matrix** is an atomic vector that has a dimension attribute, `dim()`, containing two elements (`nrow`, number of rows and `ncol`, number of columns) 
+
+```{r}
+matrix(ages, nrow = 2)
+```
+
++ **Lists** are collections of atomic vectors and/or other lists.
+
+```{r}
+mylist <- list(passed, ages, namez)
+mylist
+```
+
+We can assign names to list objects:
+```{r}
+names(mylist) <- c("passed", "ages", "namez")
+mylist
+
+```
+
+
++ **Data frames** are a special type of list, where each atomic vector in the collection has the same length. 
+Each vector represents a column (variable) in the data frame.
+
+```{r}
+exam <- data.frame(name = namez, passed = passed)
+exam
+```
+
+
+![Illustration of R data types. Image: [http://yzc.me/2015/12/11/r-intro-1/](http://yzc.me/2015/12/11/r-intro-1/) ](https://raw.githubusercontent.com/Anonymous-Y/BlogImage/master/r-intro-3.jpg)
+
+
+### Vectors
+
+The combine function `c()` is used to form the vector.
+
+```{r}
+a <- c(1, 2, 5, -3, 6, -2, 4)
+b <- c("one", "two", "three")
+d <- c(TRUE,TRUE,TRUE,FALSE,TRUE,FALSE) # We use d instead of c as vector name. Why?
+```
+
+
+`a` is a numeric vector, `b` is a character vector, and `d` is a logical vector. 
+The data in a vector can be only one type (numeric, character, or logical).
+
+You can refer to elements of a vector: 
+
+```{r}
+a[c(2, 4)] # Refers to the second and fourth elements of vector a.
+'['(a, c(2,4)) # [ is a function! This is very handy in case of piping, as we see in the upcoming lessons.
+```
+
+We can sort/order vector:
+
+```{r}
+sort(a, decreasing = FALSE) # sorts vector in ascending order
+```
+
+We can extract uniqe elements of a vector:
+
+```{r}
+d
+unique(d) # Returns a vector, data frame or array like d but with duplicate elements removed.
+```
+
+Create sequence:
+
+```{r}
+seq(2, 5, by = 0.5)
+```
+
+A complex sequence:
+
+```{r}
+rep(1:4, times = 2)
+```
+
+Repeat each element of a vector: 
+
+```{r}
+rep(1:2, each = 3)
+```
+
+Repeat elements of a vector:
+
+```{r}
+rep(c("poodle","sheltie"), each = 3, times = 2)
+```
+
+### Matrix
+
+Matrix: a collection of vectors, which are all numeric, character, or logical. 
+
+```{r}
+n <- matrix(rnorm(30), ncol = 5) 
+dim(n)
+```
+
+```{r}
+n
+```
+
+
+```{r}
+exam # we created previously data.frame exam
+class(exam)
+m <- as.matrix(exam) # coerce data.frame with n,m dimension to a matrix with n,m dimension 
+m
+t(m) # transposes a matrix
+```
+
+Transpose a data frame with 1st column as factor
+
+```{r}
+n <- exam$name
+df <- as.data.frame(t(exam[,-1]))
+colnames(df) <- n
+df
+```
+
+### Data frame
+
+* `data frame`: a collection of vectors where different columns can contain different modes of data (numeric, character, and so on). 
+Each vector contains only 1 mode of data (`vector1 <- c("a", 2, 3.4)` is automatically coerced to `chr`, but can be manually coerced to numeric or factor). 
+The data frame columns are variables, and the rows are observations. 
+Vectors are bound into matrix/data.frame vertically, with the direction from top to bottom. 
+Column = vector.
+`as.matrix()` has default argument `byrow = FALSE`, change this to fill matrix by rows.
+
+* `tibble::data_frame()` is a more modern version of data.frame (slight differences for the better)
+`as.data_frame()` converts to it. 
+`data_frame()` does less than `data.frame()`: 
+    + it never changes the type of the inputs (e.g. it never converts strings to factors!), 
+    + it never changes the names of variables, and it never creates `row.names()`.
+
+**Tibbles** have a print method that shows only the first 10 rows, and all the columns that fit on screen. 
+This makes it much easier to work with large data. 
+In addition to its name, each column reports its type. 
+Tibbles clearly delineate `[` and `[[`: `[` always returns another tibble, `[[` always returns a vector. 
+Some older functions don't work with tibbles because they expect `df[, 1]` to return a vector, not a data frame. 
+If you encounter one of these functions, use `as.data.frame()` to coerce a tibble back to a data frame:
+
+![Iris dataset contains sepal and petal measurements of three iris species.](http://articles.concreteinteractive.com/wp-content/uploads/2015/03/irises.png)
+
+```{r}
+library(dplyr) # tbl_df 
+tbl_df(iris)
+```
+```{r}
+class(as.data.frame(tbl_df(iris)))
+```
+
+```{r}
+height <- c(187, 190, 156)
+name <- c("Jim", "Joe", "Jill")
+my_tab <- data.frame(name, height)
+my_tab
+```
+
+A vector can be extracted by `$` and worked on:
+
+```{r}
+Mean.height <- mean(my_tab$height)
+Mean.height # Prints the answer
+```
+
+New vectors can be bound into a data.frame:
+
+```{r}
+my_tab$weight <- c(87, 96, 69) # Now there are 3 columns in my_tab
+my_tab
+```
+
+
+```{r}
+my_tab$experiment <- factor("A") # the 4th col contains a factor with a single level "A"
+levels(my_tab$experiment) # prints the unique levels in a factor vector
+```
+
+```{r}
+head(iris) # Prints first 6 rows; tail(df) last 6
+```
+
+```{r}
+summary(iris) # Prints a summary of data
+```
+
+```{r}
+names(iris) # Prints column names
+```
+
+```{r}
+nrow(iris) # number of rows
+```
+
+### Contingency table
+Contingency table is a type of table in a matrix format that displays the frequency distribution of the variables.
+
+We use Rio 2016 summer Olympics medal table to illustrate contingency table.
+First we download and munge medals table from Wikipedia page.
+```{r}
+library(rvest)
+rio <- read_html("https://en.wikipedia.org/wiki/2016_Summer_Olympics_medal_table") # download wikipedia web page containing Rio Olympics medals table
+tab_node <- html_nodes(rio, 'table[class="wikitable sortable plainrowheaders"]') # extract html node from webpage containing medals table
+medals <- html_table(tab_node, fill=TRUE) # extracts table as data.frame from html, outputs list
+medals <- medals[[1]] # we have list of length 1, we extract data.frame and assign it back to medals  
+medals <- medals[-nrow(medals),-1] # Identify last row number and remove this last row 'Total' and first column 'Rank'
+```
+
+![Rio 2016 medals feature images of Nike, the Panathinaiko Stadium and the Acropolis (Photo: Rio 2016/Alex Ferro)](https://smsprio2016-a.akamaihd.net/news/Nj2RO1/4pUVV_IM.jpg)
+
+Lets see the top rows of our medals table, using function `head()`:
+```{r}
+head(medals)
+```
+
+How many contries have won certain number of medals?
+First, we use function `table()` to display already summed up data from Total column.
+```{r}
+table(medals$Total, dnn = c("Medals")) # how many countries have shown number of medals
+```
+
+Second, we use `xtabs()` and `ftable()` functions to summarise all colors of medals and display summed up data.
+```{r}
+ftable(xtabs(Gold + Silver + Bronze ~ NOC, data = medals), dnn = c("Medals"))
+```
+
+#### Confusion matrix
+`table()` can be useful to display classification model performance as confusion matrix (although `caret` library has special function `confusionMatrix()`). 
+
+We use `iris` dataset to train k-nearest neighbours model to predict Species based on sepal and petal measurements.
+
+```{r}
+library(caret)
+model <- knn3(Species~., data = iris) # here we perform KNN classification of iris dataset
+predicted <- predict(model, iris[,-ncol(iris)], type = "class") # predict Species based on model
+table(iris$Species, predicted) # how good is our model?
+```
+
+`table()` outputs contingency table in **wide format**. To illustrate this point, we use **Tartu Maraton 2013** cross-country skiing marathon 63 km distance finish data. Elukoht -- country, Vanuseklass -- age group.
+```{r}
+load("data/Tartu_Maraton_2013.RData")
+head(sort(table(tm_2013$Elukoht), decreasing = TRUE)) # most frequent country/county
+table(tm_2013$Vanuseklass)
+```
+![[Tartu Maraton](https://www.tartumaraton.ee/en/about/). Photo: Kaimo Puniste](https://www.tartumaraton.ee/et/klubist/ajalugu/raamat/FotoKaimoPuniste.jpg)
+
+We can display number of participants per **country** and **age group** in a **wide format**
+```{r}
+head(table(tm_2013$Elukoht, tm_2013$Vanuseklass))
+```
+
+In contrast, `dplyr` function `count` outputs results in **long format**:
+```{r}
+library(dplyr)
+count(tm_2013, Elukoht, Vanuseklass, sort = TRUE) # outputs a tibble
+```
+
+```{r}
+library(dplyr)
+count(medals, Gold, Silver, Bronze, sort = TRUE)
+```
+### List
+A list is an ordered collection of objects. 
+Basically, in R you can shove any data structure into list.
+E.g. list may contain a combination of vectors, matrices, data frames, and even other lists, (poodles?). 
+You can specify elements of the list by: 
+
+```{r}
+mylist[[2]]
+mylist[["ages"]]
+mylist$ages
+```
+
+As you can see all these above expressions give identical result 
+```{r}
+all.equal(mylist[[2]], mylist[["ages"]], mylist$ages)
+```
+
+Output of statistical tests in R is usually a list. 
+Here we perform t test to compare `Petal.length` of two iris species `setosa` and `virginica from iris dataset. 
+```{r}
+unique(iris$Species) # three species in a dataset
+iris_subset <- filter(iris, Species!='versicolor') # we filter out '!=' versicolor data
+a <- t.test(Petal.Length ~ Species, data = iris_subset) # a is a list of 9
+str(a) # str() displays the internal structure of an R object
+a$conf.int # extracts an element from the list
+a$p.value # p.value
+```
+

@@ -1,0 +1,37 @@
+Getting and installing R
+---------------
+
+### To start:
+
+1. Download and install **R** from [https://cran.r-project.org/](https://cran.r-project.org/)
+2. Download and install **RStudio** from [https://www.rstudio.com/](https://www.rstudio.com/)
+3. Open RStudio
+4. Print to the editor:
+
+```{r setwdex, eval=FALSE}
+# Sets working directory, into which things are saved by default and from which stuff is imported
+setwd("/Users/ulomaivali/Dropbox/") # mac
+setwd("C:/Users/ulomaivali/Dropbox/") # windows
+setwd("~/Dropbox/R course/") # linux, ~/ references to user home directory
+```
+
+```{r getwd}
+# Prints the current working directory
+getwd()
+```
+
+### Getting help
+
+You can get help from R Documentation at the program's command prompt by preceding R command with ?.
+
+```{r help}
+?getwd()
+```
+
+### Random tips
+
+* `Cmd + Enter` (`Ctrl + Enter` on a PC) in RStudio: sends the current line (or current selection) from the editor to the console and runs it. 
+* R is case-sensitive. 
+* Enter commands one at a time at the console or run a set of commands from the editor. 
+* Object names cannot begin with a number. 
+* No spaces in object names! (use . or _ or -).

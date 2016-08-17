@@ -1,0 +1,41 @@
+---
+title: "Reproducible Data Analysis in R"
+author: "Ülo Maiväli, Taavi Päll"
+date: "`r Sys.Date()`" 
+output:
+  html_document:
+    theme: journal
+    highlight: pygments
+    toc: true
+    toc_float: true
+    toc_depth: 4
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r introduction, child='01-introduction.Rmd'}
+
+```
+
+```{r install, child='02-install.Rmd'}
+
+```
+
+```{r packages, child='03-packages.Rmd'}
+
+```
+
+```{r objects, child='04-objects.Rmd'}
+
+```
+
+```{r datatypes, child='05-datatypes.Rmd'}
+
+```
+
+```{r inout, child='06-R-import-export.Rmd'}
+
+```
+

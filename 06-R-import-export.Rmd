@@ -1,0 +1,69 @@
+Getting data in and out of R
+---------------------------
+
+![You know nothing. Official promotion logo for Banksy's October 2013 artist residency in New York City. Photo: Banksy](https://upload.wikimedia.org/wikipedia/en/2/2c/Banksy_Better_Out_Than_In_New_York_City_2013.png)
+
+### Import text file
+Probably, the most basic form of data to import into R is a simple text file.
+
+Here we write our data to external file `ex.data` and read it into R using `scan()` function. 
+Importantly, `scan()` reads vectors of data which all have the same mode. 
+Default data type is numeric, strings can be specified with the `what = ""` argument.
+```{r}
+cat("my title line", "2 3 5 7", "11 13 17", file = "ex.data", sep = "\n")
+pp <- scan("ex.data", skip = 1) # we skip 1st line with title text or we get error
+unlink("ex.data") # tidy up, unlink deletes the file(s) or directories specified
+pp
+```
+
+In case you dont wan't or can't save your text into file (bad for reproducibility!), it's possible to use `textConnection()` function to input data into R. 
+`\n` is a newline character. 
+
+`readLines` reads "unorganized" data, this is the function that will read input into R so that we can manipulate it further.
+
+```{r}
+zzz <- textConnection("my title line 2 3 5 7 11 13 17 9") 
+pp <- readLines(zzz) # zzz is a connection object
+pp
+close(zzz) # close connection
+```
+
+```{r}
+pp <- scan(textConnection("my title line\n2 3 5 7\n11 13 17 9"), skip = 1)
+pp
+```
+
+Text in `textConnection` call can be already structured, so you can quickly import copy-paste data from screen into R. 
+```{r}
+zzz <- textConnection("my title line 
+                      2 3 5 7
+                      11 13 17 9")
+scan(zzz, skip = 2) # lets skip 1st two lines
+```
+
+Scanned data can be coerced into rectangular matrix. 
+We have 2 rows of numbers in our text string shown above therefore we set `nrow = 2` and we need to specify that data is inserted into matrix rowwise `byrow = TRUE` (default option is FALSE) to keep original data structure.
+
+```{r}
+matrix(pp, nrow = 2, byrow = TRUE)
+```
+
+### Import tabular data
+`read.table`, `read.csv`, `read.delim` functions allow to create data frames, where different columns may contain different type of data -- `numeric`, `character` etc. 
+`read.table` is the basic function with values separated by white space `""` (one or more spaces, tabs, newlines). 
+`read.csv` is a wrapper around it and expects comma `,` as a field separator and `read.delim` expects `tab` separator `\t`.
+Other important arguments of `read.table` are:
+
++ `stringsAsFactors = ` default setting is TRUE and character data is converted into factors.
++ `na.string = "NA"` a character vector of strings which are to be interpreted as NA values. Blank fields are also considered to be missing values in logical, integer, numeric and complex fields.  
++ `skip =` the number of lines of the data file to skip before beginning to read data.
+
+
+```{r}
+kasv <- read.table("data/Kasvajad_haigestumus_2000-9.csv", sep = ",", header = TRUE)
+head(kasv)
+```
+
+
+
+
