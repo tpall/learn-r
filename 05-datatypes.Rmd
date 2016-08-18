@@ -1,3 +1,7 @@
+---
+
+---
+
 Data structures 
 ---------------
 
@@ -5,11 +9,11 @@ Data structures
 Each of the following is a one-dimensional atomic vector: 
 
 ```{r}
-passed <- c(TRUE,TRUE,FALSE,TRUE)
+passed <- c(TRUE, FALSE, FALSE, FALSE, TRUE, TRUE, TRUE) # random sequence
 class(passed)
-ages <- c(15, 18, 25, 14, 19, 21)
+ages <- c(53, 51, 25, 67, 66, 41, 62, 42) # random numbers
 class(ages)
-namez <- c("Bob", "Ted", "Carol", "Alice") # names is R function!
+namez <- c("Marina", "Allar", "Siim", "Mart", "Mailis", "Eiki", "Urmas") # random names, names is R function!
 class(namez)  
 ```
 
