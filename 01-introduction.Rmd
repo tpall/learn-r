@@ -1,6 +1,8 @@
 Introduction
 ------------
 
+
+
 As functional language and [statistical environment, R](https://www.r-project.org/about.html) has pros and cons.    
 
 #### Pros:
@@ -23,7 +25,6 @@ tn %>% ggplot(aes(ymd(Date), cumsum(Packages), group = 1)) +
   geom_line() + ylab("Number of packages") + xlab("Years") + 
   ggtitle("Available CRAN Packages By Date of Publication")
 ```
-
 
 
 + R contains advanced statistical routines not yet available in other packages \@ref(fig:plotcranpackages).  

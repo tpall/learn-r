@@ -5,16 +5,23 @@ Getting and installing R
 
 1. Download and install **R** from [https://cran.r-project.org/](https://cran.r-project.org/)
 2. Download and install **RStudio** from [https://www.rstudio.com/](https://www.rstudio.com/)
-3. Open RStudio
-4. Print to the editor:
 
-```{r setwdex, eval=FALSE}
+![RStudio window layout. The panel in the upper right contains your workspace. Any plots that you generate will show up in the panel in the lower right corner. The panel on the upper left corner is your source file. The panel on the lower left corner is the console.](graphs/RStudio.png)
+
+3. Open RStudio
+4. Select `Project` menu from the **upper right corner** and either create `New Project` or `Open Project` 
+
+![New Project menu](graphs/RStudio_NewProject.png)
+
+```{r setwdex, include = FALSE, eval=FALSE}
 # Sets working directory, into which things are saved by default and from which stuff is imported
 setwd("/Users/ulomaivali/Dropbox/") # mac
 setwd("C:/Users/ulomaivali/Dropbox/") # windows
 setwd("~/Dropbox/R course/") # linux, ~/ references to user home directory
 ```
 
+
+Where are we?
 ```{r getwd}
 # Prints the current working directory
 getwd()
@@ -28,10 +35,19 @@ You can get help from R Documentation at the program's command prompt by precedi
 ?getwd()
 ```
 
-### Random tips
 
-* `Cmd + Enter` (`Ctrl + Enter` on a PC) in RStudio: sends the current line (or current selection) from the editor to the console and runs it. 
-* R is case-sensitive. 
-* Enter commands one at a time at the console or run a set of commands from the editor. 
-* Object names cannot begin with a number. 
-* No spaces in object names! (use . or _ or -).
+In RStudio if you type the name of the function without parentheses eg. `scale` and hit the `F1` key, the help page of the function is shown in the lower right panel.
+
+### Tips and tricks
+
++ `Cmd + Enter` (`Ctrl + Enter` on a PC) in RStudio: sends the current line (or current selection) from the editor to the console and runs it. 
++ `Alt + -` in RStudio: gives assignment operator `<-`. 
++ `Ctrl + Shift + M` in RStudio: gives piping operator `%>%`. 
++ `Ctrl + Shift + C` in RStudio: comment/uncomment lines.
++ [RStudio cheat sheet with more tips](https://www.rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf).
++ R is case-sensitive. 
++ Enter commands one at a time at the console or run a set of commands from the editor. 
++ Object names and column names cannot begin with a number. 
++ No spaces in object names! (use `.` or `_` or `-`).
+
+
