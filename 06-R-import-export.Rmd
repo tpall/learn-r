@@ -7,6 +7,12 @@ Getting data in and out of R
 
 ![You know nothing. Official promotion logo for Banksy's October 2013 artist residency in New York City. Photo: Banksy](https://upload.wikimedia.org/wikipedia/en/2/2c/Banksy_Better_Out_Than_In_New_York_City_2013.png)
 
+<!-- When planning to import your data from external files to R, then -->
+
+<!-- + avoid whitespaces in your file names, replace these with `.`,`_` or `-` -->
+<!-- + don't use special characters like `,` `?` `#` `*` `@` `$` `%` `|` `^` `{` `}` `(` `)` `[` `]` `\` `/` -->
+
+
 ### Import text file
 Probably, the most basic form of data to import into R is a simple text file.
 
@@ -42,7 +48,8 @@ Text in `textConnection` call can be already structured, so you can quickly impo
 zzz <- textConnection("my title line 
                       2 3 5 7
                       11 13 17 9")
-scan(zzz, skip = 2) # lets skip 1st two lines
+a <- scan(zzz, skip = 2) # lets skip 1st two lines
+a
 ```
 
 Scanned data can be coerced into rectangular matrix. 
@@ -169,42 +176,6 @@ parse_date("01/02/15", "%d/%m/%y")
 parse_date("01/02/15", "%y/%m/%d")
 ```
 
-#### Import all datasets from the working directory
-
-First we define `read_datasets` function, which takes in as arguments vector of filenames and reader function.
-```{r}
-read_datasets <- function(datasets, read_func){
-    read_and_assign <- function(dataset, read_func){
-        assign(dataset, read_func(dataset), envir = .GlobalEnv)
-    }
-    output <- invisible(
-    sapply(datasets, read_and_assign, read_func = read_func, simplify = FALSE, USE.NAMES = TRUE))
-  }
-```
-
-
-```{r}
-library("readr")
-library("tibble")
-data_files <- list.files(path = "data", pattern = ".csv", full.names = TRUE)
-datasets <- read_datasets(data_files, read.table)
-str(datasets)
-```
-
-If you have datasets with same column names, you can import all datasets as a list and rbind them into one data.frame. Here we concatenate our single data.frame in `datasets` object.
-
-`do.call(rbind, my_list_of_dataframes)` is base R solution to this task.
-```{r}
-nrow(datasets[[1]]) # how many rows in our original data? datasets is a list.
-rbound_datasets <-  do.call(rbind, c(datasets, datasets)) # bind dataframes in list by rows
-nrow(rbound_datasets) # how many rows we have now
-```
-
-Alternative solution is `bind_rows` from `dplyr` package.
-```{r}
-rbound_datasets2 <- dplyr::bind_rows(c(datasets, datasets))
-nrow(rbound_datasets2) # how many rows we have now
-```
 
 ### Import MS Excel
 There are several libraries and functions available to import MS excel workbooks into R, like `XLConnect`,`gdata::read.xls()`, `xlsx`. 
@@ -244,4 +215,51 @@ out1 <- extract_tables(f)
 str(out1)
 ```
 
+### Import SPSS, SAS etc.
+`foreign` package provies functions for reading and writing data stored by Minitab, S, SAS, SPSS, Stata, etc.
 
+```{r, eval=FALSE}
+library(foreign)
+mydata <- read.spss("mydata.sav") # import spss data file, returns list
+mydata <- read.spss("mydata.sav", to.data.frame = TRUE) # returns data.frame
+```
+
+#### Import all datasets from directory
+We can use `sapply(X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)` or `lapply(X, FUN, ...)` functions to iterate through vector or list of files, respectively.
+Three dots `...` shows that you can pass further arguments to your function (FUN).
+
+```{r, include=FALSE, eval=FALSE}
+# First we define `read_datasets` function, which takes in as arguments vector of filenames and reader function.
+library("readr")
+library("tibble")
+read_datasets <- function(datasets, read_func){
+    read_and_assign <- function(dataset, read_func){
+        assign(dataset, read_func(dataset), envir = .GlobalEnv)
+    }
+    output <- invisible(
+    sapply(datasets, read_and_assign, read_func = read_func, simplify = FALSE, USE.NAMES = TRUE))
+  }
+```
+
+
+```{r}
+data_files <- list.files(path = "data", pattern = ".csv", full.names = TRUE) # 
+data_files # ups, we have only one file
+datasets <- sapply(data_files, read.table, simplify = FALSE, USE.NAMES = TRUE) # sapply returns vector or matrix, simplify = FALSE outputs list
+str(datasets)
+```
+
+If you have datasets with same column names, you can import all datasets as a list and rbind them into one data.frame. Here we concatenate our single data.frame in `datasets` object.
+
+`do.call(rbind, my_list_of_dataframes)` is base R solution to this task.
+```{r}
+nrow(datasets[[1]]) # how many rows in our original data? datasets is a list.
+rbound_datasets <-  do.call(rbind, c(datasets, datasets)) # bind dataframes in list by rows
+nrow(rbound_datasets) # how many rows we have now
+```
+
+Alternative solution is `bind_rows` from `dplyr` package.
+```{r}
+rbound_datasets2 <- dplyr::bind_rows(c(datasets, datasets))
+nrow(rbound_datasets2) # how many rows we have now
+```

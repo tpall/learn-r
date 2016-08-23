@@ -1,0 +1,74 @@
+---
+
+---
+
+Merging tables
+--------------
+
+To illustrate merging, let's consider [following itinerary](https://uhhuduur.ee/pilta-kah/). 
+Here we have day of travel and city.
+```{r}
+itinerary <- data.frame(day = c(1:6), city = c("Teheran", "Qom", "Esfahan", "Persepolis", "Shiraz", "Bandar"))
+head(itinerary)
+```
+
+Next table we have hotels with addresses for each city.
+```{r}
+lodging <- data.frame(city = c("Teheran", "Qom", "Esfahan", "Persepolis", "Shiraz", "Bandar"), hotel = c("Firouzeh Hotel", "Aria Hotel", "Amir Kabir Hotel", "Sita Aukh Guest House", "Anvari Hotel", "Bolivar Inn"), address = c("Dowlat Abad Alley", "Astane Square", "Chahar Bagh Abbasi Street", "Tume Junn Mohammad Street", "Anvari Street", "Abuzar Street"))
+head(lodging)
+```
+
+#### base::merge
+We use base R function `merge` to join these tables by explicitly specifying column/variable 'by = "city"' (e.g. in order to guarantee consistent behaviour when number of columns in our data frame can vary in our script).
+By default, `merge` joins data frames on the columns with names they both have.
+
+```{r}
+merge(itinerary, lodging, by = "city", sort = FALSE) # don't sort on 'by' column
+```
+
+If we choose only rows 1 through 3 from table `lodging`?
+```{r}
+merge(itinerary, lodging[1:3,], by = "city", sort = FALSE) 
+```
+
+If we choose only rows 2 through 5 from table `itinerary`?
+```{r}
+merge(itinerary[2:5,], lodging, by = "city", sort = FALSE) 
+```
+
+In our simple example we always have only matching rows in our results.
+
+#### dplyr::inner_join and friends
+
+```{r}
+library(dplyr)
+inner_join(itinerary, lodging, by = "city")
+```
+
+```{r}
+inner_join(itinerary[2:5,], lodging[1:3,], by = "city") 
+```
+
+```{r}
+left_join(itinerary[2:5,], lodging, by = "city") 
+```
+
+```{r}
+left_join(itinerary, lodging[2:5,], by = "city") 
+```
+
+```{r}
+right_join(itinerary, lodging[2:5,], by = "city") 
+```
+
+```{r}
+semi_join(itinerary, lodging[2:4,], by = "city") # returns only cols from itinerary 
+```
+
+```{r}
+anti_join(itinerary[1:3,], lodging[3:4,], by = "city") # returns cols fron itinerary where there are no matching values in lodging 
+```
+
+```{r}
+full_join(itinerary[1:3,], lodging[3:6,], by = "city") 
+```

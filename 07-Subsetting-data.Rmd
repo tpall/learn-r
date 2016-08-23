@@ -11,7 +11,7 @@ Selecting by index
 + index is in square brackets (list elements are selected by double square brackets). '[' and '[[' are functions!
 
 ```{r}
-'['(c(1,2,3), 1)
+'['(c(1,2,3), 1) == c(1,2,3)[1] # as you can see these are both identical
 ```
 
 + you can select values, rows or columns by index
@@ -22,14 +22,14 @@ Selecting by index
 + == means "equal"
 
 ```{r, eval = FALSE}
-df[ , 2] # selects 2nd column
-df[2, ] # selects 2nd row
+df[,2] # selects 2nd column
+df[2,] # selects 2nd row
 df[1:10, 2:3]
 ```
 ```{r}
-df <- data.frame(M = c(2,3,6,1,34), N = c(34,1,8,9,3))
+df <- data.frame(M = c(2, 3, 6, 3, 34), N = c(34, 3, 8, 3, 3), L = c(TRUE, FALSE, TRUE, FALSE, TRUE))
 df
-df[df$M == 34, ] # selects rows from A that have value == 34
+df[df$M == 34,] # selects rows from A that have value == 34
 ```
 ```{r}
 df[1:2, "N"] # selects rows 1 through 2 from column "A"
@@ -37,26 +37,40 @@ df[1:2, "N"] # selects rows 1 through 2 from column "A"
 
 ```{r}
 rownames(df) <- letters[1:5]
-df[rownames(df)=="c", ] # selects row named "c"
+df[rownames(df) == "c",] # selects row named "c"
 ```
 
 ```{r}
-df[-(2:4), ] # drops rows 2 to 4 (incl)
+df[-(2:4),] # drops rows 2 to 4 (incl)
 ```
 
 ```{r}
-df[,-2] # drops col 2, outputs vector! 
+df[, -2] # drops col 2, outputs vector! 
+```
+
+```{r}
+df[df$M==6,] # selects all rows that do not contain 6 in column named M
 ```
 
 
-df[ !(X==”a”), ] selects all rows that do not contain “a” in column named X
+```{r}
+df[df$L==T,] # selects all rows where L is TRUE (T)
+```
 
-df[AA==T, ] selects all rows where AA is TRUE
+```{r}
+df[!duplicated(df),] # removes second one of the duplicated rows from df, we have to use ! to negate logical evaluation
+```
 
-df[! duplicated(X), ] selects 1st value of duplicated values in column named X
+```{r}
+df[df$M > median(df$N) & df$M < 25,] # selects rows where df$M value is > median df$N AND df$M value < 25
+```
 
-df[col1 > median(col1) & col2 < 5.2, ] selects rows where col1 value is > median & col2 value < 5.2
 
-df[col1 > 8 | col2 < 5.2, ] selects rows where col1 value is > 8 or col2 < 5.2
+```{r}
+df[df$M > median(df$N) | df$M == 34,] # selects rows where df$M value is > median df$N OR df$M value == 34
+```
 
-sum(df$a[df$sex==”male”]) – sums column “a” at rows where column sex is “male” 
+```{r}
+sum(df$M[df$L==T]) # sums column df$M at rows where column 'L' is TRUE (T)
+```
+
