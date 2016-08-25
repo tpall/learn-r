@@ -1,6 +1,13 @@
 Installing packages
 -------------------
 
+To install package
+
+  ```{r}
+
+```
+
+
 You will not be able to use a package until you load it with `library()` function. 
 After you have installed the packages, you can load any of the packages into your current R session with the `library()` command, e.g. 
 

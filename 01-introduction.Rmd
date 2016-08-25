@@ -1,11 +1,17 @@
 Introduction
 ------------
 
+R is [functional programming language](https://en.wikipedia.org/wiki/Functional_programming) and [statistical environment](https://www.r-project.org/about.html).
+
+R statistical language is based on **S** (R is [GNU](https://en.wikipedia.org/wiki/GNU) S). 
+S was developed by John Chambers (mainly), Rick Becker and Allan Wilks of Bell Laboratories. 
+The first version of S saw light in 1976. 
+The aim of the S language was "to turn ideas into software, quickly and faithfully".
+R was initially written by Robert Gentleman and Ross Ihaka at the University of Auckland Statistics Department. 
+The project is relatively new, conceived in 1992, with an initial version released in 1994 and a first stable beta version in 2000.
 
 
-As functional language and [statistical environment, R](https://www.r-project.org/about.html) has pros and cons.    
-
-#### Pros:
+#### R pros
 
 + Just about any type of data analysis can be done in R. 
 
@@ -15,7 +21,7 @@ load("data/Available_CRAN_Packages_By_Date_of_Publication_2016-08-17.RData")
 t <- t[[1]] # t is list of length 1 containing data.frame
 library(dplyr)
 tn <- t %>% group_by(Date) %>% summarise(Packages = n())
-cap <- paste("The number of available CRAN packages grows exponentially, featuring", length(unique(t$Package)), "available packages as of", t$Date[1],".")
+cap <- paste("There are about eight packages supplied with the R distribution. The number of available CRAN packages grows exponentially, featuring", length(unique(t$Package)), "available packages as of", t$Date[1],".")
 ```
 
 ```{r plotcranpackages, echo=FALSE, message=FALSE, fig.show='asis', fig.align='center', fig.cap=cap}
@@ -40,7 +46,7 @@ tn %>% ggplot(aes(ymd(Date), cumsum(Packages), group = 1)) +
 
 A key reason that R is a good thing is because it is a language. The power of language is abstraction. The way to make abstractions in R is to write functions [(Burns, 2011)](http://www.burns-stat.com/pages/Tutor/R_inferno.pdf).
 
-#### Cons (none is the deal breaker):
+#### R cons (none is the deal breaker):
 
 + With R you must know exactly, what you want to do – in terms of your immediate atomic goals in data massage, methods of statistical analysis, and the overall strategy of analysis. 
 + It is like getting your own keys to daddy's F-16 fighter plane. Get a setting wrong and boom!

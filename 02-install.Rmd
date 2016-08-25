@@ -1,3 +1,7 @@
+---
+
+---
+
 Getting and installing R
 ---------------
 
@@ -9,15 +13,25 @@ Getting and installing R
 ![RStudio window layout. The panel in the upper right contains your workspace. Any plots that you generate will show up in the panel in the lower right corner. The panel on the upper left corner is your source file. The panel on the lower left corner is the console.](graphs/RStudio.png)
 
 3. Open RStudio
-4. Select `Project` menu from the **upper right corner** and either create `New Project` or `Open Project` 
+4. Select `Project` menu from the **upper right corner** and either create `New Project` or `Open Project`. [RStudio support page for using projects](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects). 
 
 ![New Project menu](graphs/RStudio_NewProject.png)
 
-```{r setwdex, include = FALSE, eval=FALSE}
-# Sets working directory, into which things are saved by default and from which stuff is imported
-setwd("/Users/ulomaivali/Dropbox/") # mac
-setwd("C:/Users/ulomaivali/Dropbox/") # windows
-setwd("~/Dropbox/R course/") # linux, ~/ references to user home directory
+#### Folder structure of R project
+
++ Create a directory structure to separate R code, data, reports, and output
++ __Treat data as read-only__: do data-munging in R code, but always start with the source data
++ __Consider output figures and tables as disposable__: the data plus the R script is the canonical source
++ __Keep function definitions and applications code separately__
+
+![Example folder structure in R project](graphs/RProject_folders.png)
+
+```{r, eval=FALSE}
+MyProject/
+  |-- src/ # contains R script
+  |-- data/ # contains raw data, read only
+  |-- lib/ # contains R functions (R scipts defining functions)
+  |-- graphs/ # output graphs
 ```
 
 
@@ -26,6 +40,16 @@ Where are we?
 # Prints the current working directory
 getwd()
 ```
+
+
+But if you want set working directory by your self:
+```{r eval=FALSE}
+# Sets working directory, into which things are saved by default and from which stuff is imported
+setwd("/Users/ulomaivali/Dropbox/") # mac
+setwd("C:/Users/ulomaivali/Dropbox/") # windows
+setwd("~/Dropbox/R course/") # linux, ~/ references to user home directory
+```
+
 
 ### Getting help
 
@@ -39,11 +63,11 @@ You can get help from R Documentation at the program's command prompt by precedi
 In RStudio if you type the name of the function without parentheses eg. `scale` and hit the `F1` key, the help page of the function is shown in the lower right panel.
 
 ### Tips and tricks
-
-+ `Cmd + Enter` (`Ctrl + Enter` on a PC) in RStudio: sends the current line (or current selection) from the editor to the console and runs it. 
++ RStudio: `Help` menu contains section `Cheatsheets`.
++ `Ctrl + Enter` (`Cmd + Enter` on a Mac) in RStudio: sends the current line (or current selection) from the editor to the console and runs it. 
 + `Alt + -` in RStudio: gives assignment operator `<-`. 
-+ `Ctrl + Shift + M` in RStudio: gives piping operator `%>%`. 
-+ `Ctrl + Shift + C` in RStudio: comment/uncomment lines.
++ `Ctrl + Shift + M` (Ctrl + Cmd + M on a Mac) in RStudio: gives piping operator `%>%`. 
++ `Ctrl + Shift + C` (Ctrl + Cmd + C on a Mac) in RStudio: comment/uncomment lines.
 + [RStudio cheat sheet with more tips](https://www.rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf).
 + R is case-sensitive. 
 + Enter commands one at a time at the console or run a set of commands from the editor. 

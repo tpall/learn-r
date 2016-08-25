@@ -4,7 +4,24 @@
 
 Merging tables
 --------------
+### Combine by rows
+For rbind column names are taken from the first argument with appropriate names: colnames for a matrix, or names for a vector of length the number of columns of the result.
 
+To illustrate combining two data.frames by rowwise we first split `mtcars` dataset into two
+```{r}
+dim(mtcars)
+head(mtcars)
+df1 <- mtcars[1:4, ]
+df2 <- mtcars[11:14, ]
+```
+
+```{r}
+# a <- rbind(df1, df2)
+b <- dplyr::bind_rows("group 1" = df1, "group 2" = df2, .id = "groups") # When you supply a column name with the `.id` argument, a new column is created to link each row to its original data frame. Columns don't need to match when row-binding
+b
+```
+
+### Joins
 To illustrate merging, let's consider [following itinerary](https://uhhuduur.ee/pilta-kah/). 
 Here we have day of travel and city.
 ```{r}
@@ -18,28 +35,36 @@ lodging <- data.frame(city = c("Teheran", "Qom", "Esfahan", "Persepolis", "Shira
 head(lodging)
 ```
 
-#### base::merge
-We use base R function `merge` to join these tables by explicitly specifying column/variable 'by = "city"' (e.g. in order to guarantee consistent behaviour when number of columns in our data frame can vary in our script).
-By default, `merge` joins data frames on the columns with names they both have.
+<!-- #### base::merge -->
+<!-- We use base R function `merge` to join these tables by explicitly specifying column/variable 'by = "city"' (e.g. in order to guarantee consistent behaviour when number of columns in our data frame can vary in our script). -->
+<!-- By default, `merge` joins data frames on the columns with names they both have. -->
 
-```{r}
-merge(itinerary, lodging, by = "city", sort = FALSE) # don't sort on 'by' column
+<!-- ```{r} -->
+<!-- merge(itinerary, lodging, by = "city", sort = FALSE) # don't sort on 'by' column -->
+<!-- ``` -->
+
+<!-- If we choose only rows 1 through 3 from table `lodging`? -->
+<!-- ```{r} -->
+<!-- merge(itinerary, lodging[1:3,], by = "city", sort = FALSE)  -->
+<!-- ``` -->
+
+<!-- If we choose only rows 2 through 5 from table `itinerary`? -->
+<!-- ```{r} -->
+<!-- merge(itinerary[2:5,], lodging, by = "city", sort = FALSE)  -->
+<!-- ``` -->
+
+<!-- In our simple example we always have only matching rows in our results. -->
+
+<!-- #### dplyr::inner_join and friends -->
+We use `dplyr` `_join` functions to join these tables by explicitly specifying column/variable 'by = "city"' (e.g. in order to guarantee consistent behaviour when number of columns in our data frame can vary in our script).
+
+```{r include=FALSE}
+x <- as.character(bquote(itinerary))
+y <- as.character(bquote(lodging))
 ```
 
-If we choose only rows 1 through 3 from table `lodging`?
-```{r}
-merge(itinerary, lodging[1:3,], by = "city", sort = FALSE) 
-```
 
-If we choose only rows 2 through 5 from table `itinerary`?
-```{r}
-merge(itinerary[2:5,], lodging, by = "city", sort = FALSE) 
-```
-
-In our simple example we always have only matching rows in our results.
-
-#### dplyr::inner_join and friends
-
+Returns all rows from `r paste(x)` where there are matching values in `r paste(x)`, and all columns from `r paste(x)` and `r paste(y)`.
 ```{r}
 library(dplyr)
 inner_join(itinerary, lodging, by = "city")
@@ -49,6 +74,7 @@ inner_join(itinerary, lodging, by = "city")
 inner_join(itinerary[2:5,], lodging[1:3,], by = "city") 
 ```
 
+Returns all rows from `r paste(x)`, and all columns from `r paste(x)` and `r paste(y)`. Rows in `r paste(x)` with no match in `r paste(y)` will have NA values in the new columns.
 ```{r}
 left_join(itinerary[2:5,], lodging, by = "city") 
 ```
@@ -57,18 +83,22 @@ left_join(itinerary[2:5,], lodging, by = "city")
 left_join(itinerary, lodging[2:5,], by = "city") 
 ```
 
+Returns all rows from `r paste(y)`, and all columns from `r paste(x)` and `r paste(y)`. Rows in `r paste(y)` with no match in `r paste(x)` will have NA values in the new columns. 
 ```{r}
 right_join(itinerary, lodging[2:5,], by = "city") 
 ```
 
+Returns all rows from `r paste(x)` where there are matching values in `r paste(y)`, keeping just columns from `r paste(x)`.
 ```{r}
 semi_join(itinerary, lodging[2:4,], by = "city") # returns only cols from itinerary 
 ```
 
+Return all rows from `r paste(x)` where there are not matching values in `r paste(y)`, keeping just columns from `r paste(x)`.
 ```{r}
 anti_join(itinerary[1:3,], lodging[3:4,], by = "city") # returns cols fron itinerary where there are no matching values in lodging 
 ```
 
+Return all rows and all columns from both `r paste(x)` and `r paste(y)`. Where there are not matching values, returns NA for the one missing.
 ```{r}
 full_join(itinerary[1:3,], lodging[3:6,], by = "city") 
 ```

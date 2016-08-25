@@ -1,0 +1,28 @@
+---
+
+---
+
+Find character strings 
+----------------------
+Character strings can be matched and manipulated in R by using `regular expressions` in functions `grep`, `grepl`, `sub`, `gsub` and some others.
+A `regular expression` is a pattern that describes a set of strings.
+
++ The fundamental building blocks are the regular expressions that match a single character. 
++ Most characters, including all letters and digits, are regular expressions that match themselves. 
++ The metacharacters in regular expressions are `. \ | ( ) [ { ^ $ * + ?`, whether these have a special meaning depends on the context. 
++ When matching any metacharacter as a regular character, precede it with a double backslash `\\`.
+
++ The caret `^` and the dollar sign `$` are metacharacters that respectively match the empty string at the beginning and end of a line.
+
+`grep(pattern, x)` finds a pattern in x. Pattern -- character string containing a regular expression (or exact character string for fixed = TRUE).
+
+
+We can use grepl to filter data frame:
+```{r}
+library(dplyr)
+fruit_males <- fruit %>% filter(grepl("M", Gender)) %>% tbl_df
+fruit_males
+```
+
+
+

@@ -152,17 +152,17 @@ Column = vector.
 `as.matrix()` has default argument `byrow = FALSE`, change this to fill matrix by rows.
 
 * `tibble::data_frame()` is a more modern version of data.frame (slight differences for the better)
-`as.data_frame()` converts to it. 
+`as_data_frame()` converts to it. 
 `data_frame()` does less than `data.frame()`: 
     + it never changes the type of the inputs (e.g. it never converts strings to factors!), 
     + it never changes the names of variables, and it never creates `row.names()`.
 
 **Tibbles** have a print method that shows only the first 10 rows, and all the columns that fit on screen. 
 This makes it much easier to work with large data. 
-In addition to its name, each column reports its type. 
-Tibbles clearly delineate `[` and `[[`: `[` always returns another tibble, `[[` always returns a vector. 
-Some older functions don't work with tibbles because they expect `df[, 1]` to return a vector, not a data frame. 
-If you encounter one of these functions, use `as.data.frame()` to coerce a tibble back to a data frame:
+<!-- In addition to its name, each column reports its type.  -->
+<!-- Tibbles clearly delineate `[` and `[[`: `[` always returns another tibble, `[[` always returns a vector.  -->
+<!-- Some older functions don't work with tibbles because they expect `df[, 1]` to return a vector, not a data frame.  -->
+<!-- If you encounter one of these functions, use `as.data.frame()` to coerce a tibble back to a data frame: -->
 
 ![Iris dataset contains sepal and petal measurements of three iris species.](http://articles.concreteinteractive.com/wp-content/uploads/2015/03/irises.png)
 

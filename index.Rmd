@@ -13,6 +13,7 @@ output:
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+set.seed(437385) # from random.org
 ```
 
 

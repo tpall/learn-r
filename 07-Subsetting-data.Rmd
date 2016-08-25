@@ -4,6 +4,7 @@
 
 Selecting by index
 ------------------
+TODO: lihtsamaks!!!
 
 + index is a quick address used to select/filter elements of vector/matrix/df/list
 + first rows, then columns: [1, 2] means "select 1st row, 2nd column"

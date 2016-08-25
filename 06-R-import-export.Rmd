@@ -96,85 +96,90 @@ head(airquality)
 ```
 
 #### `readr` package
+You can import tabular data using read_ functions from `readr` package. Compared to base R functions like `read.csv()`, `readr` is much faster and gives more convenient output: it never converts strings to factors, can parse date/times, and it doesn't munge the column names.
+
+The first two arguments of `read_csv()` are:
++ `file`: path (or URL) to the file you want to load. Readr can automatically decompress files ending in .zip, .gz, .bz2, and .xz.
++ `col_names`: column names. 3 options: TRUE (the default); FALSE numbers columns sequentially from X1 to Xn. A character vector, used as column names. If these don't match up with the columns in the data, you'll get a warning message.
+
+<!-- `read_fwf()` reads fixed width files. You can specify fields either by their widths with `fwf_widths()` or their position with `fwf_positions()`.  -->
+`read_table()` reads a common variation of fixed width files where columns are separated by white space.
+
+
 ```{r, eval = FALSE}
 install.packages("readr")
 library(readr)
+read_table() # read the type of textual data where each column is separate by whitespace
 read_csv() # reads comma delimited files, 
-read_csv2() # reads semi-colon separated files, 
+read_csv2() # reads semi-colon delimited files, 
 read_tsv() # reads tab delimited files, 
 read_delim() # reads in files with a user supplied delimiter.
 ```
+
+Importantly, `read_` functions expect specific delimiter: comma for _csv, tab for _tsv etc., and only `read_delim` has argument for specifying delimiter to be used.
 
 ```{r, include = FALSE}
 library(readr)
 ```
 
-The first two arguments of `read_csv()` are:
+<!-- #### Change column type -->
+<!-- ```{r, eval=FALSE} -->
+<!-- read_csv("mypath.csv", col_types = col(x = col_integer(), treatment = col_character())) -->
+<!-- ``` -->
 
-+ `file`: path (or URL) to the file you want to load. Readr can automatically decompress files ending in .zip, .gz, .bz2, and .xz.
-+ `col_names`: column names. 3 options: TRUE (the default); FALSE numbers columns sequentially from X1 to Xn. A character vector, used as column names. If these don't match up with the columns in the data, you'll get a warning message.
+<!-- You can specify the following types of columns: -->
 
-`read_fwf()` reads fixed width files. You can specify fields either by their widths with `fwf_widths()` or their position with `fwf_positions()`. 
-`read_table()` reads a common variation of fixed width files where columns are separated by white space.
+<!-- + `col_integer()` (i) and `col_double()` (d) specify integer and doubles. -->
+<!-- + `col_logical()` (l) parses TRUE, T, FALSE and F into a logical vector. -->
+<!-- + `col_character()` (c) leaves strings as is. -->
+<!-- + `col_number()` (n) is a more flexible parser for numbers embedded in other strings. It will look for the first number in a string, ignoring non-numeric prefixes and suffixes. -->
+<!-- + `col_factor()` (f) allows you to load data directly into a factor if you know what the levels are. -->
+<!-- + `col_skip()` (_, -) completely ignores a column. -->
+<!-- + `col_date()` (D), `col_datetime()` (T) and `col_time()` (t) parse into dates, date times, and times. -->
 
-#### Change column type
+<!-- Each column parser has a one letter abbreviation, which you can use instead of the full function call (assuming you're happy with the default arguments): -->
 
-```{r, eval=FALSE}
-read_csv("mypath.csv", col_types = col(x = col_integer(), treatment = col_character()))
-```
-You can specify the following types of columns:
+<!-- ```{r, eval=FALSE} -->
+<!-- read_csv("mypath.csv", col_types = cols(x = "i", treatment = "c")) -->
+<!-- ``` -->
 
-+ `col_integer()` (i) and `col_double()` (d) specify integer and doubles.
-+ `col_logical()` (l) parses TRUE, T, FALSE and F into a logical vector.
-+ `col_character()` (c) leaves strings as is.
-+ `col_number()` (n) is a more flexible parser for numbers embedded in other strings. It will look for the first number in a string, ignoring non-numeric prefixes and suffixes.
-+ `col_factor()` (f) allows you to load data directly into a factor if you know what the levels are.
-+ `col_skip()` (_, -) completely ignores a column.
-+ `col_date()` (D), `col_datetime()` (T) and `col_time()` (t) parse into dates, date times, and times.
+<!-- Each `col_XYZ()` function also has a corresponding `parse_XYZ()` that you can use on a character vector. -->
 
-Each column parser has a one letter abbreviation, which you can use instead of the full function call (assuming you're happy with the default arguments):
+<!-- ```{r} -->
+<!-- parse_integer(c("1", "2", "3")) -->
+<!-- ``` -->
 
-```{r, eval=FALSE}
-read_csv("mypath.csv", col_types = cols(x = "i", treatment = "c"))
-```
+<!-- ```{r} -->
+<!-- parse_logical(c("TRUE", "FALSE", "NA")) -->
+<!-- ``` -->
 
-Each `col_XYZ()` function also has a corresponding `parse_XYZ()` that you can use on a character vector.
+<!-- ```{r} -->
+<!-- parse_number(c("$1000", "20%", "3,000")) -->
+<!-- ``` -->
 
-```{r}
-parse_integer(c("1", "2", "3"))
-```
+<!-- ```{r} -->
+<!-- parse_datetime("2010-10-01T2010") -->
+<!-- ``` -->
 
-```{r}
-parse_logical(c("TRUE", "FALSE", "NA"))
-```
+<!-- ```{r} -->
+<!-- parse_date("2010-10-01") -->
+<!-- ``` -->
 
-```{r}
-parse_number(c("$1000", "20%", "3,000"))
-```
+<!-- ```{r} -->
+<!-- parse_time("20:10:01") -->
+<!-- ``` -->
 
-```{r}
-parse_datetime("2010-10-01T2010")
-```
+<!-- ```{r} -->
+<!-- parse_date("01/02/15", "%m/%d/%y") -->
+<!-- ``` -->
 
-```{r}
-parse_date("2010-10-01")
-```
+<!-- ```{r} -->
+<!-- parse_date("01/02/15", "%d/%m/%y") -->
+<!-- ``` -->
 
-```{r}
-parse_time("20:10:01")
-```
-
-```{r}
-parse_date("01/02/15", "%m/%d/%y")
-```
-
-```{r}
-parse_date("01/02/15", "%d/%m/%y")
-```
-
-```{r}
-parse_date("01/02/15", "%y/%m/%d")
-```
+<!-- ```{r} -->
+<!-- parse_date("01/02/15", "%y/%m/%d") -->
+<!-- ``` -->
 
 
 ### Import MS Excel
