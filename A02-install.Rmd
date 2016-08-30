@@ -2,22 +2,34 @@
 
 ---
 
-Getting and installing R
----------------
+## Install R
+As you can guess, it's very straightforward: download and install **R** for your operation system from [https://cran.r-project.org/](https://cran.r-project.org/). 
 
-### To start:
+## Install RStudio
+> RStudio is a set of integrated tools designed to help you be more productive with R. It includes a console, syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging and workspace management.
 
-1. Download and install **R** from [https://cran.r-project.org/](https://cran.r-project.org/)
-2. Download and install **RStudio** from [https://www.rstudio.com/](https://www.rstudio.com/)
+Download and install **RStudio** from [https://www.rstudio.com/](https://www.rstudio.com/)
 
 ![RStudio window layout. The panel in the upper right contains your workspace. Any plots that you generate will show up in the panel in the lower right corner. The panel on the upper left corner is your source file. The panel on the lower left corner is the console.](graphs/RStudio.png)
 
-3. Open RStudio
-4. Select `Project` menu from the **upper right corner** and either create `New Project` or `Open Project`. [RStudio support page for using projects](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects). 
+### Setup your project
+To get started using R via RStudio it is suggested to organise your work to projects. Each project has their own working directory, workspace, history, and source documents.
+In order to create a new project:
+
+1. Open RStudio
+2. Select `Project` menu from the **upper right corner** and either create `New Project` or `Open Project`. [RStudio support page for using projects](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects). 
 
 ![New Project menu](graphs/RStudio_NewProject.png)
 
-#### Folder structure of R project
+When you open a project in RStudio several actions are taken:
+
++ A fresh new R session is started
++ The current working directory is set to the project directory.
++ Previously edited source documents are restored into editor tabs.
++ The `.Rprofile` file in the project's main directory (if any) is sourced by R, also the `.RData` and `.Rhistory` files in the project's main directory are loaded.
++ Other RStudio settings (e.g. active tabs, splitter positions, etc.) are restored to where they were the last time the project was closed.
+
+### Folder structure of R project
 
 + Create a directory structure to separate R code, data, reports, and output
 + __Treat data as read-only__: do data-munging in R code, but always start with the source data
@@ -34,13 +46,10 @@ MyProject/
   |-- graphs/ # output graphs
 ```
 
-
 Where are we?
-```{r getwd}
-# Prints the current working directory
-getwd()
+```{r}
+getwd() # Prints the current working directory
 ```
-
 
 But if you want set working directory by your self:
 ```{r eval=FALSE}
@@ -51,12 +60,17 @@ setwd("~/Dropbox/R course/") # linux, ~/ references to user home directory
 ```
 
 
+
 ### Getting help
 
-You can get help from R Documentation at the program's command prompt by preceding R command with ?.
-
+You can get help for individual functions from R Documentation at the program's command prompt by preceding R command with ?.
 ```{r help}
 ?getwd()
+```
+
+Package documentation with list of all included functions can be accessed like this:
+```{r}
+library(help = "readxl")
 ```
 
 
@@ -73,5 +87,7 @@ In RStudio if you type the name of the function without parentheses eg. `scale` 
 + Enter commands one at a time at the console or run a set of commands from the editor. 
 + Object names and column names cannot begin with a number. 
 + No spaces in object names! (use `.` or `_` or `-`).
++ Using the backslash `\` in a pathname on Windows -- R sees the `\` as an escape character. `setwd("C:\mydata")` generates an error. Use `setwd("C:/mydata")` or `setwd("C:\\mydata")` instead.
+
 
 

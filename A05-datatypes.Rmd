@@ -2,8 +2,7 @@
 
 ---
 
-Data structures 
----------------
+# Data structures 
 
 + **Atomic vectors** are arrays that contain a single data type (logical, real, complex, character). 
 Each of the following is a one-dimensional atomic vector: 
@@ -40,7 +39,6 @@ mylist
 
 ```
 
-
 + **Data frames** are a special type of list, where each atomic vector in the collection has the same length. 
 Each vector represents a column (variable) in the data frame.
 
@@ -53,7 +51,7 @@ exam
 ![Illustration of R data types. Image: [http://yzc.me/2015/12/11/r-intro-1/](http://yzc.me/2015/12/11/r-intro-1/) ](https://raw.githubusercontent.com/Anonymous-Y/BlogImage/master/r-intro-3.jpg)
 
 
-### Vectors
+## Vectors
 
 The combine function `c()` is used to form the vector.
 
@@ -111,7 +109,7 @@ Repeat elements of a vector:
 rep(c("poodle","sheltie"), each = 3, times = 2)
 ```
 
-### Matrix
+## Matrix
 
 Matrix: a collection of vectors, which are all numeric, character, or logical. 
 
@@ -142,7 +140,7 @@ colnames(df) <- n
 df
 ```
 
-### Data frame
+## Data frame
 
 * `data frame`: a collection of vectors where different columns can contain different modes of data (numeric, character, and so on). 
 Each vector contains only 1 mode of data (`vector1 <- c("a", 2, 3.4)` is automatically coerced to `chr`, but can be manually coerced to numeric or factor). 
@@ -181,29 +179,7 @@ my_tab <- data.frame(name, height)
 my_tab
 ```
 
-A vector can be extracted by `$` and worked on:
 
-```{r}
-Mean.height <- mean(my_tab$height)
-Mean.height # Prints the answer
-```
-
-New vectors can be bound into a data.frame:
-
-```{r}
-my_tab$weight <- c(87, 96, 69) # Now there are 3 columns in my_tab
-my_tab
-```
-
-
-```{r}
-my_tab$experiment <- factor("A") # the 4th col contains a factor with a single level "A"
-levels(my_tab$experiment) # prints the unique levels in a factor vector
-```
-
-```{r}
-head(iris) # Prints first 6 rows; tail(df) last 6
-```
 
 ```{r}
 summary(iris) # Prints a summary of data
@@ -215,6 +191,8 @@ names(iris) # Prints column names
 
 ```{r}
 nrow(iris) # number of rows
+ncol(iris)
+dim(iris)
 ```
 
 ### Contingency table
@@ -229,6 +207,7 @@ tab_node <- html_nodes(rio, 'table[class="wikitable sortable plainrowheaders"]')
 medals <- html_table(tab_node, fill=TRUE) # extracts table as data.frame from html, outputs list
 medals <- medals[[1]] # we have list of length 1, we extract data.frame and assign it back to medals  
 medals <- medals[-nrow(medals),-1] # Identify last row number and remove this last row 'Total' and first column 'Rank'
+save(medals, file = "data/Rio2016_medals.RData") # we save table for later use into folder 'data' in working directory
 ```
 
 ![Rio 2016 medals feature images of Nike, the Panathinaiko Stadium and the Acropolis (Photo: Rio 2016/Alex Ferro)](https://smsprio2016-a.akamaihd.net/news/Nj2RO1/4pUVV_IM.jpg)
@@ -249,7 +228,7 @@ Second, we use `xtabs()` and `ftable()` functions to summarise all colors of med
 ftable(xtabs(Gold + Silver + Bronze ~ NOC, data = medals), dnn = c("Medals"))
 ```
 
-#### Confusion matrix
+### Confusion matrix
 `table()` can be useful to display classification model performance as confusion matrix (although `caret` library has special function `confusionMatrix()`). 
 
 We use `iris` dataset to train k-nearest neighbours model to predict Species based on sepal and petal measurements.
@@ -284,7 +263,8 @@ count(tm_2013, Elukoht, Vanuseklass, sort = TRUE) # outputs a tibble
 library(dplyr)
 count(medals, Gold, Silver, Bronze, sort = TRUE)
 ```
-### List
+
+## List
 A list is an ordered collection of objects. 
 Basically, in R you can shove any data structure into list.
 E.g. list may contain a combination of vectors, matrices, data frames, and even other lists, (poodles?). 

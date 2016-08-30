@@ -2,8 +2,8 @@
 
 ---
 
-Find character strings 
-----------------------
+# Find character strings 
+
 Character strings can be matched and manipulated in R by using `regular expressions` in functions `grep`, `grepl`, `sub`, `gsub` and some others.
 A `regular expression` is a pattern that describes a set of strings.
 

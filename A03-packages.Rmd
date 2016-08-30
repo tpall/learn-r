@@ -1,11 +1,11 @@
-Installing packages
--------------------
+## Installing packages
 
-To install package
-
-  ```{r}
-
+To install package, run following command in your R console:
+```{r, eval=FALSE}
+install.packages("packagename") # eg use "ggplot2" as packagename
 ```
+RStudio offers also point-and-click style package install option:
+![Install packages via RStudio GUI](graphs/RStudio_package.install.png)
 
 
 You will not be able to use a package until you load it with `library()` function. 
@@ -27,9 +27,8 @@ library(tidyr)
 ls("package:tidyr")
 ```
 
-***
 
-### R repositories
+## R repositories
 R packages are available from 3 major repositories:
 
 1. __CRAN__ 
@@ -130,10 +129,10 @@ help_console(confusionMatrix, "text", lines = 1:25)
 
 ### Common mistakes in loading packages
 
-* Using the wrong case — help(), Help(), and HELP() - only the first will work.
-* Forgetting quotation marks -- `install.packages("gclus")` works.
-* Forgetting to include the parentheses in a function call. 
-For example `help()` works, but `help` doesn't. 
++ Using the wrong case — help(), Help(), and HELP() - only the first will work.
++ Forgetting quotation marks -- `install.packages("gclus")` works.
++ Using a function from a package that's not loaded – library("foo")
++ Forgetting to include the parentheses in a function call. For example `help()` works, but `help` doesn't. 
 
 > Entering function name without parentheses returns function internals. Very useful!
 
@@ -143,16 +142,11 @@ ruut # display function internals
 ruut(3) # run function
 ```
 
-Even if there are no **function arguments**, you still need the `()` appended to function name to execute function.
+<!-- Even if there are no **function arguments**, you still need the `()` appended to function name to execute function. -->
 
-```{r}
-twoplustwo <- function() 2+2 # here we define our function
-twoplustwo # lets see whats in it
-twoplustwo() # run function
-```
-
-* Using the `\` in a pathname on Windows--R sees the backslash character as an escape character. 
-`setwd("C:\mydata")` generates an error. 
-Use `setwd("C:/mydata")` or `setwd("C:\\mydata")` instead.
-* Using a function from a package that's not loaded – library("foo")
+<!-- ```{r} -->
+<!-- twoplustwo <- function() 2+2 # here we define our function -->
+<!-- twoplustwo # lets see whats in it -->
+<!-- twoplustwo() # run function -->
+<!-- ``` -->
 

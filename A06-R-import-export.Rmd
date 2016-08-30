@@ -2,8 +2,7 @@
 
 ---
 
-Getting data in and out of R
----------------------------
+# Getting data in and out of R
 
 ![You know nothing. Official promotion logo for Banksy's October 2013 artist residency in New York City. Photo: Banksy](https://upload.wikimedia.org/wikipedia/en/2/2c/Banksy_Better_Out_Than_In_New_York_City_2013.png)
 
@@ -13,7 +12,7 @@ Getting data in and out of R
 <!-- + don't use special characters like `,` `?` `#` `*` `@` `$` `%` `|` `^` `{` `}` `(` `)` `[` `]` `\` `/` -->
 
 
-### Import text file
+## Import text file
 Probably, the most basic form of data to import into R is a simple text file.
 
 Here we write our data to external file `ex.data` and read it into R using `scan()` function. 
@@ -59,7 +58,7 @@ We have 2 rows of numbers in our text string shown above therefore we set `nrow 
 matrix(pp, nrow = 2, byrow = TRUE)
 ```
 
-### Import tabular data
+## Import tabular data
 `read.table`, `read.csv`, `read.delim` functions allow to create data frames, where different columns may contain different type of data -- `numeric`, `character` etc. 
 `read.table` is the basic function with values separated by white space `""` (one or more spaces, tabs, newlines). 
 `read.csv` is a wrapper around it and expects comma `,` as a field separator and `read.delim` expects `tab` separator `\t`.
@@ -95,7 +94,7 @@ airquality <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/datas
 head(airquality)
 ```
 
-#### `readr` package
+### `readr` package
 You can import tabular data using read_ functions from `readr` package. Compared to base R functions like `read.csv()`, `readr` is much faster and gives more convenient output: it never converts strings to factors, can parse date/times, and it doesn't munge the column names.
 
 The first two arguments of `read_csv()` are:
@@ -182,7 +181,7 @@ library(readr)
 <!-- ``` -->
 
 
-### Import MS Excel
+## Import MS Excel
 There are several libraries and functions available to import MS excel workbooks into R, like `XLConnect`,`gdata::read.xls()`, `xlsx`. 
 `XLConnect` is a very powerful package to work with .xls(x) files, depends on Java, but has memory limitations: on average PC you never know when your script crashes when importing (even not so) large tables.
 `readxl` package contains only two verbs and is very easy to use. 
@@ -200,7 +199,7 @@ dim(z)
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Extract tables from messy spreadsheets with jailbreakr <a href="https://t.co/9wJfDj0cLM">https://t.co/9wJfDj0cLM</a> <a href="https://twitter.com/hashtag/rstats?src=hash">#rstats</a> <a href="https://twitter.com/hashtag/DataScience?src=hash">#DataScience</a></p>&mdash; R-bloggers (@Rbloggers) <a href="https://twitter.com/Rbloggers/status/766226281859997697">August 18, 2016</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js"charset="utf-8"></script>
 
-### Import ODS
+## Import ODS
 To import Open Document Spreadsheets .ods files into R you can try [following approach](https://github.com/chainsawriot/readODS).
 ```{r, eval = FALSE}
 library(readODS)
@@ -208,7 +207,7 @@ read_ods("table.ods", header = TRUE) ## return only the first sheet
 read_ods("multisheet.ods", sheet = 2) ## return the second sheet 
 ```
 
-### PDF tables
+## PDF tables
 PDF table extractor -- `Tabula` - exists as both a server application, accessed via a web browser, or as a service using the tabula extractor Java application. The (`tabulizer` R package)[https://github.com/ropenscilabs/tabulizer] provides a wrapper for tabula extractor (bundled within the package), that lets you access the service via it's command line calls. (One dependency you do need to take care of is to have Java installed; adding Java into an RStudio docker container would be one way of taking care of this.)
 
 You can try this code with [more instructions on `github`](https://github.com/ropenscilabs/tabulizer) to install package (if rJava is installed successfully...).
@@ -220,7 +219,7 @@ out1 <- extract_tables(f)
 str(out1)
 ```
 
-### Import SPSS, SAS etc.
+## Import SPSS, SAS etc.
 `foreign` package provies functions for reading and writing data stored by Minitab, S, SAS, SPSS, Stata, etc.
 
 ```{r, eval=FALSE}
@@ -229,7 +228,7 @@ mydata <- read.spss("mydata.sav") # import spss data file, returns list
 mydata <- read.spss("mydata.sav", to.data.frame = TRUE) # returns data.frame
 ```
 
-#### Import all datasets from directory
+## Import all datasets from directory
 We can use `sapply(X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)` or `lapply(X, FUN, ...)` functions to iterate through vector or list of files, respectively.
 Three dots `...` shows that you can pass further arguments to your function (FUN).
 

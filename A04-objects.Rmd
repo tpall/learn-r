@@ -3,8 +3,7 @@
 ---
 
 
-R objects
----------
+## R objects
 
 An R object is anything that can be assigned a value (data, functions, graphs, analytic results, and more). 
 Every object has a class attribute telling R how to handle it. 
@@ -42,6 +41,7 @@ y
 a <- "b"
 a
 ```
+
 
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">In <a href="https://twitter.com/hashtag/rstats?src=hash">#rstats</a>, it&#39;s surprisingly important to realise that names have objects; objects don&#39;t have names <a href="https://t.co/bEMO1YVZX0">pic.twitter.com/bEMO1YVZX0</a></p>&mdash; Hadley Wickham (@hadleywickham) <a href="https://twitter.com/hadleywickham/status/732288980549390336">May 16, 2016</a>
@@ -151,7 +151,4 @@ Sex would be treated as categorical, the labels "Male" and "Female" would appear
 sex <- factor(sex, levels = c(1, 2), labels = c("Male", "Female"))
 sex
 ```
-
-
-
 
