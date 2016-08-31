@@ -8,7 +8,7 @@ RStudio offers also point-and-click style package install option:
 ![Install packages via RStudio GUI](graphs/RStudio_package.install.png)
 
 
-You will not be able to use a package until you load it with `library()` function. 
+You will not be able to use a package until you load it with the `library()` function. 
 After you have installed the packages, you can load any of the packages into your current R session with the `library()` command, e.g. 
 
 ```{r eval=FALSE}
@@ -16,11 +16,11 @@ After you have installed the packages, you can load any of the packages into you
 library(tidyr)
 ```
 
-This `library(tidyr)` command makes available all funtions in tidyr package in your R environment.
+The `library(tidyr)` command makes available all the funtions in the tidyr package.
 
 > R packages are collections of one or more functions with clearly specifed task. 
 
-For example tidyr package contains following `r library(tidyr); length(ls("package:tidyr"))` functions:
+For example, the tidyr package contains following `r library(tidyr); length(ls("package:tidyr"))` functions:
 
 ```{r}
 library(tidyr)
@@ -51,7 +51,7 @@ biocLite("GenomicRanges", suppressUpdates=TRUE)
 ```{r eval=FALSE}
 library(devtools)
 install_github("ramnathv/slidify") # ramnathv is the user, slidify the package.
-# or more preferably, as we usually want only to install missing package and to avoid side effects i.e. loading entire package to environment, we use: 
+# or alternatively, should we want only to install the missing package while avoiding any side effects that might result from loading the entire package, we use: 
 devtools::install_github("ramnathv/slidify")
 ```
 
@@ -129,9 +129,9 @@ help_console(confusionMatrix, "text", lines = 1:25)
 
 ### Common mistakes in loading packages
 
-+ Using the wrong case — help(), Help(), and HELP() - only the first will work.
++ Using the wrong case: help(), Help(), and HELP() - only the first will work.
 + Forgetting quotation marks -- `install.packages("gclus")` works.
-+ Using a function from a package that's not loaded – library("foo")
++ Using a function from a package that's not loaded: library("foo")
 + Forgetting to include the parentheses in a function call. For example `help()` works, but `help` doesn't. 
 
 > Entering function name without parentheses returns function internals. Very useful!
