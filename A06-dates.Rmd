@@ -1,0 +1,523 @@
+---
+
+---
+
+<!-- # Using Dates and Times in R -->
+<!-- % Bonnie Dixon -->
+<!-- % 14-02-10 15:09:57 -->
+
+<!-- *Today at the [Davis R Users' -->
+<!-- Group](http://www.noamross.net/davis-r-users-group.html), [Bonnie -->
+<!-- Dixon](http://ffhi.ucdavis.edu/people/directory/bmdixon) gave a tutorial on the -->
+<!-- various ways to handle dates and times in R. Bonnie provided this great script -->
+<!-- which walks through essential classes, functions, and packages. Here it is piped through -->
+<!-- `knitr::spin`. The original R script can be found as a gist -->
+<!-- [here](https://gist.github.com/noamross/8928124).* -->
+
+## Date and time classes
+Three date and time classes are built-in in R, `Date`, `POSIXct`, and `POSIXlt`.
+
+### Date
+If you have **only dates** in your data (but no times).
+
+Create a date:
+```{r}
+bs <- as.Date("2016-08-29")
+class(bs)
+bs
+```
+If you don't specify format, `as.Date` will try "%Y-%m-%d" then "%Y/%m/%d". Other formats must be specified:
+
+```{r}
+es <- as.Date("01/29/2017", format = "%m/%d/%Y")
+es  
+```
+
+```{r}
+ch <- as.Date("December 19, 2016", format = "%B %d, %Y")
+ch
+```
+
+The list of format symbols can be accessed via `strptime`:
+```{r, eval=FALSE}
+?strptime     
+```
+
+Get the current date:
+```{r}
+Sys.Date()
+```
+
+**Calculations with dates**. Find the difference between dates:
+
+```{r}
+es - bs
+```
+
+
+```{r}
+difftime(ch, bs, units = "weeks")
+```
+
+Add or subtract days:
+```{r}
+bs + 40
+```
+
+
+```{r}
+ch - 10
+```
+
+Create a vector of dates and find the intervals between them:
+
+```{r}
+road.fatalities <- as.Date(c("01.01.2016", "05.01.2016", "11.01.2016","18.01.2016","02.02.2016","08.02.2016","19.02.2016","25.02.2016", "02.03.2016", "28.03.2016", "29.03.2016", "21.03.2016", "04.04.2016", "12.04.2016", "13.04.2016","09.05.2016","13.05.2016","16.05.2016", "01.08.2016","22.08.2016"), format = "%d.%m.%Y")
+road.fatalities <- sort(road.fatalities) # just in case, lets sort it
+road.fatalities
+```
+
+```{r}
+diff(road.fatalities)
+```
+
+Create a sequence of dates:
+```{r}
+six.weeks <- seq(Sys.Date(), length = 6, by = "week") 
+six.weeks
+```
+
+```{r}
+six.weeks <- seq(Sys.Date(), length = 6, by = 7)
+six.weeks
+```
+
+```{r}
+six.weeks <- seq(Sys.Date(), length = 3, by = "2 weeks")
+six.weeks
+```
+
+See the internal integer representation:
+```{r}
+unclass(bs)
+```
+
+Note, that internal integer representation of Date class is number of days from `January 1, 1970`:
+```{r}
+bs - as.Date("1970-01-01") # 
+```
+
+### POSIXct
+If you have **times in your data**, this is usually the best class to use.
+
+Create some POSIXct objects:
+```{r}
+mft1 <- as.POSIXct("2014-03-11	17:14:15")
+mft1
+```
+
+Specify format:
+```{r}
+mft2 <- as.POSIXct("22-Oct-2013 16:30:55", format = "%d-%b-%Y %H:%M:%S")
+mft2
+```
+
+Specify the time zone:
+```{r}
+rstudio.webinar <- as.POSIXct("November 9, 2016 11am", 
+                  format = "%B %d, %Y %I%p", 
+                  tz = "EST")
+rstudio.webinar
+```
+
+**Some calculations with times**
+Compare times:
+
+```{r}
+mft1 > mft2
+```
+
+Add or subtract seconds:
+```{r}
+mft1 + 30
+```
+
+```{r}
+mft2 - 30
+```
+
+Find the difference between times:
+```{r}
+mft1 - mft2
+```
+
+Automatically adjusts for daylight savings time. Last sunday in march, clocks are adjusted forward one hour:
+```{r}
+as.POSIXct("2016-03-27 3:00:00") - as.POSIXct("2016-03-26 23:55:00") # note that time difference is only 2.08 hours
+```
+
+Get the current time (in POSIXct by default):
+```{r}
+Sys.time()
+```
+
+See the internal integer representation in seconds:
+```{r}
+unclass(mft1)
+```
+
+```{r}
+difftime(mft1, as.POSIXct("1970-01-01 00:00:00", tz = "UTC"), units = "secs")
+```
+
+### POSIXlt
+This class enables easy extraction of specific componants of a time. 
++ `ct` -- calendar time 
++ `lt` -- local time. `lt` also helps one remember that POXIXlt objects are *lists*.)
+
+Create a time:
+```{r}
+mft1.lt <- as.POSIXlt("2014-03-11	17:14:15")
+mft1.lt
+```
+
+
+```{r}
+unclass(mft1.lt)
+```
+
+```{r}
+unlist(mft1.lt)
+```
+
+Extract componants of a time object:
+```{r}
+mft1.lt$sec
+```
+
+```{r}
+mft1.lt$wday
+```
+
+Truncate or round off the time:
+```{r}
+trunc(mft1.lt, "days")
+```
+
+```{r}
+trunc(mft1.lt, "mins")
+```
+
+**Summary of date and time classes**
+
++ When you just have dates, use `Date`.
++ When you have times, `POSIXct` is usually the best,
++ `POSIXlt` enables easy extraction of specific components
++ and there is also `chron` package when you don't need to deal with timezones and daylight savings time.
+
+### Manipulating times and dates
+
+#### lubridate
+This package is a wrapper for POSIXct with more intuitive syntax.
+
+
+```{r}
+library(lubridate)
+```
+
+Create a time. Note that lubridate uses UTC time zones as default:
+```{r}
+mft1.lub <- ymd_hms("2014-03-11	17:14:15")
+mft1.lub
+```
+We have to set timezone explicitly:
+```{r}
+mft2.lub <- dmy_hm("22-Oct-2013 16:30", tz = "EET") 
+mft2.lub
+```
+
+Timezone can be easily changed using `force_tz`:
+```{r}
+mft1.lub <- force_tz(mft1.lub, "EET")
+mft1.lub
+```
+
+```{r}
+rstudio.webinar <- mdy_h("November 9, 2016 11am")
+rstudio.webinar
+```
+
+```{r}
+today <- ymd(Sys.Date())
+today
+```
+
+
+Some manipulations:
+Extract or reassign componants:
+```{r}
+year(mft1.lub)
+```
+
+```{r}
+week(mft1.lub)
+```
+
+```{r}
+wday(mft1.lub, label = TRUE)
+```
+
+```{r}
+hour(mft1.lub)
+```
+
+```{r}
+tz(mft1.lub)
+```
+
+```{r}
+second(mft1.lub) <- 7
+mft1.lub
+```
+
+Converting to decimal hours can facilitate some types of calculations:
+```{r}
+mft1.dechr <- hour(mft1.lub) + minute(mft1.lub)/60 + second(mft1.lub)/3600
+mft1.dechr
+```
+
++ Lubridate distinguishes between four types of objects: instant, interval, duration, and period.
++ An instant is a specific moment in time.
++ Interval, duration, and period are all ways of recording time spans.
+
+Dates and times parsed in lubridate are instants:
+```{r}
+is.instant(mft1.lub)
+```
+
+Round an instant:
+```{r}
+round_date(mft1.lub, "minute")
+```
+
+```{r}
+round_date(mft1.lub, "day")
+```
+
+Get the current time or date as an instant (`Sys.time()`):
+```{r}
+now()
+```
+
+Shortcut for `Sys.Date()`
+```{r}
+today()
+```
+Some calculations with instants. Note that the units are seconds:
+```{r}
+mft1.lub - mft2.lub
+```
+
+```{r}
+mft1.lub > mft2.lub
+```
+Add seconds:
+```{r}
+mft1.lub + 30
+```
+
+An interval is the span of time that occurs between two specified instants.
+
+```{r}
+time.to.xmas <- interval(now(), dmy("24-12-2016"))
+time.to.xmas
+```
+
+Check whether a certain instant occured with a specified interval:
+```{r}
+rstudio.webinar %within% time.to.xmas
+```
+
+```{r}
+mft1.lub %within% time.to.xmas
+```
+
+Determine whether two intervals overlap:
+```{r}
+daylight <- as.interval(ymd_hm("2016-03-26 23:55"), ymd_hm("2016-03-27 3:00"))
+daylight
+```
+
+```{r}
+inbed <- as.interval(ymd_hm("2016-03-26 22:30"), ymd_hm("2016-03-27 7:30"))
+```
+
+
+```{r}
+int_overlaps(inbed, daylight)
+```
+
+A **duration is a time span not anchored to specific start and end times**. It has an exact, fixed length, and is stored internally in seconds.
+Lets go to the wild side and create some durations:
+```{r}
+six.minutes <- dminutes(6)
+six.minutes
+```
+
+```{r}
+five.days <- ddays(5)
+five.days
+```
+
+And now, after some practice with days and minutes, lets create whole year...
+```{r}
+one.year <- dyears(1)
+one.year
+```
+
+```{r}
+as.duration(inbed)
+```
+
+Calculations with durations:
+```{r}
+year(mft1.lub)
+mft1.lub + one.year
+```
+
+```{r}
+five.days + dhours(12)
+```
+
+```{r}
+six.minutes/as.duration(inbed)
+```
+
+A **period is a time span not anchored to specific start and end times and measured in units larger than seconds with inexact lengths**. 
+Create some periods:
+```{r}
+three.weeks <- weeks(3)
+three.weeks
+```
+
+```{r}
+four.hours <- hours(4)
+four.hours
+```
+
+Calculations with periods:
+```{r}
+mft2.lub
+mft2.lub + three.weeks
+```
+
+```{r}
+sabbatical <- months(6) + days(12)
+sabbatical
+```
+
+```{r}
+three.weeks/sabbatical
+```
+
+### Calculating mean clock times
+Say we have a vector of clock times in decimal hours and **we want to calculate the mean clock time**.
+
+```{r}
+bed.times <- c(23.9, 0.5, 22.7, 0.1, 23.3, 1.2, 23.6)
+bed.times
+```
+
+```{r}
+mean(bed.times)  # doesn't work, gives aritmetic mean
+```
+
+The **clock has a circular scale**, which ends where it begins, so we need to use circular statistics.
+Get the package `psych`.
+```{r}
+library(psych)
+circadian.mean(bed.times)
+```
+
+### Using times and dates in a data frame
+Here is a data frame with a week of hypothetical times of going to bed and getting up for one person, and the total amount of time sleep time obtained each night according to a sleep monitoring device.
+
+
+```{r}
+sleep <- 
+  data.frame(
+    bed.time = ymd_hms("2013-09-01 23:05:24", "2013-09-02 22:51:09",
+                       "2013-09-04 00:09:16", "2013-09-04 23:43:31",
+                       "2013-09-06 00:17:41", "2013-09-06 22:42:27",
+                       "2013-09-08 00:22:27"),
+    rise.time = ymd_hms("2013-09-02 08:03:29", "2013-09-03 07:34:21",
+                        "2013-09-04 07:45:06", "2013-09-05 07:07:17",
+                        "2013-09-06 08:17:13", "2013-09-07 06:52:11",
+                        "2013-09-08 07:15:19"),
+    sleep.time = dhours(c(6.74, 7.92, 7.01, 6.23, 6.34, 7.42, 6.45))
+              ); sleep
+```
+
+We want to calculate sleep efficiency, 
+ the percent of time in bed spent asleep.
+```{r}
+sleep$efficiency <- 
+  round(sleep$sleep.time/(sleep$rise.time - sleep$bed.time)*100, 1)
+sleep
+```
+
+Now let's calculate the mean of each column:
+```{r, eval=FALSE}
+colMeans(sleep)  # doesn't work
+```
+
+```{r}
+circadian.mean(hour(sleep$bed.time) + 
+               minute(sleep$bed.time)/60 + 
+               second(sleep$bed.time)/3600)
+```
+
+```{r}
+circadian.mean(hour(sleep$rise.time) + 
+               minute(sleep$rise.time)/60 + 
+               second(sleep$rise.time)/3600)
+```
+
+
+```{r}
+mean(sleep$sleep.time)/3600
+```
+
+```{r}
+mean(sleep$efficiency)
+```
+
+<!-- We can also plot sleep duration and efficiency across the week: -->
+<!-- ```{r} -->
+<!-- par(mar = c(5, 4, 4, 4)) -->
+<!-- plot(round_date(sleep$rise.time, "day"), sleep$efficiency,  -->
+<!--      type = "o", col = "blue", xlab = "Morning", ylab = NA) -->
+<!-- par(new = TRUE) -->
+<!-- plot(round_date(sleep$rise.time, "day"), sleep$sleep.time/3600,  -->
+<!--      type = "o", col = "red", axes = FALSE, ylab = NA, xlab = NA) -->
+<!-- axis(side = 4) -->
+<!-- mtext(side = 4, line = 2.5, col = "red", "Sleep duration") -->
+<!-- mtext(side = 2, line = 2.5, col = "blue", "Sleep efficiency") -->
+<!-- ``` -->
+
+<!-- More resources on times and dates -->
+<!-- Date and time tutorials for R: -->
+
+<!-- + [http://www.stat.berkeley.edu/classes/s133/dates.html](http://www.stat.berkeley.edu/classes/s133/dates.html) -->
+<!-- + [http://science.nature.nps.gov/im/datamgmt/statistics/r/fundamentals/dates.cfm](http://science.nature.nps.gov/im/datamgmt/statistics/r/fundamentals/dates.cfm) -->
+<!-- + [http://en.wikibooks.org/wiki/R_Programming/Times_and_Dates](http://en.wikibooks.org/wiki/R_Programming/Times_and_Dates) -->
+
+<!-- [lubridate](http://www.jstatsoft.org/v40/i03/paper) -->
+
+<!-- Time zone and daylight saving time info: -->
+
+<!-- + [http://www.timeanddate.com/](http://www.timeanddate.com/) -->
+<!-- + [http://en.wikipedia.org/wiki/List_of_tz_database_time_zones](http://en.wikipedia.org/wiki/List_of_tz_database_time_zones) -->
+<!-- + [http://www.twinsun.com/tz/tz-link.htm](http://www.twinsun.com/tz/tz-link.htm) -->
+<!-- + Also see the R help file at `?Sys.timezone` -->
+
