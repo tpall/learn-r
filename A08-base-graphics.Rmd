@@ -142,7 +142,7 @@ boxplot(iris$Sepal.Length ~ iris$Species,
 <!-- p$out # possible outliers -->
 <!-- ``` -->
 
-## Bargraphs and dynamite plots
+## Bargraphs
 This is **no-brainer**! Base graphics function `barplot` creates for us barplots with either vertical or horizontal bars:
 ```{r}
 load("data/Rio2016_medals.RData") # we use rio medals data 
@@ -169,26 +169,26 @@ barplot(medals$Total,
 ```
 
 
-### Dynamite plot
-Whenever you open scientific article in biomedical field there is a good chance that you encounter **barplots with errorbars** sticking out of them, these pests are also known as [dynamite plots](http://biostat.mc.vanderbilt.edu/wiki/pub/Main/TatsukiKoyama/Poster3.pdf). In order to blend into the crowd we also learn how to create these wonderful and frightening graphs.
-First we have to calculate summary statistics we want to put onto the graph -- mean (bar) and standard deviation (errorbar):
-```{r}
-irissl_mean <- tapply(iris$Sepal.Length, iris$Species, mean) # mean for each species
-irissl_sd <- tapply(iris$Sepal.Length, iris$Species, sd) # standard deviation for each species
-```
-It might seem little bit complicated, but you can use `tapply` when you want to apply a function (mean or sd in our case) to subsets of a vector (`iris$Sepal.Length` by Species) and the subsets are defined by some other vector, usually a factor (`iris$Species`).
-`mapply` - when you have several data structures (e.g. lists) and you want to apply a function to the 1st elements of each, and then the 2nd elements of each, etc.
+<!-- ### Dynamite plot -->
+<!-- Whenever you open scientific article in biomedical field there is a good chance that you encounter **barplots with errorbars** sticking out of them, these pests are also known as [dynamite plots](http://biostat.mc.vanderbilt.edu/wiki/pub/Main/TatsukiKoyama/Poster3.pdf). In order to blend into the crowd we also learn how to create these wonderful and frightening graphs. -->
+<!-- First we have to calculate summary statistics we want to put onto the graph -- mean (bar) and standard deviation (errorbar): -->
+<!-- ```{r} -->
+<!-- irissl_mean <- tapply(iris$Sepal.Length, iris$Species, mean) # mean for each species -->
+<!-- irissl_sd <- tapply(iris$Sepal.Length, iris$Species, sd) # standard deviation for each species -->
+<!-- ``` -->
+<!-- It might seem little bit complicated, but you can use `tapply` when you want to apply a function (mean or sd in our case) to subsets of a vector (`iris$Sepal.Length` by Species) and the subsets are defined by some other vector, usually a factor (`iris$Species`). -->
+<!-- `mapply` - when you have several data structures (e.g. lists) and you want to apply a function to the 1st elements of each, and then the 2nd elements of each, etc. -->
 
-```{r}
-maxLim <- 1.1*max(mapply(sum, irissl_mean, irissl_sd)) # we find maximum sum of mean and sd in our dataset and multiply this number with 1.1 to give enough headroom for errorbars in our graph
-bp <- barplot(irissl_mean, # means of our groups
-              names.arg = levels(iris$Species), # names for x-axis
-              ylim = c(0, maxLim)) # we have to set y-axis limits manually
-arrows(x0 = bp, # coordinates of our groups on x-axis
-       y0 = irissl_mean, # start of arrow
-       y1 = irissl_mean + irissl_sd, # end of arrow
-       angle = 90) # blunt end for arrows; default is 30deg
-```
+<!-- ```{r} -->
+<!-- maxLim <- 1.1*max(mapply(sum, irissl_mean, irissl_sd)) # we find maximum sum of mean and sd in our dataset and multiply this number with 1.1 to give enough headroom for errorbars in our graph -->
+<!-- bp <- barplot(irissl_mean, # means of our groups -->
+<!--               names.arg = levels(iris$Species), # names for x-axis -->
+<!--               ylim = c(0, maxLim)) # we have to set y-axis limits manually -->
+<!-- arrows(x0 = bp, # coordinates of our groups on x-axis -->
+<!--        y0 = irissl_mean, # start of arrow -->
+<!--        y1 = irissl_mean + irissl_sd, # end of arrow -->
+<!--        angle = 90) # blunt end for arrows; default is 30deg -->
+<!-- ``` -->
 
 ## Combine multiple subplots
 Some say, that every normal person should arrange figure panels in a **vector graphics** tool like `Inkscape` (freeware) or `Adobe Illustrator` (nonfree). However, from the point of view of reproducibility, you can also very easily assemble your article's figures 'automatically' on-the-fly using R code. For this purpose, we can use R base graphics or by using grid graphics libraries `grid` and `gridExtra`. We introduce `gridExtra` in later lectures.
