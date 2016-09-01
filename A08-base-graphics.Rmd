@@ -191,16 +191,18 @@ arrows(x0 = bp, # coordinates of our groups on x-axis
 ```
 
 ## Combine multiple subplots
-R allows combine multiple subplots into one overall graph, using either the `par()` or `layout()` function. 
+Some say, that every normal person should arrange figure panels in a **vector graphics** tool like `Inkscape` (freeware) or `Adobe Illustrator` (nonfree). However, from the point of view of reproducibility, you can also very easily assemble your article's figures 'automatically' on-the-fly using R code. For this purpose, we can use R base graphics or by using grid graphics libraries `grid` and `gridExtra`. We introduce `gridExtra` in later lectures.
+Here we show, how to combine multiple subplots into one overall graph in base R, using either the `par()` or `layout()` function. 
 Plotting linear model fit object outputs four separate diagnostic plots -- "Residuals vs Fitted", "Normal Q-Q", "Scale-Location" and "Residuals vs Leverage":
 ```{r}
 plot(mod1)
 ```
 
-By telling graphics device to create four slots, arranged 2x2, in our plot window, using `par` function argument `mfrow=`, we can tidy up all this information little bit:
+By telling graphics device to create four slots, arranged 2x2, in our plot window, using `par` function argument `mfrow=c(nr, nc)`, we can tidy up all this information little bit:
 ```{r}
 par(mfrow=c(2,2))      # number of rows, number of columns
 plot(mod1) # plots are arranged into matrix in order of appearance
+dev.off()
 ```
 
 `layout()` function specifies graph layout using matrix. Here we create 2x2 layout specified by matrix -- plots one and two will appear in the first column and third plot will be placed into second column and occupies two slots:
@@ -218,7 +220,26 @@ barplot(medals$Total,
         main = "Country ranking by Rio 2016 medals", # main title
         sub = "Ranking also takes into account the number of gold, silver and bronze medals.", # subtitle or ingraph caption
         cex.sub = 0.5)
+dev.off()
 ```
+
+If you want to revert your `par(mfrow=...` to the original settings with single slot in  graphics device, use following approach:
+
+Either run `par` again with `mfrow=c(1,1)` settings
+```{r}
+par(mfrow=c(1,1))
+```
+
+Or assign original settings to object and after you have done your multiplot load these setting using `par`:
+```{r}
+originalpars <- par(mfrow=c(1,2))
+hist(rnorm(100))
+plot(rnorm(100),rnorm(100))
+dev.off()
+par(originalpars)
+```
+
+
 
 ## Save plots
 To save a plot into file you have to open the file and plot device first and then plot any graphics. Base R has graphics devices for BMP, JPEG, PNG and TIFF format bitmap files and for PDF. 
