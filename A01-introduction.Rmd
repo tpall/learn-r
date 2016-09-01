@@ -17,7 +17,7 @@ The project is relatively new, conceived in 1992, with an initial version releas
 
 ```{r cranpackages, echo=FALSE, message=FALSE}
 # Load saved CRAN package data to environment
-load("data/Available_CRAN_Packages_By_Date_of_Publication_2016-08-17.RData")
+load("data/Available_CRAN_Packages.RData")
 t <- t[[1]] # t is list of length 1 containing data.frame
 library(dplyr)
 tn <- t %>% group_by(Date) %>% summarise(Packages = n())
@@ -29,7 +29,7 @@ library(ggplot2)
 library(lubridate)
 tn %>% ggplot(aes(ymd(Date), cumsum(Packages), group = 1)) + 
   geom_line() + ylab("Number of packages") + xlab("Years") + 
-  ggtitle("Available CRAN Packages By Date of Publication")
+  ggtitle("Available CRAN Packages")
 ```
 
 
