@@ -2,6 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
-index.html
 *.docx
 packrat/lib*/
