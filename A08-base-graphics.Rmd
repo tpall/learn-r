@@ -80,15 +80,17 @@ pairs(~ Fertility + Education + Catholic, data = swiss,
 ```
 
 
-**Scatterplots are also ideal for visualising relationships between independent and dependent variables**. We use R in-house dataset `CO2` showing carbon dioxide uptake in grass plants. We first summarise the dataset by calculating mean uptake per conc and ignore the independent variables Plant, Type, and Treatment:
+**Scatterplots are also ideal for visualising relationships between independent and dependent variables**. We use R in-house dataset `CO2` showing carbon dioxide uptake in grass plants. 
 
-```{r}
-head(CO2) # 
-mean.uptake <- tapply(CO2$uptake, CO2$conc, mean) # we calculate mean for each conc ignoring variables Plant, Type, and Treatment.
-CO2 <- data.frame(conc = unique(CO2$conc), uptake = mean.uptake) # we overwrite original CO2 dataset
-```
+<!-- We first summarise the dataset by calculating mean uptake per conc and ignore the independent variables Plant, Type, and Treatment: -->
 
-Here we plot plant CO~2~ uptake versus its concentration and add calculated linear model fit to the scatterplot:
+<!-- ```{r} -->
+<!-- head(CO2) #  -->
+<!-- mean.uptake <- tapply(CO2$uptake, CO2$conc, mean) # we calculate mean for each conc ignoring variables Plant, Type, and Treatment. -->
+<!-- CO2 <- data.frame(conc = unique(CO2$conc), uptake = mean.uptake) # we overwrite original CO2 dataset -->
+<!-- ``` -->
+
+We plot plant CO~2~ uptake versus its concentration and add calculated linear model fit to the scatterplot:
 ```{r}
 plot(uptake ~ conc, 
      data = CO2, 
@@ -190,8 +192,41 @@ barplot(medals$Total,
 <!--        angle = 90) # blunt end for arrows; default is 30deg -->
 <!-- ``` -->
 
+## Add second y-axis
+Sometimes, it's necessary to compare trends in two (or more) timeseries with very different scales. This can be solved by plotting these timeseries using separate y-axes for each of them. 
+To illustrate addition of second y-axis to the plot, we use stockmarket data, which can be easily accessed via `quantmod` library. First we download stock data:
+```{r, message=FALSE}
+library(quantmod)
+getSymbols(c("AAPL","GOOG")) # download stock data in xts format
+```
+
+Stock data are in xts (time series) format, we convert this data into conventional data.frame:
+```{r}
+# base plot of time series prior to xts
+# get the data in data.frame format rather than xts
+apple <- data.frame(Date = index(AAPL), coredata(AAPL), stringsAsFactors=FALSE
+)
+head(apple)
+google <- data.frame(Date = index(GOOG), coredata(GOOG), stringsAsFactors=FALSE)
+```
+
+
+```{r}
+par(mar = c(5, 4, 4, 4))
+plot(apple$Date, apple$AAPL.Adjusted, type = "l", col = "blue", ylab = NA, xlab = NA)
+par(new = TRUE)
+plot(google$Date, google$GOOG.Adjusted, type = "l", col = "red", axes = FALSE, ylab = NA, xlab = "Date")
+axis(side = 4)
+mtext(side = 4, line = 2.5, col = "red", "Google")
+mtext(side = 2, line = 2.5, col = "blue", "Apple")
+```
+
+
 ## Combine multiple subplots
-Some say, that every normal person should arrange figure panels in a **vector graphics** tool like `Inkscape` (freeware) or `Adobe Illustrator` (nonfree). However, from the point of view of reproducibility, you can also very easily assemble your article's figures 'automatically' on-the-fly using R code. For this purpose, we can use R base graphics or by using grid graphics libraries `grid` and `gridExtra`. We introduce `gridExtra` in later lectures.
+Some say, that **every normal person** should arrange figure panels in a **vector graphics** tool like `Inkscape` (freeware) or `Adobe Illustrator` (nonfree). However, from the point of view of reproducibility, you can also very easily assemble your article's figures 'automatically' on-the-fly using R code. For this purpose, we can use R base graphics or by using grid graphics libraries `grid` and `gridExtra`. We introduce `gridExtra` in later lectures.
+
+![Normal persons. Are you on the picture? Images: google image.](graphs/normal_person.png)
+
 Here we show, how to combine multiple subplots into one overall graph in base R, using either the `par()` or `layout()` function. 
 Plotting linear model fit object outputs four separate diagnostic plots -- "Residuals vs Fitted", "Normal Q-Q", "Scale-Location" and "Residuals vs Leverage":
 ```{r}
@@ -232,18 +267,16 @@ par(mfrow=c(1,1))
 
 Or assign original settings to object and after you have done your multiplot load these setting using `par`:
 ```{r}
-originalpars <- par(mfrow=c(1,2))
+originalpars <- par(mfrow=c(1,2)) # direct current mfrow to originalpars object
 hist(rnorm(100))
 plot(rnorm(100),rnorm(100))
 dev.off()
-par(originalpars)
+par(originalpars) # loads/restores previous parameters
+originalpars # we have only mfrow here 
 ```
-
-
 
 ## Save plots
 To save a plot into file you have to open the file and plot device first and then plot any graphics. Base R has graphics devices for BMP, JPEG, PNG and TIFF format bitmap files and for PDF. 
-
 
 ```{r, eval=FALSE}
 png(filename = "Rplot%03d.png",
