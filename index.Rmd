@@ -24,4 +24,3 @@ allfiles <- list.files()
 chapters <- allfiles[grepl("[A-Z0-9]{3}-.*.Rmd", allfiles)]
 cat(sapply(chapters, knitr::knit_child, quiet = TRUE))
 ```
-
