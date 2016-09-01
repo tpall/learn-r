@@ -193,7 +193,7 @@ barplot(medals$Total,
 <!-- ``` -->
 
 ## Add second y-axis
-Sometimes, it's necessary to compare trends in two (or more) timeseries with very different scales. This can be solved by plotting these timeseries using separate y-axes for each of them. 
+Sometimes it's necessary to compare trends in two (or more) timeseries with very different scales. This can be solved by plotting these timeseries using separate y-axes for each of them. 
 To illustrate addition of second y-axis to the plot, we use stockmarket data, which can be easily accessed via `quantmod` library. First we download stock data:
 ```{r, message=FALSE}
 library(quantmod)
