@@ -17,6 +17,7 @@
 `read.csv` is a wrapper around it and expects comma `,` as a field separator and `read.delim` expects `tab` separator `\t`.
 
 Other important arguments of `read.table` are:
+
 + `dec = "."` the character used in the file for decimal points. In many cases ignorant people use comma as decimal separator.
 + `stringsAsFactors = ` default setting is TRUE and character data is converted into factors.
 + `na.string = "NA"` a character vector of strings which are to be interpreted as NA values. Blank fields are also considered to be missing values in logical, integer, numeric and complex fields.  
