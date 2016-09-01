@@ -4,11 +4,11 @@
 
 # Selecting by index
 
-+ Index is address used to select elements of vector/matrix/list or data.frame
++ Index gives the address that specifies the elements of vector/matrix/list or data.frame, which are then automatically selected.
 + Indexing begins at 1 (not 0) in R
 + Indexing operators in R are square brackets -- '[', `[[` and dollar sign `$`  
-+ Important distinction between these operators is that `[` allows select more than one element whereas `[[` and `$` select only one element.
-+ Empty index [,] means "all" eg. `a[,1]` means: select all rows and 1st column from `a`.
++ `[` allows selecting more than one element, whereas `[[` and `$` select only one element.
++ Empty index [,] means "select all" -- `a[,1]` means "select all rows and 1st column from `a`".
 
 <!-- ```{r} -->
 <!-- '['(c(1,2,3), 1) == c(1,2,3)[1] # as you can see these are both identical -->
@@ -63,7 +63,7 @@ m[ci]                 # matrix character index
 ```
 
 ```{r}
-m <- m[,-1]           # delete the first column of m
+m[,-1]           # delete the first column of m
 ```
 
 
@@ -86,28 +86,29 @@ mylist[c(1, 3)]           # a list containing elements 1 and 3 of mylist
 ```{r}
 mylist$ages               # the element of mylist named ages
 ```
-### Recursive indexing into lists
-```{r}
-z <- list(a = list(x = 9, y = "chello"), b = 1:5) # we create list named 'a' inside list 'z'
-z
-```
 
-```{r}
-unlist(z) # look what happens if we simplify this list into vector...
-```
+<!-- ### Recursive indexing into lists -->
+<!-- ```{r} -->
+<!-- z <- list(a = list(x = 9, y = "chello"), b = 1:5) # we create list named 'a' inside list 'z' -->
+<!-- z -->
+<!-- ``` -->
 
-```{r}
-z$a$x # what's a$x in list z
-```
+<!-- ```{r} -->
+<!-- unlist(z) # look what happens if we simplify this list into vector... -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- z$a$x # what's a$x in list z -->
+<!-- ``` -->
 
 
-```{r}
-z[[c(1, 2)]] # we get second element of 1st element of list z
-```
-```{r}
-z[[c("a", "x")]] <- "piano" # here we replace z$a$x with "piano"
-z
-```
+<!-- ```{r} -->
+<!-- z[[c(1, 2)]] # we get second element of 1st element of list z -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- z[[c("a", "x")]] <- "piano" # here we replace z$a$x with "piano" -->
+<!-- z -->
+<!-- ``` -->
 
 
 ## Indexing data.frames
