@@ -24,9 +24,9 @@ Other important arguments of `read.table` are:
 
 We use survey data (%) of eating fruits and vegetables within last 7 days from Estonian [Institute for Health Development](http://www.tai.ee/en/). 
 Don't mind the file extension .csv, it's values are tab separated.
-TAI offers different download formats, but mostly in difficult and useless ragged form (even .csv and .txt files).
-However, only "Tabeldieraldusega pealkirjata tekst (.csv)" and "Semikooloneraldusega pealkirjata tekst (.csv)" are in a suitable rectangular format, but lacking column headers.
-More often than not, raw data needs some munging. Also here, we have to identify and add column headers separately and fix also character encoding.
+TAI offers different download formats, but mostly in useless forms (even for .csv and .txt files).
+Only "Tabeldieraldusega pealkirjata tekst (.csv)" and "Semikooloneraldusega pealkirjata tekst (.csv)" are in a suitable rectangular format, although lacking column headers.
+We have to identify and add column headers separately and fix character encoding.
 
 ```{r}
 fruit <- read.table("data/TKU10m.csv") # tab separated text
@@ -48,7 +48,26 @@ head(airquality)
 ```
 
 ### `readr` package
-You can import tabular data using read_ functions from `readr` package. Compared to base R functions like `read.csv()`, `readr` is much faster and gives more convenient output: it never converts strings to factors, can parse date/times, and it doesn't munge the column names.
+You can import tabular data using read_ functions from `readr` package. Compared to base R functions like `read.csv()`, `readr` is much faster (important for very large datasets) and gives more convenient output: it never converts strings to factors, can parse date/times, and it leaves the column names as in raw data. 
+
+We can compare what happens with column names in case of `read.csv` and `read_csv`:
+
+`base::read.csv` changes column names (1st row):
+```{r}
+read.csv(textConnection("1 column, my data
+               2,3
+               4,5"))
+```
+
+`readr::read_csv` leaves column names intact:
+```{r}
+library(readr)
+read_csv("1 column, my data
+              2,3
+              4,5")  
+```
+
+Note also that in case of `read_csv` you can directly paste your comma separated text into function (instead trough textConnection). 
 
 The first two arguments of `read_csv()` are:
 + `file`: path (or URL) to the file you want to load. Readr can automatically decompress files ending in .zip, .gz, .bz2, and .xz.
@@ -63,7 +82,6 @@ install.packages("readr")
 library(readr)
 read_table() # read the type of textual data where each column is separate by whitespace
 read_csv() # reads comma delimited files, 
-read_csv2() # reads semi-colon delimited files, 
 read_tsv() # reads tab delimited files, 
 read_delim() # reads in files with a user supplied delimiter.
 ```
@@ -136,7 +154,7 @@ library(readr)
 
 ## Import MS Excel
 There are several libraries and functions available to import MS excel workbooks into R, like `XLConnect`,`gdata::read.xls()`, `xlsx`. 
-`XLConnect` is a very powerful package to work with .xls(x) files, depends on Java, but has memory limitations: on average PC you never know when your script crashes when importing (even not so) large tables.
+`XLConnect` is a powerful package for working with .xls(x) files, but it depends on Java and has memory limitations: you'll never know when your script crashes. 
 `readxl` package contains only two verbs and is very easy to use. 
 
 ```{r}
@@ -160,17 +178,17 @@ read_ods("table.ods", header = TRUE) ## return only the first sheet
 read_ods("multisheet.ods", sheet = 2) ## return the second sheet 
 ```
 
-## PDF tables
-PDF table extractor -- `Tabula` - exists as both a server application, accessed via a web browser, or as a service using the tabula extractor Java application. The (`tabulizer` R package)[https://github.com/ropenscilabs/tabulizer] provides a wrapper for tabula extractor (bundled within the package), that lets you access the service via it's command line calls. (One dependency you do need to take care of is to have Java installed; adding Java into an RStudio docker container would be one way of taking care of this.)
+<!-- ## PDF tables -->
+<!-- PDF table extractor -- `Tabula` - exists as both a server application, accessed via a web browser, or as a service using the tabula extractor Java application. The (`tabulizer` R package)[https://github.com/ropenscilabs/tabulizer] provides a wrapper for tabula extractor (bundled within the package), that lets you access the service via it's command line calls. (One dependency you do need to take care of is to have Java installed; adding Java into an RStudio docker container would be one way of taking care of this.) -->
 
-You can try this code with [more instructions on `github`](https://github.com/ropenscilabs/tabulizer) to install package (if rJava is installed successfully...).
-```{r, eval=FALSE}
-devtools::install_github("ropenscilabs/tabulizer")
-library("tabulizer")
-f <- system.file("examples", "data.pdf", package = "tabulizer")
-out1 <- extract_tables(f)
-str(out1)
-```
+<!-- You can try this code with [more instructions on `github`](https://github.com/ropenscilabs/tabulizer) to install package (if rJava is installed successfully...). -->
+<!-- ```{r, eval=FALSE} -->
+<!-- devtools::install_github("ropenscilabs/tabulizer") -->
+<!-- library("tabulizer") -->
+<!-- f <- system.file("examples", "data.pdf", package = "tabulizer") -->
+<!-- out1 <- extract_tables(f) -->
+<!-- str(out1) -->
+<!-- ``` -->
 
 ## Import SPSS, SAS etc.
 `foreign` package provies functions for reading and writing data stored by Minitab, S, SAS, SPSS, Stata, etc.
