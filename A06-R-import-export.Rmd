@@ -11,53 +11,6 @@
 <!-- + avoid whitespaces in your file names, replace these with `.`,`_` or `-` -->
 <!-- + don't use special characters like `,` `?` `#` `*` `@` `$` `%` `|` `^` `{` `}` `(` `)` `[` `]` `\` `/` -->
 
-
-## Import text file
-Probably, the most basic form of data to import into R is a simple text file.
-
-Here we write our data to external file `ex.data` and read it into R using `scan()` function. 
-Importantly, `scan()` reads vectors of data which all have the same mode. 
-Default data type is numeric, strings can be specified with the `what = ""` argument.
-```{r}
-cat("my title line", "2 3 5 7", "11 13 17", file = "ex.data", sep = "\n")
-pp <- scan("ex.data", skip = 1) # we skip 1st line with title text or we get error
-unlink("ex.data") # tidy up, unlink deletes the file(s) or directories specified
-pp
-```
-
-In case you dont wan't or can't save your text into file (bad for reproducibility!), it's possible to use `textConnection()` function to input data into R. 
-`\n` is a newline character. 
-
-`readLines` reads "unorganized" data, this is the function that will read input into R so that we can manipulate it further.
-
-```{r}
-zzz <- textConnection("my title line 2 3 5 7 11 13 17 9") 
-pp <- readLines(zzz) # zzz is a connection object
-pp
-close(zzz) # close connection
-```
-
-```{r}
-pp <- scan(textConnection("my title line\n2 3 5 7\n11 13 17 9"), skip = 1)
-pp
-```
-
-Text in `textConnection` call can be already structured, so you can quickly import copy-paste data from screen into R. 
-```{r}
-zzz <- textConnection("my title line 
-                      2 3 5 7
-                      11 13 17 9")
-a <- scan(zzz, skip = 2) # lets skip 1st two lines
-a
-```
-
-Scanned data can be coerced into rectangular matrix. 
-We have 2 rows of numbers in our text string shown above therefore we set `nrow = 2` and we need to specify that data is inserted into matrix rowwise `byrow = TRUE` (default option is FALSE) to keep original data structure.
-
-```{r}
-matrix(pp, nrow = 2, byrow = TRUE)
-```
-
 ## Import tabular data
 `read.table`, `read.csv`, `read.delim` functions allow to create data frames, where different columns may contain different type of data -- `numeric`, `character` etc. 
 `read.table` is the basic function with values separated by white space `""` (one or more spaces, tabs, newlines). 
@@ -253,17 +206,63 @@ datasets <- sapply(data_files, read.table, simplify = FALSE, USE.NAMES = TRUE) #
 str(datasets)
 ```
 
-If you have datasets with same column names, you can import all datasets as a list and rbind them into one data.frame. Here we concatenate our single data.frame in `datasets` object.
+<!-- If you have datasets with same column names, you can import all datasets as a list and rbind them into one data.frame. Here we concatenate our single data.frame in `datasets` object. -->
 
-`do.call(rbind, my_list_of_dataframes)` is base R solution to this task.
+<!-- `do.call(rbind, my_list_of_dataframes)` is base R solution to this task. -->
+<!-- ```{r} -->
+<!-- nrow(datasets[[1]]) # how many rows in our original data? datasets is a list. -->
+<!-- rbound_datasets <-  do.call(rbind, c(datasets, datasets)) # bind dataframes in list by rows -->
+<!-- nrow(rbound_datasets) # how many rows we have now -->
+<!-- ``` -->
+
+<!-- Alternative solution is `bind_rows` from `dplyr` package. -->
+<!-- ```{r} -->
+<!-- rbound_datasets2 <- dplyr::bind_rows(c(datasets, datasets)) -->
+<!-- nrow(rbound_datasets2) # how many rows we have now -->
+<!-- ``` -->
+
+## Import text file
+Probably, the most basic form of data to import into R is a simple text file.
+
+Here we write our data to external file `ex.data` and read it into R using `scan()` function. 
+Importantly, `scan()` reads vectors of data which all have the same mode. 
+Default data type is numeric, strings can be specified with the `what = ""` argument.
 ```{r}
-nrow(datasets[[1]]) # how many rows in our original data? datasets is a list.
-rbound_datasets <-  do.call(rbind, c(datasets, datasets)) # bind dataframes in list by rows
-nrow(rbound_datasets) # how many rows we have now
+cat("my title line", "2 3 5 7", "11 13 17", file = "ex.data", sep = "\n")
+pp <- scan("ex.data", skip = 1) # we skip 1st line with title text or we get error
+unlink("ex.data") # tidy up, unlink deletes the file(s) or directories specified
+pp
 ```
 
-Alternative solution is `bind_rows` from `dplyr` package.
+In case you dont wan't or can't save your text into file (bad for reproducibility!), it's possible to use `textConnection()` function to input data into R. 
+`\n` is a newline character. 
+
+`readLines` reads "unorganized" data, this is the function that will read input into R so that we can manipulate it further.
+
 ```{r}
-rbound_datasets2 <- dplyr::bind_rows(c(datasets, datasets))
-nrow(rbound_datasets2) # how many rows we have now
+zzz <- textConnection("my title line 2 3 5 7 11 13 17 9") 
+pp <- readLines(zzz) # zzz is a connection object
+pp
+close(zzz) # close connection
+```
+
+```{r}
+pp <- scan(textConnection("my title line\n2 3 5 7\n11 13 17 9"), skip = 1)
+pp
+```
+
+Text in `textConnection` call can be already structured, so you can quickly import copy-paste data from screen into R. 
+```{r}
+zzz <- textConnection("my title line 
+                      2 3 5 7
+                      11 13 17 9")
+a <- scan(zzz, skip = 2) # lets skip 1st two lines
+a
+```
+
+Scanned data can be coerced into rectangular matrix. 
+We have 2 rows of numbers in our text string shown above therefore we set `nrow = 2` and we need to specify that data is inserted into matrix rowwise `byrow = TRUE` (default option is FALSE) to keep original data structure.
+
+```{r}
+matrix(pp, nrow = 2, byrow = TRUE)
 ```
