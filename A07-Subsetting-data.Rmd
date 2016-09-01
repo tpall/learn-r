@@ -69,7 +69,7 @@ m[,-1]           # delete the first column of m
 
 ## Indexing lists
 Indexing by `[` is similar to atomic vectors and selects a list of the specified element(s).
-Both `[[` and `$` select a single element of the list.
+Both `[[` and `$` select a single element of the list (e.g. a single vector or data frame).
 
 ```{r}
 mylist # here we go back to our mylist object
@@ -112,7 +112,7 @@ mylist$ages               # the element of mylist named ages
 
 
 ## Indexing data.frames
-Data frames can be indexed in several modes. When [ and [[ are used with a single vector index (x[i] or x[[i]]), they index the data frame as if it were a list.
+<!-- Data frames can be indexed in several modes. When [ and [[ are used with a single vector index (x[i] or x[[i]]), they index the data frame as if it were a list. -->
 
 We use R `mtcars` dataset to illustrate indexing of a data.frame:
 ```{r}
@@ -198,6 +198,3 @@ my_tab
 my_tab$experiment <- factor("A") # the 4th col contains a factor with a single level "A"
 levels(my_tab$experiment) # prints the unique levels in a factor vector
 ```
-
-
-
