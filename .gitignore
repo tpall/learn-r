@@ -4,3 +4,4 @@
 .Ruserdata
 index.html
 *.docx
+packrat/lib*/
