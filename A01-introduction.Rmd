@@ -49,7 +49,7 @@ A key reason that R is a good thing is because it is a language. The power of la
 ### R cons (none is the deal breaker):
 
 + With R you must know exactly, what you want to do – in terms of your immediate atomic goals in data massage, methods of statistical analysis, and the overall strategy of analysis. 
-+ It is like getting your own keys to daddy's F-16 fighter plane. Get a setting wrong and boom!
++ It is **like getting your own keys to daddy's F-16 fighter plane**. Get a setting wrong **and boom!**
 
 ![Unlike your daddy's F-16, it's similarly annoying but safe to crash your R session. Image: [The Brofessional](http://www.thebrofessional.net/guy-builds-incredible-working-replica-dutch-f-16-military-fighter-jet-scratch/)](http://nkpzz1l56ai473pu632f0nui.wpengine.netdna-cdn.com/wp-content/uploads/2015/01/amazing-model-airplane-remote-control-replica-of-dutch-orange-f-16-fighter-jet-672x377.jpg)
 
