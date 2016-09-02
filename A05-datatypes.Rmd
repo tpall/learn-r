@@ -228,18 +228,19 @@ Second, we use `xtabs()` and `ftable()` functions to summarise all colors of med
 ftable(xtabs(Gold + Silver + Bronze ~ NOC, data = medals), dnn = c("Medals"))
 ```
 
-### Confusion matrix
-`table()` can be useful to display classification model performance as confusion matrix (although `caret` library has special function `confusionMatrix()`). 
+<!-- ### Confusion matrix -->
+<!-- `table()` can be useful to display classification model performance as confusion matrix (although `caret` library has special function `confusionMatrix()`).  -->
 
-We use `iris` dataset to train k-nearest neighbours model to predict Species based on sepal and petal measurements.
+<!-- We use `iris` dataset to train k-nearest neighbours model to predict Species based on sepal and petal measurements. -->
 
-```{r}
-library(caret)
-model <- knn3(Species~., data = iris) # here we perform KNN classification of iris dataset
-predicted <- predict(model, iris[,-ncol(iris)], type = "class") # predict Species based on model
-table(iris$Species, predicted) # how good is our model?
-```
+<!-- ```{r} -->
+<!-- library(caret) -->
+<!-- model <- knn3(Species~., data = iris) # here we perform KNN classification of iris dataset -->
+<!-- predicted <- predict(model, iris[,-ncol(iris)], type = "class") # predict Species based on model -->
+<!-- table(iris$Species, predicted) # how good is our model? -->
+<!-- ``` -->
 
+#### From wide to long contingency table
 `table()` outputs contingency table in **wide format**. To illustrate this point, we use **Tartu Maraton 2013** cross-country skiing marathon 63 km distance finish data. Elukoht -- country, Vanuseklass -- age group.
 ```{r}
 load("data/Tartu_Maraton_2013.RData")
