@@ -1,6 +1,6 @@
 ---
 title: "Reproducible Data Analysis in R"
-author: "Ülo Maiväli, Taavi Päll"
+author: "Ülo Maiväli^1^, Taavi Päll^2^"
 date: "`r Sys.Date()`" 
 output:
   html_document:
@@ -17,6 +17,9 @@ opts_chunk$set(echo = TRUE, fig.align = 'center')
 set.seed(437385) # from random.org
 options(lubridate.verbose = FALSE)
 ```
+
+^1^[University of Tartu, Institute of Technology](http://www.tuit.ut.ee/en), 
+^2^[Tallinn University of Technology, Department of Gene Technology](http://www.ttu.ee/faculty-of-science/department-of-gene-technology/)
 
 ```{r collectfiles, echo = FALSE, message = FALSE, results = 'asis'}
 # Here we collect all child .Rmd files and parse them with knit_child and cat output into main document
