@@ -285,6 +285,11 @@ png(filename = "Rplot%03d.png",
     type = c("cairo", "cairo-png", "Xlib", "quartz"), antialias)
 ```
 
+We want to save our disposable output files to directory `output`, therefore we first check if we already have this directory, if not then we create it:  
+```{r}
+if(!dir.exists("output")) dir.create("output")
+```
+
 In case of .png:
 ```{r}
 png(file = "output/iris_sepal.png", width = 1200, height = 800, res = 300)
