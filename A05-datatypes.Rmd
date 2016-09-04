@@ -247,7 +247,7 @@ load("data/Tartu_Maraton_2013.RData")
 head(sort(table(tm_2013$Elukoht), decreasing = TRUE)) # most frequent country/county
 table(tm_2013$Vanuseklass)
 ```
-![[Tartu Maraton](https://www.tartumaraton.ee/en/about/). Photo: Kaimo Puniste](https://www.tartumaraton.ee/et/klubist/ajalugu/raamat/FotoKaimoPuniste.jpg)
+![[Tartu Marathon](https://www.tartumaraton.ee/en/about/). Photo: Margus Ansu/Postimees.](http://f.pmo.ee/f/2009/02/18/136355t81h0e00.jpg)
 
 We can display number of participants per **country** and **age group** in a **wide format**
 ```{r}

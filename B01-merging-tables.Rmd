@@ -5,9 +5,9 @@
 # Merging tables
 
 ## Combine by rows
-For rbind column names are taken from the first argument with appropriate names: colnames for a matrix, or names for a vector of length the number of columns of the result.
+For `rbind` column names are taken from the first argument with appropriate names: colnames for a matrix, or names for a vector of length the number of columns of the result.
 
-To illustrate combining two data.frames by rowwise we first split `mtcars` dataset into two
+To illustrate combining two data.frames by rowwise we first split `mtcars` dataset into two:
 ```{r}
 dim(mtcars)
 head(mtcars)
@@ -16,7 +16,12 @@ df2 <- mtcars[11:15, ]
 ```
 
 ```{r}
-# a <- rbind(df1, df2)
+rbind(df1, df2)
+```
+
+
+
+```{r}
 b <- dplyr::bind_rows("group 1" = df1, "group 2" = df2, .id = "groups") # When you supply a column name with the `.id` argument, a new column is created to link each row to its original data frame. Columns don't need to match when row-binding
 b
 ```
