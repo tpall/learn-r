@@ -111,7 +111,7 @@ rep(c("poodle","sheltie"), each = 3, times = 2)
 
 ## Matrix
 
-Matrix: a collection of vectors, which are all numeric, character, or logical. 
+Matrix: a collection of data elements, which are all numeric, character, or logical. 
 
 ```{r}
 n <- matrix(rnorm(30), ncol = 5) 
