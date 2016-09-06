@@ -1,0 +1,317 @@
+---
+
+---
+
+# Base graphics
+Some say that R base graphics is only good for **quick and dirty** data exploration, but not very straightforward for creating polished publication quality graphs (but you can master it if you really dive into it). 
+
+![Base R graphics has mojo too, and massive strength. Photo: [wikipedia](https://en.wikipedia.org/wiki/Fat_Bastard_(character)). ](https://upload.wikimedia.org/wikipedia/en/7/73/Fat_bastard.jpeg)
+
+```{r}
+library(help = "graphics") # complete list of functions
+```
+
+Base R has extensive set of graphical parameters, which can be set or query using function `par`:
+```{r, eval=FALSE}
+par() # look at the available graphical parameters
+```
+
+## Histogram
+To illustrate `hist` function we use 2013 Tartu cross-country skiing marathon 63 km times (`Aeg` in Estonian). We first convert times in H:M:S format into periods using `hms()` function from `lubridate` package, then convert them to period objects with `as.duration` function (ibid.). `as.duration` gives us seconds, which we convert to decimal hours by dividing with 3600s (== 1h).
+
+```{r}
+library(lubridate) # for easy time manipulation
+head(tm_2013$Aeg)
+tm_2013[tm_2013$Nimi=="Päll, Taavi",]$Aeg 
+times <- hms(tm_2013$Aeg[-1]) 
+times <- unclass(as.duration(times))/3600 # unclass gives us numbers (time in seconds), which we further divide by 3600 to get time in hours
+tp_time <- unclass(as.duration(hms(tm_2013[tm_2013$Nimi=="Päll, Taavi",]$Aeg)))/3600 
+```
+
+Now we plot a histogram of Tartu skiing marathon times and add a vertical line at `TP`-s time:
+```{r}
+hist(times, 
+     breaks = 100, # seems to be a good granularity
+     main = "Tartu cross-country skiing\nmarathon 2013, 63 km", # plot title. Pro tip: '\n' works as enter.
+     xlab = "Time, h", # x-axis label: time in seconds
+     las = 1) # horizontal y-axis labels
+abline(v = tp_time, col = "red", lwd = 2) # add red vertical line
+```
+
+```{r}
+hist(times, breaks = seq(2, 10, by = 0.25)) # breaks after every 15 min
+```
+
+
+## Scatterplot
+Scatterplots can be created using `plot()`. Here we explore the relationship between sepal length and width in different iris species. `iris$Species` column is used as the factor by whose levels to color the points (R will automatically order factor levels in alphabetical order: setosa, versicolor and virginica). `palette()` gives you the colors and their order, and it allows you to manipulate the color palette (see `?palette`).
+
+```{r}
+plot(iris$Sepal.Length, iris$Sepal.Width, 
+     col = iris$Species, # dots are colored by species
+     pch = 16, # we use filled dots instead of default empty dots
+     las = 1) # horizontal y-axis labels
+palette()
+legend("topright", # we place legend to the top right corner of the plot
+       legend = levels(iris$Species), # species names in the legend
+       pch = 16, # dot shape
+       bty = "n", # the type of box to be drawn around the legend: "n" no box
+       col = 1:3) # new colors are added with numbers 1 to 3. This will work like using a factor.
+```
+
+We can plot all variable pairs into a single **matrix of scatterplots**:
+```{r}
+pairs(iris[1:4], 
+      main = "Iris Dataset",
+      pch = 21, # dots need to be big enough to display color
+      bg = iris$Species) # color by species
+```
+<!-- `bg=` arguments gives us color for dots background. We can sample colors from colors 2:4 from default `palette()`: `c( "red","green3",  "blue")[unclass(iris$Species)]`. If we just use `iris$Species` then we get colors 1:3, which are "`r palette()[1:3]`". -->
+
+**Matrix scatterplots can be created using the R formula interface**, which allows better control over variables we want to explore. We use "Swiss Fertility and Socioeconomic Indicators (1888)" data as example.
+```{r}
+head(swiss)
+```
+
+
+```{r}
+pairs(~ Fertility + Education + Catholic, data = swiss,
+      subset = Education < 20, main = "Swiss data, Education < 20") # formula method from function example
+```
+
+
+**Scatterplots are also ideal for visualising relationships between independent and dependent variables**. We use R in-house dataset `CO2` showing carbon dioxide uptake in grass plants. 
+
+<!-- We first summarise the dataset by calculating mean uptake per conc and ignore the independent variables Plant, Type, and Treatment: -->
+
+<!-- ```{r} -->
+<!-- head(CO2) #  -->
+<!-- mean.uptake <- tapply(CO2$uptake, CO2$conc, mean) # we calculate mean for each conc ignoring variables Plant, Type, and Treatment. -->
+<!-- CO2 <- data.frame(conc = unique(CO2$conc), uptake = mean.uptake) # we overwrite original CO2 dataset -->
+<!-- ``` -->
+
+We plot plant CO~2~ uptake versus its concentration and add calculated linear model fit to the scatterplot:
+```{r}
+plot(uptake ~ conc, 
+     data = CO2, 
+     pch = 16, col = "blue", # dot type and color
+     main = "Carbon Dioxide Uptake in Grass Plants", # scatterplot
+     las = 1) # horizontal y-axis labels
+mod1 <- lm(uptake~conc, data = CO2) # linear model fit
+abline(mod1, col = "red", lty = 2, lwd = 2) # add lin model fit to the scatterplot
+
+coefs <- coef(mod1) # linear model coefficients
+b0 <- round(coefs[1], 2) # round for printing
+b1 <- round(coefs[2], 2) # round for printing
+r2 <- round(summary(mod1)$r.squared, 2) # r squared
+eqn <- bquote(italic(y) == .(b0) + .(b1)*italic(x) * "," ~~ r^2 == .(r2)) # formula and rsuared for printing
+text(750, 20, labels = eqn) # add equation to the plot
+```
+
+As we can see in the upper plot, the linear model does not explain the relationship between conc and uptake very well. Therefore we fit exponential function, which seems to fit much better to these data. 
+```{r}
+plot(uptake ~ conc, 
+     data = CO2, 
+     pch = 16, col = "blue",
+     main = "Carbon Dioxide Uptake in Grass Plants",
+     las = 1) # horizontal y-axis labels
+lines(x = CO2$conc, y = predict(mod1), col = "red", lty = 2, lwd = 2) # add linear model fitted line
+mod2 <- nls(uptake ~ SSlogis(conc, Asym, xmid, scal), data = CO2) # nonlin fit using SSlogis selfstart model
+xvals <- seq(from = 95, to = 1000, by = 3) # new x values for which we want model prediction
+lines(x = xvals, y = predict(mod2, list(conc = xvals)), col = "green", lty = 2, lwd = 2) # add nonlin fit line
+legend("bottomright", legend = c("linear model", "exponential model") , lty = 2, col = c("red", "green"), bty = "n", lwd = 2) # add legend to the plot
+```
+
+## Boxplot
+Boxplots can be created, unsurprisingly, by `boxplot`: 
+```{r}
+boxplot(iris$Sepal.Length ~ iris$Species, 
+        las = 1,
+        xlab = "Species",
+        ylab = "Sepal Length",
+        main = "Sepal Length by Species in Iris",
+        ylim = c(0, max(iris$Sepal.Length)))
+```
+
+<!-- With base graphics `boxplot` it is possible to use `plot = FALSE` argument to obtain boxplot stats for each group/plot without drawing the plot (**lower whisker, the lower hinge, the median, the upper hinge and the upper whisker**): -->
+<!-- ```{r} -->
+<!-- p <- boxplot(iris$Sepal.Length ~ iris$Species, plot = FALSE) -->
+<!-- p$stats # boxplot stats -->
+<!-- ``` -->
+
+<!-- Whereas, lower and upper whiskers show 1.5 IQR by default (can be adjusted with the argument `range=`) and any values which lie outside of extremes of whiskers can be accessed like this:  -->
+<!-- ```{r} -->
+<!-- p$out # possible outliers -->
+<!-- ``` -->
+
+## Bargraphs
+This is **no-brainer**! Base graphics function `barplot` creates for us barplots with either vertical or horizontal bars:
+```{r}
+load("data/Rio2016_medals.RData") # we use rio medals data 
+```
+
+```{r labels, include=FALSE}
+m <- gregexpr("\\(.*?\\)", medals$NOC) # match parentheses
+abr <- mapply(regmatches, medals$NOC, m) # 
+countries <- gsub("[\\(\\)]", "", abr)
+medals$country_un <- countries
+```
+
+```{r,fig.height=9, fig.width=4}
+barplot(medals$Total, 
+        names.arg = medals$country_un, # country abbreviations, x-axis labels
+        horiz = TRUE, # horozontal y-axis
+        cex.names = 0.5, # smaller labels
+        las = 1, # horizontal axis labels
+        col = 4, # fill color nr 4 from default palette = "blue"
+        xlab = "Total number of medals", # x-axis label
+        main = "Country ranking by Rio 2016 medals", # main title
+        sub = "Ranking also takes into account the number of gold, silver and bronze medals.", # subtitle or ingraph caption
+        cex.sub = 0.5) # labels perpendicular to x-axis
+```
+
+
+<!-- ### Dynamite plot -->
+<!-- Whenever you open scientific article in biomedical field there is a good chance that you encounter **barplots with errorbars** sticking out of them, these pests are also known as [dynamite plots](http://biostat.mc.vanderbilt.edu/wiki/pub/Main/TatsukiKoyama/Poster3.pdf). In order to blend into the crowd we also learn how to create these wonderful and frightening graphs. -->
+<!-- First we have to calculate summary statistics we want to put onto the graph -- mean (bar) and standard deviation (errorbar): -->
+<!-- ```{r} -->
+<!-- irissl_mean <- tapply(iris$Sepal.Length, iris$Species, mean) # mean for each species -->
+<!-- irissl_sd <- tapply(iris$Sepal.Length, iris$Species, sd) # standard deviation for each species -->
+<!-- ``` -->
+<!-- It might seem little bit complicated, but you can use `tapply` when you want to apply a function (mean or sd in our case) to subsets of a vector (`iris$Sepal.Length` by Species) and the subsets are defined by some other vector, usually a factor (`iris$Species`). -->
+<!-- `mapply` - when you have several data structures (e.g. lists) and you want to apply a function to the 1st elements of each, and then the 2nd elements of each, etc. -->
+
+<!-- ```{r} -->
+<!-- maxLim <- 1.1*max(mapply(sum, irissl_mean, irissl_sd)) # we find maximum sum of mean and sd in our dataset and multiply this number with 1.1 to give enough headroom for errorbars in our graph -->
+<!-- bp <- barplot(irissl_mean, # means of our groups -->
+<!--               names.arg = levels(iris$Species), # names for x-axis -->
+<!--               ylim = c(0, maxLim)) # we have to set y-axis limits manually -->
+<!-- arrows(x0 = bp, # coordinates of our groups on x-axis -->
+<!--        y0 = irissl_mean, # start of arrow -->
+<!--        y1 = irissl_mean + irissl_sd, # end of arrow -->
+<!--        angle = 90) # blunt end for arrows; default is 30deg -->
+<!-- ``` -->
+
+## Add second y-axis
+Sometimes it's necessary to compare trends in two (or more) timeseries with very different scales. This can be solved by plotting these timeseries using separate y-axes for each of them. 
+To illustrate addition of second y-axis to the plot, we use stockmarket data, which can be easily accessed via `quantmod` library. First we download stock data:
+```{r, message=FALSE}
+library(quantmod)
+getSymbols(c("AAPL","GOOG")) # download stock data in xts format
+```
+
+Stock data are in xts (time series) format, we convert this data into conventional data.frame:
+```{r}
+# base plot of time series prior to xts
+# get the data in data.frame format rather than xts
+apple <- data.frame(Date = index(AAPL), coredata(AAPL), stringsAsFactors=FALSE
+)
+head(apple)
+google <- data.frame(Date = index(GOOG), coredata(GOOG), stringsAsFactors=FALSE)
+```
+
+
+```{r}
+par(mar = c(5, 4, 4, 4))
+plot(apple$Date, apple$AAPL.Adjusted, type = "l", col = "blue", ylab = NA, xlab = NA)
+par(new = TRUE)
+plot(google$Date, google$GOOG.Adjusted, type = "l", col = "red", axes = FALSE, ylab = NA, xlab = "Date")
+axis(side = 4)
+mtext(side = 4, line = 2.5, col = "red", "Google")
+mtext(side = 2, line = 2.5, col = "blue", "Apple")
+```
+
+
+## Combine multiple subplots
+Some say, that **every normal person** should arrange figure panels in a **vector graphics** tool like `Inkscape` (freeware) or `Adobe Illustrator` (nonfree). However, from the point of view of reproducibility, you can also very easily assemble your article's figures 'automatically' on-the-fly using R code. For this purpose, we can use R base graphics or by using grid graphics libraries `grid` and `gridExtra`. We introduce `gridExtra` in later lectures.
+
+![Normal persons. Are you on the picture? Images: google image.](graphs/normal_person.png)
+
+Here we show, how to combine multiple subplots into one overall graph in base R, using either the `par()` or `layout()` function. 
+Plotting linear model fit object outputs four separate diagnostic plots -- "Residuals vs Fitted", "Normal Q-Q", "Scale-Location" and "Residuals vs Leverage":
+```{r}
+plot(mod1)
+```
+
+By telling graphics device to create four slots, arranged 2x2, in our plot window, using `par` function argument `mfrow=c(nr, nc)`, we can tidy up all this information little bit:
+```{r}
+par(mfrow=c(2,2))      # number of rows, number of columns
+plot(mod1) # plots are arranged into matrix in order of appearance
+dev.off()
+```
+
+`layout()` function specifies graph layout using matrix. Here we create 2x2 layout specified by matrix -- plots one and two will appear in the first column and third plot will be placed into second column and occupies two slots:
+```{r}
+layout(matrix(c(1,2,3,3), 2, 2)) 
+plot(iris$Sepal.Length, iris$Sepal.Width, col = iris$Species, pch = 16, las = 1)
+plot(uptake ~ conc, data = CO2, pch = 16, col = "blue", main = "Carbon Dioxide Uptake in Grass Plants", las = 1)
+barplot(medals$Total, 
+        names.arg = medals$country_un, # country abbreviations, x-axis labels
+        horiz = TRUE, # horozontal y-axis
+        cex.names = 0.5, # smaller labels
+        las = 1, # horizontal axis labels
+        col = 4, # fill color nr 4 from default palette = "blue"
+        xlab = "Total number of medals", # x-axis label
+        main = "Country ranking by Rio 2016 medals", # main title
+        sub = "Ranking also takes into account the number of gold, silver and bronze medals.", # subtitle or ingraph caption
+        cex.sub = 0.5)
+dev.off()
+```
+
+If you want to revert your `par(mfrow=...` to the original settings with single slot in  graphics device, use following approach:
+
+Either run `par` again with `mfrow=c(1,1)` settings
+```{r}
+par(mfrow=c(1,1))
+```
+
+Or assign original settings to object and after you have done your multiplot load these setting using `par`:
+```{r}
+originalpars <- par(mfrow=c(1,2)) # direct current mfrow to originalpars object
+hist(rnorm(100))
+plot(rnorm(100),rnorm(100))
+dev.off()
+par(originalpars) # loads/restores previous parameters
+originalpars # we have only mfrow here 
+```
+
+## Save plots
+To save a plot into file you have to open the file and plot device first and then plot any graphics. Base R has graphics devices for BMP, JPEG, PNG and TIFF format bitmap files and for PDF. 
+
+```{r, eval=FALSE}
+png(filename = "Rplot%03d.png",
+    width = 480, height = 480, units = "px", pointsize = 12,
+     bg = "white",  res = NA, ...,
+    type = c("cairo", "cairo-png", "Xlib", "quartz"), antialias)
+```
+
+We want to save our disposable output files to directory `output`, therefore we first check if we already have this directory, if not then we create it:  
+```{r}
+if(!dir.exists("output")) dir.create("output")
+```
+
+In case of .png:
+```{r}
+png(file = "output/iris_sepal.png", width = 1200, height = 800, res = 300)
+plot(iris$Sepal.Length, iris$Sepal.Width, col = iris$Species, pch = 16, las = 1)
+dev.off()
+```
+
+```{r, eval=FALSE}
+pdf(file = if(onefile) "Rplots.pdf" else "Rplot%03d.pdf",
+    width, height, onefile, family, title, fonts, version,
+    paper, encoding, bg, fg, pointsize, pagecentre, colormodel,
+    useDingbats, useKerning, fillOddEven, compress)
+```
+width, height -- the width and height of the graphics region in inches. The default values are 7.
+
+```{r}
+pdf(file = "output/co2_uptake.pdf")
+plot(uptake ~ conc, data = CO2, pch = 16, col = "blue", main = "Carbon Dioxide Uptake in Grass Plants", las = 1)
+dev.off()
+```
+
+```{r}
+list.files("output")
+```
+
