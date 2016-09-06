@@ -92,8 +92,7 @@ pairs(~ Fertility + Education + Catholic, data = swiss,
 
 We plot plant CO~2~ uptake versus its concentration and add calculated linear model fit to the scatterplot:
 ```{r}
-plot(uptake ~ conc, 
-     data = CO2, 
+plot(x = CO2$uptake, y = CO2$conc,
      pch = 16, col = "blue", # dot type and color
      main = "Carbon Dioxide Uptake in Grass Plants", # scatterplot
      las = 1) # horizontal y-axis labels
