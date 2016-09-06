@@ -182,17 +182,17 @@ my_tab
 
 
 ```{r}
-summary(iris) # Prints a summary of data
+summary(my_tab) # Prints a summary of data
 ```
 
 ```{r}
-names(iris) # Prints column names
+names(my_tab) # Prints column names
 ```
 
 ```{r}
-nrow(iris) # number of rows
-ncol(iris)
-dim(iris)
+nrow(my_tab) # number of rows
+ncol(my_tab)
+dim(my_tab)
 ```
 
 ### Contingency table
