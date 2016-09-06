@@ -3,7 +3,7 @@
 ---
 
 
-## R objects
+# R objects
 
 An R object is anything that can be assigned a value (data, functions, graphs, analytic results, and more). 
 Every object has a class attribute telling R how to handle it. 
@@ -102,6 +102,7 @@ as.numeric(as.character(ss))
 Factor variables are encoded as integers in their underlying representation. So a variable like "poodle" and "sheltie" will be encoded as 1 and 2 in the underlying representation [more about factors and stringsAsFactors option when importing a data.frame](http://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/).
 
 Factors are used to group data by their levels for analysis (e.g. linear model: `lm()`) & graphing. 
+In earlier versions of R, storing character data as a factor was more space efficient if there is even a small proportion of repeats. However, identical character strings now share storage, so the difference is small in most cases. 
 Nominal variables are categorical, without an implied order. 
 
 ```{r}

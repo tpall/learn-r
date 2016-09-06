@@ -173,12 +173,12 @@ class(as.data.frame(tbl_df(iris)))
 ```
 
 ```{r}
+library(tibble)
 height <- c(187, 190, 156)
 name <- c("Jim", "Joe", "Jill")
-my_tab <- data.frame(name, height)
+my_tab <- data_frame(name, height) # object names are used as column names
 my_tab
 ```
-
 
 
 ```{r}
