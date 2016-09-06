@@ -5,7 +5,7 @@
 # Find character strings 
 
 Character strings can be matched and manipulated in R by using `regular expressions` in functions `grep`, `grepl`, `sub`, `gsub` and some others.
-A `regular expression` is a pattern that describes a set of strings.
+A [regular expression](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html) is a pattern that describes a set of strings.
 
 + The fundamental building blocks are the regular expressions that match a single character. 
 + Most characters, including all letters and digits, are regular expressions that match themselves. 
@@ -14,7 +14,7 @@ A `regular expression` is a pattern that describes a set of strings.
 
 + The caret `^` and the dollar sign `$` are metacharacters that respectively match the empty string at the beginning and end of a line.
 
-`grep(pattern, x)` finds a pattern in x. Pattern -- character string containing a regular expression (or exact character string for fixed = TRUE).
+`grep(pattern, x)` finds a pattern in x. Pattern -- character string containing a regular expressions (or exact character string for fixed = TRUE).
 
 
 We can use grepl to filter data frame:
@@ -24,5 +24,25 @@ fruit_males <- fruit %>% filter(grepl("M", Gender)) %>% tbl_df
 fruit_males
 ```
 
+What really happens when we use `grep` or `grepl` on a vector x.
+By using `grep()` with default arguments gets us vector of the indices of the matching items in x:
+```{r}
+grep("M", fruit$Gender) %>% head()
+```
 
-test
+Using `grep(value = TRUE)` we get character vector containing the selected elements of x:
+```{r}
+grep("M", fruit$Gender, value = TRUE) %>% head()
+```
+
+However, by using `grepl` we get logical vector showing match for each element:
+```{r}
+grepl("M", fruit$Gender) %>% head()
+```
+
+Neat thing with the `grepl` is that it's versatile: you can use its result for subsetting or to count matches (TRUE = 1 and FALSE = 0):
+```{r}
+grepl("M", fruit$Gender) %>% sum
+```
+
+
