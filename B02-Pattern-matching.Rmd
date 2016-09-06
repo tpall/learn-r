@@ -11,18 +11,9 @@ A [regular expression](https://stat.ethz.ch/R-manual/R-devel/library/base/html/r
 + Most characters, including all letters and digits, are regular expressions that match themselves. 
 + The metacharacters in regular expressions are `. \ | ( ) [ { ^ $ * + ?`, whether these have a special meaning depends on the context. 
 + When matching any metacharacter as a regular character, precede it with a double backslash `\\`.
-
 + The caret `^` and the dollar sign `$` are metacharacters that respectively match the empty string at the beginning and end of a line.
 
 `grep(pattern, x)` finds a pattern in x. Pattern -- character string containing a regular expressions (or exact character string for fixed = TRUE).
-
-
-We can use grepl to filter data frame:
-```{r}
-library(dplyr)
-fruit_males <- fruit %>% filter(grepl("M", Gender)) %>% tbl_df
-fruit_males
-```
 
 What really happens when we use `grep` or `grepl` on a vector x.
 By using `grep()` with default arguments gets us vector of the indices of the matching items in x:
@@ -43,6 +34,12 @@ grepl("M", fruit$Gender) %>% head()
 Neat thing with the `grepl` is that it's versatile: you can use its result for subsetting or to count matches (TRUE = 1 and FALSE = 0):
 ```{r}
 grepl("M", fruit$Gender) %>% sum
+```
+
+We can use `grepl` in `dplyr::filter` to subset data frame:
+```{r}
+library(dplyr)
+fruit %>% filter(grepl("M", Gender)) %>% tbl_df
 ```
 
 

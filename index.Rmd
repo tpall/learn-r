@@ -15,7 +15,7 @@ output:
 library(knitr)
 opts_chunk$set(echo = TRUE, fig.align = 'center')
 set.seed(437385) # from random.org
-options(lubridate.verbose = FALSE)
+options(lubridate.verbose = FALSE, "getSymbols.warning4.0" = FALSE)
 ```
 
 ^1^[University of Tartu, Institute of Technology](http://www.tuit.ut.ee/en), 
