@@ -61,7 +61,7 @@ legend("topright", # we place legend to the top right corner of the plot
 
 We can plot all variable pairs into a single **matrix of scatterplots**:
 ```{r}
-pairs(iris[1:4], 
+pairs(iris[1:4], # same output can be achieved also by using just plot()
       main = "Iris Dataset",
       pch = 21, # dots need to be big enough to display color
       bg = iris$Species) # color by species
