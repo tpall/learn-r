@@ -291,7 +291,26 @@ levels(my_tab$experiment) # prints the unique levels in a factor vector
 
 
 ## Matrix
-Matrix: a collection of data elements, which are all numeric, character, or logical. 
+Matrix: a collection of data elements, which are all numeric, character, or logical.
+
+Why use matrix? The choice between matrix and data.frame comes up only if you have data of the same type.
+
++ The answer depends on what you are going to do with the data in data.frame/matrix. 
+If it is going to be passed to other functions then the expected type of the arguments of these functions determine the choice.
+
++ Matrices are more memory efficient:
+
+```{r}
+m <- matrix(1:4, 2, 2)
+d <- as.data.frame(m)
+object.size(m)
+object.size(d)
+```
+
++ Matrices are a necessity if you plan to do any linear algebra-type of operations.
++ Data frames are more convenient if you frequently refer to its columns by name (via the `$` operator).
++ Data frames are also better for reporting tabular data as you can apply formatting to each column separately.
+
 ```{r}
 n <- matrix(rnorm(30), ncol = 5) 
 dim(n)
