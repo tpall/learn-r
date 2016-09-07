@@ -1,0 +1,73 @@
+---
+
+---
+
+<!-- ### Contingency table -->
+<!-- Contingency table is a type of table in a matrix format that displays the frequency distribution of the variables. -->
+
+<!-- We use Rio 2016 summer Olympics medal table to illustrate contingency table. -->
+<!-- First we download and munge medals table from Wikipedia page. -->
+```{r, include=FALSE}
+library(rvest)
+rio <- read_html("https://en.wikipedia.org/wiki/2016_Summer_Olympics_medal_table") # download wikipedia web page containing Rio Olympics medals table
+tab_node <- html_nodes(rio, 'table[class="wikitable sortable plainrowheaders"]') # extract html node from webpage containing medals table
+medals <- html_table(tab_node, fill=TRUE) # extracts table as data.frame from html, outputs list
+medals <- medals[[1]] # we have list of length 1, we extract data.frame and assign it back to medals  
+medals <- medals[-nrow(medals),-1] # Identify last row number and remove this last row 'Total' and first column 'Rank'
+save(medals, file = "data/Rio2016_medals.RData") # we save table for later use into folder 'data' in working directory
+```
+
+<!-- ![Rio 2016 medals feature images of Nike, the Panathinaiko Stadium and the Acropolis (Photo: Rio 2016/Alex Ferro)](https://smsprio2016-a.akamaihd.net/news/Nj2RO1/4pUVV_IM.jpg) -->
+
+<!-- Lets see the top rows of our medals table, using function `head()`: -->
+```{r, include=FALSE}
+head(medals)
+```
+
+<!-- How many contries have won certain number of medals? -->
+<!-- First, we use function `table()` to display already summed up data from Total column. -->
+```{r, include=FALSE}
+table(medals$Total, dnn = c("Medals")) # how many countries have shown number of medals
+```
+
+<!-- Second, we use `xtabs()` and `ftable()` functions to summarise all colors of medals and display summed up data. -->
+```{r, include=FALSE}
+ftable(xtabs(Gold + Silver + Bronze ~ NOC, data = medals), dnn = c("Medals"))
+```
+
+<!-- ### Confusion matrix -->
+<!-- `table()` can be useful to display classification model performance as confusion matrix (although `caret` library has special function `confusionMatrix()`).  -->
+
+<!-- We use `iris` dataset to train k-nearest neighbours model to predict Species based on sepal and petal measurements. -->
+
+<!-- ```{r} -->
+<!-- library(caret) -->
+<!-- model <- knn3(Species~., data = iris) # here we perform KNN classification of iris dataset -->
+<!-- predicted <- predict(model, iris[,-ncol(iris)], type = "class") # predict Species based on model -->
+<!-- table(iris$Species, predicted) # how good is our model? -->
+<!-- ``` -->
+
+<!-- #### From wide to long contingency table -->
+<!-- `table()` outputs contingency table in **wide format**. To illustrate this point, we use **Tartu Maraton 2013** cross-country skiing marathon 63 km distance finish data. Elukoht -- country, Vanuseklass -- age group. -->
+```{r, include=FALSE}
+load("data/Tartu_Maraton_2013.RData")
+head(sort(table(tm_2013$Elukoht), decreasing = TRUE)) # most frequent country/county
+table(tm_2013$Vanuseklass)
+```
+<!-- ![[Tartu Marathon](https://www.tartumaraton.ee/en/about/). Photo: Margus Ansu/Postimees.](http://f.pmo.ee/f/2009/02/18/136355t81h0e00.jpg) -->
+
+<!-- We can display number of participants per **country** and **age group** in a **wide format** -->
+```{r, include=FALSE}
+head(table(tm_2013$Elukoht, tm_2013$Vanuseklass))
+```
+
+<!-- In contrast, `dplyr` function `count` outputs results in **long format**: -->
+```{r,include=FALSE}
+library(dplyr)
+count(tm_2013, Elukoht, Vanuseklass, sort = TRUE) # outputs a tibble
+```
+
+```{r, include=FALSE}
+library(dplyr)
+count(medals, Gold, Silver, Bronze, sort = TRUE)
+```

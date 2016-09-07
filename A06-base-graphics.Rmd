@@ -13,18 +13,26 @@ library(help = "graphics") # complete list of functions
 
 Base R has extensive set of graphical parameters, which can be set or query using function `par`:
 ```{r, eval=FALSE}
-par() # look at the available graphical parameters
+par() # set or look at the available graphical parameters
 ```
 
 ## Histogram
-To illustrate `hist` function we use 2013 Tartu cross-country skiing marathon 63 km times (`Aeg` in Estonian). We first convert times in H:M:S format into periods using `hms()` function from `lubridate` package, then convert them to period objects with `as.duration` function (ibid.). `as.duration` gives us seconds, which we convert to decimal hours by dividing with 3600s (== 1h).
+To illustrate `hist` function we use 2013 Tartu cross-country skiing marathon 63 km times (`Aeg` in Estonian). 
+```{r}
+load("data/Tartu_Maraton_2013.RData")
+head(tm_2013)
+```
 
+We first convert times in H:M:S format into periods using `hms()` function from `lubridate` package, then convert them to period objects with `as.duration` function (ibid.). `as.duration` gives us seconds, which we convert to decimal hours by dividing with 3600s (== 1h).
 ```{r}
 library(lubridate) # for easy time manipulation
-head(tm_2013$Aeg)
-tm_2013[tm_2013$Nimi=="Päll, Taavi",]$Aeg 
 times <- hms(tm_2013$Aeg[-1]) 
 times <- unclass(as.duration(times))/3600 # unclass gives us numbers (time in seconds), which we further divide by 3600 to get time in hours
+```
+
+Lets have a look at `TP`-s finish time and convert it into decimal hours:
+```{r}
+tm_2013[tm_2013$Nimi=="Päll, Taavi",]$Aeg # TP-s time in H:M:S
 tp_time <- unclass(as.duration(hms(tm_2013[tm_2013$Nimi=="Päll, Taavi",]$Aeg)))/3600 
 ```
 
@@ -73,10 +81,10 @@ pairs(iris[1:4], # same output can be achieved also by using just plot()
 head(swiss)
 ```
 
-
+Here we plot matrix scatterplot using formula method from function example `?pairs`, if left hand side (dependent variable) of the formula is empty, we get all combinations of variables in the right hand side:
 ```{r}
 pairs(~ Fertility + Education + Catholic, data = swiss,
-      subset = Education < 20, main = "Swiss data, Education < 20") # formula method from function example
+      subset = Education < 20, main = "Swiss data, Education < 20") # formula method from function example 
 ```
 
 
@@ -92,7 +100,7 @@ pairs(~ Fertility + Education + Catholic, data = swiss,
 
 We plot plant CO~2~ uptake versus its concentration and add calculated linear model fit to the scatterplot:
 ```{r}
-plot(x = CO2$conc, y = CO2$uptake,
+plot(x = CO2$conc, y = CO2$uptake, # 
      pch = 16, col = "blue", # dot type and color
      main = "Carbon Dioxide Uptake in Grass Plants", # scatterplot
      las = 1) # horizontal y-axis labels

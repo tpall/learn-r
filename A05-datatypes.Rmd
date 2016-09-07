@@ -47,12 +47,11 @@ exam <- data.frame(name = namez, passed = passed)
 exam
 ```
 
-
 ![Illustration of R data types. Image: [http://yzc.me/2015/12/11/r-intro-1/](http://yzc.me/2015/12/11/r-intro-1/) ](https://raw.githubusercontent.com/Anonymous-Y/BlogImage/master/r-intro-3.jpg)
 
 ## Selecting by index
+Index gives the address that specifies the elements of vector/matrix/list or data.frame, which are then automatically selected.
 
-+ Index gives the address that specifies the elements of vector/matrix/list or data.frame, which are then automatically selected.
 + Indexing begins at 1 (not 0) in R
 + Indexing operators in R are square brackets -- '[', `[[` and dollar sign `$`  
 + `[` allows selecting more than one element, whereas `[[` and `$` select only one element.
@@ -81,7 +80,6 @@ Tip: you can use `tail` to return the very last element of a object with unknown
 tail(LETTERS, n = 1)
 ```
 
-
 ## Vectors
 
 The combine function `c()` is used to form the vector.
@@ -91,7 +89,6 @@ a <- c(1, 2, 5, -3, 6, -2, 4)
 b <- c("one", "two", "three")
 d <- c(TRUE,TRUE,TRUE,FALSE,TRUE,FALSE) # We use d instead of c as vector name. Why?
 ```
-
 
 `a` is a numeric vector, `b` is a character vector, and `d` is a logical vector. 
 The data in a vector can be only one type (numeric, character, or logical).
@@ -221,12 +218,13 @@ df <- data.frame(M = c(2, 3, 6, 3, 34), N = c(34, 3, 8, 3, 3), L = c(TRUE, FALSE
 df
 df[df$M == 34,] # selects rows from A that have value == 34
 ```
+
 ```{r}
 df[1:2, "N"] # selects rows 1 through 2 from column "A"
 ```
 
 ```{r}
-rownames(df) <- letters[1:5]
+rownames(df) <- letters[1:5] # letters vector gives us lower case letters
 df[rownames(df) == "c",] # selects row named "c"
 ```
 
@@ -239,12 +237,20 @@ df[, -2] # drops col 2, outputs vector!
 ```
 
 ```{r}
-df[df$M==6,] # selects all rows that do not contain 6 in column named M
+df[df$M == 6,] # selects all rows that contain 6 in column named M
 ```
 
+```{r}
+df[df$M != 6,] # selects all rows that do not contain 6 in column named M
+```
 
 ```{r}
 df[df$L==T,] # selects all rows where L is TRUE (T)
+```
+
+What if we have duplicated rows or elements in our data frame or vector (and we want to get rid of them)?
+```{r, eval=FALSE}
+?duplicated #  determines which elements of a vector or data frame are duplicates of elements with smaller subscripts
 ```
 
 ```{r}
@@ -272,7 +278,6 @@ Mean.height # Prints the answer
 ```
 
 New vectors can be bound into a data.frame:
-
 ```{r}
 my_tab$weight <- c(87, 96, 69) # Now there are 3 columns in my_tab
 my_tab
@@ -286,9 +291,7 @@ levels(my_tab$experiment) # prints the unique levels in a factor vector
 
 
 ## Matrix
-
 Matrix: a collection of data elements, which are all numeric, character, or logical. 
-
 ```{r}
 n <- matrix(rnorm(30), ncol = 5) 
 dim(n)
