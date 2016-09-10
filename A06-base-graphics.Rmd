@@ -16,44 +16,20 @@ Base R has extensive set of graphical parameters, which can be set or query usin
 par() # set or look at the available graphical parameters
 ```
 
-## Histogram
-To illustrate `hist` function we use 2013 Tartu cross-country skiing marathon 63 km times (`Aeg` in Estonian). 
-```{r}
-load("data/Tartu_Maraton_2013.RData")
-head(tm_2013)
-```
-
-We first convert times in H:M:S format into periods using `hms()` function from `lubridate` package, then convert them to period objects with `as.duration` function (ibid.). `as.duration` gives us seconds, which we convert to decimal hours by dividing with 3600s (== 1h).
-```{r}
-library(lubridate) # for easy time manipulation
-times <- hms(tm_2013$Aeg[-1]) 
-times <- unclass(as.duration(times))/3600 # unclass gives us numbers (time in seconds), which we further divide by 3600 to get time in hours
-```
-
-Lets have a look at `TP`-s finish time and convert it into decimal hours:
-```{r}
-tm_2013[tm_2013$Nimi=="Päll, Taavi",]$Aeg # TP-s time in H:M:S
-tp_time <- unclass(as.duration(hms(tm_2013[tm_2013$Nimi=="Päll, Taavi",]$Aeg)))/3600 
-```
-
-Now we plot a histogram of Tartu skiing marathon times and add a vertical line at `TP`-s time:
-```{r}
-hist(times, 
-     breaks = 100, # seems to be a good granularity
-     main = "Tartu cross-country skiing\nmarathon 2013, 63 km", # plot title. Pro tip: '\n' works as enter.
-     xlab = "Time, h", # x-axis label: time in seconds
-     las = 1) # horizontal y-axis labels
-abline(v = tp_time, col = "red", lwd = 2) # add red vertical line
-```
-
-```{r}
-hist(times, breaks = seq(2, 10, by = 0.25)) # breaks after every 15 min
-```
-
-
 ## Scatterplot
-Scatterplots can be created using `plot()`. Here we explore the relationship between sepal length and width in different iris species. `iris$Species` column is used as the factor by whose levels to color the points (R will automatically order factor levels in alphabetical order: setosa, versicolor and virginica). `palette()` gives you the colors and their order, and it allows you to manipulate the color palette (see `?palette`).
+Scatterplots can be created using `plot()`. If we use `plot()` command with only one variable, we get graph with values versus index. 
+```{r}
+plot(iris$Sepal.Length)
+```
 
+More sensible use of scatterplot is visualizing relationship between variables. Here, we explore the relationship between sepal length and width in different iris species.
+
+```{r}
+plot(iris$Sepal.Length, iris$Sepal.Width)
+```
+It's nice! But we don't know witch dot belongs to which of the three iris species (`r levels(iris$Species)`).
+
+We can fix that with `col=` argument, where `iris$Species` column is used as the factor by whose levels to color the dots (R will automatically order factor levels in alphabetical order: `r levels(iris$Species)`). `palette()` gives you the colors and their order, and it allows you to manipulate the color palette (see `?palette`).
 ```{r}
 plot(iris$Sepal.Length, iris$Sepal.Width, 
      col = iris$Species, # dots are colored by species
@@ -127,6 +103,41 @@ mod2 <- nls(uptake ~ SSlogis(conc, Asym, xmid, scal), data = CO2) # nonlin fit u
 xvals <- seq(from = 95, to = 1000, by = 3) # new x values for which we want model prediction
 lines(x = xvals, y = predict(mod2, list(conc = xvals)), col = "green", lty = 2, lwd = 2) # add nonlin fit line
 legend("bottomright", legend = c("linear model", "exponential model") , lty = 2, col = c("red", "green"), bty = "n", lwd = 2) # add legend to the plot
+```
+
+
+## Histogram
+To illustrate `hist` function we use 2013 Tartu cross-country skiing marathon 63 km times (`Aeg` in Estonian). 
+```{r}
+load("data/Tartu_Maraton_2013.RData")
+head(tm_2013)
+```
+
+We first convert times in H:M:S format into periods using `hms()` function from `lubridate` package, then convert them to period objects with `as.duration` function (ibid.). `as.duration` gives us seconds, which we convert to decimal hours by dividing with 3600s (== 1h).
+```{r}
+library(lubridate) # for easy time manipulation
+times <- hms(tm_2013$Aeg[-1]) 
+times <- unclass(as.duration(times))/3600 # unclass gives us numbers (time in seconds), which we further divide by 3600 to get time in hours
+```
+
+Lets have a look at `TP`-s finish time and convert it into decimal hours:
+```{r}
+tm_2013[tm_2013$Nimi=="Päll, Taavi",]$Aeg # TP-s time in H:M:S
+tp_time <- unclass(as.duration(hms(tm_2013[tm_2013$Nimi=="Päll, Taavi",]$Aeg)))/3600 
+```
+
+Now we plot a histogram of Tartu skiing marathon times and add a vertical line at `TP`-s time:
+```{r}
+hist(times, 
+     breaks = 100, # seems to be a good granularity
+     main = "Tartu cross-country skiing\nmarathon 2013, 63 km", # plot title. Pro tip: '\n' works as enter.
+     xlab = "Time, h", # x-axis label: time in seconds
+     las = 1) # horizontal y-axis labels
+abline(v = tp_time, col = "red", lwd = 2) # add red vertical line
+```
+
+```{r}
+hist(times, breaks = seq(2, 10, by = 0.25)) # breaks after every 15 min
 ```
 
 ## Boxplot
