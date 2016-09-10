@@ -49,7 +49,7 @@ exam
 
 ![Illustration of R data types. Image: [http://yzc.me/2015/12/11/r-intro-1/](http://yzc.me/2015/12/11/r-intro-1/) ](https://raw.githubusercontent.com/Anonymous-Y/BlogImage/master/r-intro-3.jpg)
 
-## Selecting by index
+# Selecting by index
 Index gives the address that specifies the elements of vector/matrix/list or data.frame, which are then automatically selected.
 
 + Indexing begins at 1 (not 0) in R
@@ -80,7 +80,7 @@ Tip: you can use `tail` to return the very last element of a object with unknown
 tail(LETTERS, n = 1)
 ```
 
-## Vectors
+# Vectors
 
 The combine function `c()` is used to form the vector.
 
@@ -138,7 +138,7 @@ rep(c("poodle","sheltie"), each = 3, times = 2)
 ```
 
 
-## Data frame
+# Data frame
 
 * `data frame`: a collection of vectors where different columns can contain different modes of data (numeric, character, and so on). 
 Each vector contains only 1 mode of data (`vector1 <- c("a", 2, 3.4)` is automatically coerced to `chr`, but can be manually coerced to numeric or factor). 
@@ -193,7 +193,7 @@ ncol(my_tab)
 dim(my_tab)
 ```
 
-### Indexing data.frames
+## Indexing data.frames
 <!-- Data frames can be indexed in several modes. When [ and [[ are used with a single vector index (x[i] or x[[i]]), they index the data frame as if it were a list. -->
 
 We use R `mtcars` dataset to illustrate indexing of a data.frame:
@@ -290,7 +290,7 @@ levels(my_tab$experiment) # prints the unique levels in a factor vector
 ```
 
 
-## Matrix
+# Matrix
 Matrix: a collection of data elements, which are all numeric, character, or logical.
 
 Why use matrix? The choice between matrix and data.frame comes up only if you have data of the same type.
