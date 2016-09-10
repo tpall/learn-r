@@ -23,11 +23,10 @@ plot(iris$Sepal.Length)
 ```
 
 More sensible use of scatterplot is visualizing relationship between variables. Here, we explore the relationship between sepal length and width in different iris species.
-
 ```{r}
 plot(iris$Sepal.Length, iris$Sepal.Width)
 ```
-It's nice! But we don't know witch dot belongs to which of the three iris species (`r levels(iris$Species)`).
+Looks OK-ish. But we don't know witch dot belongs to which of the three iris species (`r levels(iris$Species)`).
 
 We can fix that with `col=` argument, where `iris$Species` column is used as the factor by whose levels to color the dots (R will automatically order factor levels in alphabetical order: `r levels(iris$Species)`). `palette()` gives you the colors and their order, and it allows you to manipulate the color palette (see `?palette`).
 ```{r}
