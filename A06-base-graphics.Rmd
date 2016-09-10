@@ -17,12 +17,12 @@ par() # set or look at the available graphical parameters
 ```
 
 ## Scatterplot
-Scatterplots can be created using `plot()`. If we use `plot()` command with only one variable, we get graph with values versus index. 
+Scatterplots can be created using `plot()`. If we use `plot()` command with only one variable, we get graph with values versus index. We can use this representation to find out where we have gross outliers in our variable.
 ```{r}
 plot(iris$Sepal.Length)
 ```
 
-More sensible use of scatterplot is visualizing relationship between variables. Here, we explore the relationship between sepal length and width in different iris species.
+Even more sensible use of scatterplot is visualizing relationship between variables. Here, we explore the relationship between sepal length and width in different iris species.
 ```{r}
 plot(iris$Sepal.Length, iris$Sepal.Width)
 ```
