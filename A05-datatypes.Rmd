@@ -420,7 +420,11 @@ class(mylist[c(1,2)]) # returns list with two objects
 class(mylist[[1]]) # returns list object as vector in this case
 ```
 
+<<<<<<< HEAD
 If we use double square brackets `[[` with index vector e.g. c(3,2) we get 2nd element from 3rd list object:
+=======
+If we use double square brackets `[[` with index vector c(3,2) we get 2nd element from 3rd list object:
+>>>>>>> b5c388cce05a5f4004e6d19bfc57b91584243591
 ```{r}
 mylist[[c(3,2)]]
 ```
