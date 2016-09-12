@@ -5,9 +5,9 @@
 # Merging tables
 
 ## Combine by rows and columns
-Take a sequence of vector, matrix or data-frame arguments and combine by columns or rows, respectively.
+Base R `rbind` and `cbind` **take in a sequence of vector, matrix or data-frame** and combine by rows or columns, respectively. Meaning that if you want to combine only data frames you have also option to use Hadleyverse's `dplyr::bind_rows` or `dplyr::bind_cols`. Otherwise, if playing around with vectors and/or matrices too, you have to stick with base R functions.  
 
-For `rbind` column names are taken from the first argument with appropriate names: colnames for a matrix, or names for a vector of length the number of columns of the result.
+Don't try to understand this excerpt from help: for `rbind` column names are taken from the first argument with appropriate names: colnames for a matrix, or names for a vector of length the number of columns of the result.
 
 To illustrate combining two data.frames by rowwise we first subset `mtcars` dataset into two
 mini dataframes:
@@ -27,7 +27,7 @@ Combine by rows using base R `rbind`, **columns need to match**:
 rbind(df1, df2)
 ```
 
-Hadleyverse's verb to perform this task is `bind_rows`: 
+Hadleyverse's verb to perform this task is `bind_rows`, however note that `bind_rows` (`bind_cols`) **needs data frames** (NO vectors or matrices!): 
 ```{r}
 library(dplyr)
 bind_rows(df1, df2) 
@@ -61,32 +61,37 @@ do.call(rbind, df_list) # bind dataframes in list by rows
 
 `bind_rows` argument can also be a **list of data frames**, and again, columns are matched by name, and any values that don't match will be filled with `NA`-s:
 ```{r}
-bind_rows(list(df1 = df1, 
+df_list2 <- list(df1 = df1, 
           df2 = mtcars[11:13, c(1,4,6)], 
-          df3 = mtcars[4:6, c(1,6)]),
-          .id = "id")
+          df3 = mtcars[4:6, c(1,6)])
+bind_rows(df_list2, .id = "id")
 ```
 
+Combining two vectors of same length columnwise results in matrix (similar to rbind):
+```{r}
+cbind(letters[1:5], 1:5)
+```
 
+When combining vectors with different lengths, the shorter one is recycled:
 ```{r}
 m <- cbind(1, 1:7) # the '1' (= shorter vector) is recycled
 m
 ```
 
+Columns can be inserted by specifing order of colums in the index:
 ```{r}
-m <- cbind(m, 8:14)[, c(1, 3, 2)] # insert a column
-m
+cbind(m, 8:14)[, c(1, 3, 2)] # insert a column
 ```
 
+When the arguments consist of a mix of matrices and vectors the number of rows of the result is determined by the number of rows of the matrix arguments:
+```{r}
+cbind(1:7, matrix(11:16, nrow = 3)) # vector is subset -> warning
+```
 
-
-cbind(1:7, matrix(1:12, nrow = 3)) # vector is subset -> warning
-library(dplyr)
-bind_cols(data_frame(1:4),data_frame(letters[1:4]))
-
-# dplyr verbs, use for syntax consistency. Much more strict about arguments.
-bind_rows()
-bind_cols(data_frame(1:7, letters[1:7]), data_frame(sample(c(T,F),7, replace =T)))
+When column-binding, rows are matched by position, not value so all data frames must have the same number of rows.
+```{r}
+# bind_cols(1:4, 4:8)
+```
 
 
 ## Joins
