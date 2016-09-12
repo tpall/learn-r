@@ -18,7 +18,7 @@ set.seed(437385) # from random.org
 options(lubridate.verbose = FALSE, "getSymbols.warning4.0" = FALSE)
 ```
 
-^1^[University of Tartu, Institute of Technology](http://www.tuit.ut.ee/en),   
+^1^[University of Tartu, Institute of Technology](http://www.tuit.ut.ee/en),      
 ^2^[Tallinn University of Technology, Department of Gene Technology](http://www.ttu.ee/faculty-of-science/department-of-gene-technology/)
 
 ```{r collectfiles, echo = FALSE, message = FALSE, results = 'asis'}
