@@ -76,6 +76,7 @@ When combining vectors with different lengths, the shorter one is recycled:
 ```{r}
 m <- cbind(1, 1:7) # the '1' (= shorter vector) is recycled
 m
+rbind(1:6, 7:8) # same applies to rbind
 ```
 
 Columns can be inserted by specifing order of colums in the index:
@@ -88,11 +89,20 @@ When the arguments consist of a mix of matrices and vectors the number of rows o
 cbind(1:7, matrix(11:16, nrow = 3)) # vector is subset -> warning
 ```
 
-When column-binding, rows are matched by position, not value so all data frames must have the same number of rows.
+When column-binding, rows are matched by position, not value so all data frames must have the same number of rows:
 ```{r}
-# bind_cols(1:4, 4:8)
+bind_cols(df1, mtcars[1:2,5:6])
 ```
 
+Summary:
+
++ `rbind`, `cbind` take in vectors, matrices and data frames.
++ `bind_rows`, `bind_cols` -- **data frames only**.
++ with `rbind` column names must match as well numbers of columns.
++ `bind_rows` handles non-matching cols and rows with ease.
++ in case of combining vector with array, `cbind` handles non-matching vector length with row number and recycles or subsets vector if necessary.
++ `bind_cols` need same number of rows in data frames.
++ whatever you combine, onus is on you to ensure that proper rows and columns get combined, when they get combined.
 
 ## Joins
 To illustrate merging, let's consider [following itinerary](http://www.ester.ee/record=b2697405*est). 
