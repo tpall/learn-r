@@ -4,26 +4,41 @@
 
 # Merging tables
 
-## Combine by rows
+## Combine by rows and columns
 For `rbind` column names are taken from the first argument with appropriate names: colnames for a matrix, or names for a vector of length the number of columns of the result.
 
-To illustrate combining two data.frames by rowwise we first split `mtcars` dataset into two:
+To illustrate combining two data.frames by rowwise we first subset `mtcars` dataset into two
+mini dataframes:
 ```{r}
 dim(mtcars)
-head(mtcars)
-df1 <- mtcars[1:4, ]
-df2 <- mtcars[11:15, ]
+df1 <- mtcars[1:2, c(1,4)]
+df1
 ```
 
+```{r}
+df2 <- mtcars[11:13, c(1,4)]
+df2
+```
+
+Combine by rows using base R `rbind`, **columns need to match**:
 ```{r}
 rbind(df1, df2)
 ```
 
-
-
+Hadleyverse's verb to perform this task is `bind_rows`: 
 ```{r}
-b <- dplyr::bind_rows("group 1" = df1, "group 2" = df2, .id = "groups") # When you supply a column name with the `.id` argument, a new column is created to link each row to its original data frame. Columns don't need to match when row-binding
-b
+library(dplyr)
+bind_rows(df1, df2) 
+```
+
+When you supply a column name with the `.id=` argument, a new column is created to link each row to its original data frame:
+```{r}
+bind_rows(df1 = df1, df2 = df2, .id = "id")
+```
+
+**Columns don't need to match** when row-binding using `bind_rows`:
+```{r}
+bind_rows(df1 = df1, df2 = mtcars[11:13, c(1,4,6)], .id = "id")
 ```
 
 
@@ -32,21 +47,18 @@ If you have **data frames or tibbles** with same column names **in a list**, the
 Here we first create list with two dataframes:
 ```{r}
 df_list <- list(df1, df2)
+df_list
 ```
-
 
 `do.call(rbind, my_list_of_dataframes)` is base R solution to this task.
 ```{r}
-rbound_datasets <-  do.call(rbind, df_list) # bind dataframes in list by rows
-nrow(rbound_datasets) # how many rows we have now
+do.call(rbind, df_list) # bind dataframes in list by rows
 ```
 
 Alternative and some say that even preferred solution is `bind_rows` from `dplyr` package.
 ```{r}
-rbound_datasets2 <- dplyr::bind_rows(df_list)
-nrow(rbound_datasets2) # how many rows we have now
+bind_rows(df_list, .id = "id")
 ```
-
 
 ## Joins
 To illustrate merging, let's consider [following itinerary](http://www.ester.ee/record=b2697405*est). 
