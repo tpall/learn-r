@@ -1,5 +1,4 @@
 ---
-
 ---
 
 # Merging tables
@@ -105,83 +104,94 @@ Summary:
 + whatever you combine, onus is on you to ensure that proper rows and columns get combined, when they get combined.
 
 ## Joins
-To illustrate merging, let's consider [following itinerary](http://www.ester.ee/record=b2697405*est). 
-Here we have day of travel and city.
-```{r}
-itinerary <- data.frame(day = c(1:6), city = c("Teheran", "Qom", "Esfahan", "Persepolis", "Shiraz", "Bandar"))
-head(itinerary)
-```
+During data analysis you find out quite often that your data is lying around in multiple tables and you need to combine these sets.
+In `dplyr`, [there are three families of verbs](https://cran.r-project.org/web/packages/dplyr/vignettes/two-table.html) that work with two tables at a time:
 
-Next table we have hotels with addresses for each city.
-```{r}
-lodging <- data.frame(city = c("Teheran", "Qom", "Esfahan", "Persepolis", "Shiraz", "Bandar"), hotel = c("Firouzeh Hotel", "Aria Hotel", "Amir Kabir Hotel", "Sita Aukh Guest House", "Anvari Hotel", "Bolivar Inn"), address = c("Dowlat Abad Alley", "Astane Square", "Chahar Bagh Abbasi Street", "Tume Junn Mohammad Street", "Anvari Street", "Abuzar Street"))
-head(lodging)
-```
++ Mutating joins, which add new variables to one table from matching rows in another.
++ Filtering joins, which filter observations from one table based on whether or not they match an observation in the other table.
++ Set operations, which combine the observations in the data sets as if they were set elements.
 
-<!-- #### base::merge -->
-<!-- We use base R function `merge` to join these tables by explicitly specifying column/variable 'by = "city"' (e.g. in order to guarantee consistent behaviour when number of columns in our data frame can vary in our script). -->
-<!-- By default, `merge` joins data frames on the columns with names they both have. -->
-
-<!-- ```{r} -->
-<!-- merge(itinerary, lodging, by = "city", sort = FALSE) # don't sort on 'by' column -->
-<!-- ``` -->
-
-<!-- If we choose only rows 1 through 3 from table `lodging`? -->
-<!-- ```{r} -->
-<!-- merge(itinerary, lodging[1:3,], by = "city", sort = FALSE)  -->
-<!-- ``` -->
-
-<!-- If we choose only rows 2 through 5 from table `itinerary`? -->
-<!-- ```{r} -->
-<!-- merge(itinerary[2:5,], lodging, by = "city", sort = FALSE)  -->
-<!-- ``` -->
-
-<!-- In our simple example we always have only matching rows in our results. -->
-
-<!-- #### dplyr::inner_join and friends -->
-We use `dplyr` `_join` functions to join these tables by explicitly specifying column/variable 'by = "city"' (e.g. in order to guarantee consistent behaviour when number of columns in our data frame can vary in our script).
-
-```{r include=FALSE}
-x <- as.character(bquote(itinerary))
-y <- as.character(bquote(lodging))
-```
-
-
-Returns all rows from `r paste(x)` where there are matching values in `r paste(x)`, and all columns from `r paste(x)` and `r paste(y)`.
+To illustrate joining, let's consider [following data](http://www.ester.ee/record=b2697405*est). 
+Here we have day of travel, city, and population.
 ```{r}
 library(dplyr)
-inner_join(itinerary, lodging, by = "city")
+trip <- data_frame(day = c(1:8), city = c("Teheran", "Qom", "Esfahan", "Persepolis", "Shiraz", "Bandar", "Karaj", "Tabriz"), pop = c(8846782,1374036,1945765,NA,1460665,212,1967005,1549453))
+head(trip)
+```
+
+Next table we have hotels with addresses for some of the cities.
+```{r}
+hotels <- data_frame(city = c("Teheran", "Qom", "Esfahan", "Persepolis", "Shiraz", "Bandar"), hotel = c("Firouzeh Hotel", "Aria Hotel", "Amir Kabir Hotel", "Sita Aukh Guest House", "Anvari Hotel", "Bolivar Inn"), address = c("Dowlat Abad Alley", "Astane Square", "Chahar Bagh Abbasi Street", "Tume Junn Mohammad Street", "Anvari Street", "Abuzar Street"))
+head(hotels)
+```
+
+### Mutating joins
+We use `dplyr` `left_join` and `inner_join` functions to combine these tables by explicitly specifying column/variable 'by = "city"' (e.g. in order to guarantee consistent behaviour when number of columns in our data frame can vary in our script). If keep default 'by = NULL', then two datasets are combined by all matching columns.
+
+```{r include=FALSE}
+x <- as.character(bquote(trip))
+y <- as.character(bquote(hotels))
+```
+
+`left_join` returns all rows from `r paste(x)` where there are matching values in `r paste(x)`, and all columns from `r paste(x)` and `r paste(y)`.
+```{r}
+left_join(trip, hotels, by = "city") 
+```
+`left_join` is the most commonly used join because it ensures that you don't lose observations from your primary table on the left side.
+
+`inner_join` returns all rows from `r paste(x)`, and all columns from `r paste(x)` and `r paste(y)`. Rows in `r paste(x)` with no match in `r paste(y)` will have NA values in the new columns.
+```{r}
+inner_join(trip, hotels, by = "city") 
+```
+
+<!-- Lets consider immune assay data on a 8-well slide, we have quantitated whole plate, but we performed our assay only in wells 3 to 6: -->
+<!-- ```{r} -->
+<!-- well <- c(outer(LETTERS[1:4], 1:2, paste0)) # microplate wells rows A to H, and cols 1 to 12  -->
+<!-- slide <- data_frame(well, value = runif(8)) # we have 'read in' some values for each well -->
+<!-- slide -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- metadata <- data_frame(well = well[3:6],  -->
+<!--                        Ab = rep(c("catb","cdh1"), 2)) -->
+<!-- metadata -->
+<!-- ``` -->
+
+<!-- `inner_join` only includes observations that match in both x and y. -->
+<!-- ```{r} -->
+<!-- inner_join(slide, metadata)  -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- left_join(slide, metadata) -->
+<!-- ``` -->
+
+```{r}
+df1 <- data_frame(x = c(1, 2), y = c(T, F))
+df1
 ```
 
 ```{r}
-inner_join(itinerary[2:5,], lodging[1:3,], by = "city") 
+df2 <- data_frame(x = c(1, 3), a = 10, b = "a")
+df2
 ```
 
-Returns all rows from `r paste(x)`, and all columns from `r paste(x)` and `r paste(y)`. Rows in `r paste(x)` with no match in `r paste(y)` will have NA values in the new columns.
+`left_join(x, y)` includes all observations from x and observations from y that have match in x:
 ```{r}
-left_join(itinerary[2:5,], lodging, by = "city") 
+left_join(df1, df2)
 ```
 
+`inner_join(x, y)` only includes observations that match in both x and y:
 ```{r}
-left_join(itinerary, lodging[2:5,], by = "city") 
-```
-
-Returns all rows from `r paste(y)`, and all columns from `r paste(x)` and `r paste(y)`. Rows in `r paste(y)` with no match in `r paste(x)` will have NA values in the new columns. 
-```{r}
-right_join(itinerary, lodging[2:5,], by = "city") 
-```
-
-Returns all rows from `r paste(x)` where there are matching values in `r paste(y)`, keeping just columns from `r paste(x)`.
-```{r}
-semi_join(itinerary, lodging[2:4,], by = "city") # returns only cols from itinerary 
+inner_join(df1, df2)
 ```
 
 Return all rows from `r paste(x)` where there are not matching values in `r paste(y)`, keeping just columns from `r paste(x)`.
 ```{r}
-anti_join(itinerary[1:3,], lodging[3:4,], by = "city") # returns cols fron itinerary where there are no matching values in lodging 
+anti_join(trip[1:3,], hotels[3:4,], by = "city") # returns cols fron trip where there are no matching values in hotels 
 ```
 
 Return all rows and all columns from both `r paste(x)` and `r paste(y)`. Where there are not matching values, returns NA for the one missing.
 ```{r}
-full_join(itinerary[1:3,], lodging[3:6,], by = "city") 
+full_join(trip[1:3,], hotels[3:6,], by = "city") 
 ```
