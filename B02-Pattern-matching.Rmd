@@ -43,3 +43,65 @@ fruit %>% filter(grepl("M", Gender)) %>% tbl_df
 ```
 
 
+<!-- # Regular expression  -->
+<!-- A pattern that we use to search in strings can be strict (like a nucleotide string "ACAGC") or "fuzzy" ("ACNGY" where N is any nucleotide and Y is C or T). To create fuzzy search patterns we use a system called **regular expression**. As regular expression is both hugely flexible and insanely complicated, we can only scratch the surface here. -->
+
+<!-- + By default, regular expressions will match any part of a string.  -->
+<!-- + `^` anchors the regular expression to the start of the string. -->
+<!-- + `$` anchors the the regular expression to end of the string. -->
+
+<!-- ```{r} -->
+<!-- x <- c("apple", "ananas", "banana") -->
+<!-- #replaces all a-s at the beginning of strings with e-s -->
+<!-- str_replace_all(x, "^a", "e")  -->
+<!-- #only replaces at the first occurence -->
+<!-- str_replace(x, "a$", "e")  -->
+<!-- #replaces a and the following character at the end of string -->
+<!-- str_replace(x, "a.$", "e") -->
+<!-- #replaces a-s or s-s at the end of string with e-s -->
+<!-- str_replace_all(x, "(a|s)$", "e") -->
+<!-- #replaces a-s or s-s anywhere in the string with e-s -->
+<!-- str_replace_all(x, "a|s", "e") -->
+<!-- ``` -->
+
+
+<!-- To force to only match a complete string: -->
+<!-- ```{r} -->
+<!-- str_view(x, "^apple$") -->
+<!-- ``` -->
+
+<!-- **patterns that match more than one character:** -->
+
+<!-- + `.` (dot): any character apart from a newline. -->
+<!-- + `\\d`: any digit. -->
+<!-- + `\\s`: any whitespace (space, tab, newline). -->
+<!-- + `\[abc]`: match a, b, or c. -->
+<!-- + `\[!abc]`: match anything except a, b, or c. -->
+
+<!-- To create a regular expression containing `\d` or `\s`, you'll need to escape the `\` for the string, so you'll type `\\\\d` or `\\\\s`. -->
+
+<!-- + `abc|d..f` will match either 'abc', or 'deaf'.  -->
+
+<!-- ```{r} -->
+<!-- str_view(c("abc", "xyz"), "abc | xyz") -->
+<!-- ``` -->
+
+<!-- If precedence gets confusing, use parentheses to make it clear what you want: -->
+<!-- ```{r} -->
+<!-- str_detect(c("grey", "gray"), "gr(e|a)y") -->
+<!-- str_detect(c("grey", "gray"), "gr(?:e|a)y") #unequivocal vers. of the above -->
+
+<!-- ``` -->
+
+<!-- This beauty removes all numbers from text strings. Can be very useful. -->
+<!-- ```{r} -->
+<!-- y <- c("as1", "2we3w", "3e") -->
+<!-- str_replace_all(y, "\\d", "")  -->
+<!-- ``` -->
+
+<!-- Even better, this removes everything except numbers. Yes, you may send us thank-you letters! -->
+<!-- ```{r} -->
+<!-- y<-c("as1", "2we3w", "3e") -->
+<!-- str_replace_all(y, "[A-Za-z_]", "")  -->
+<!-- ``` -->
+
