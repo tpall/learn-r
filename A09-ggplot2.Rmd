@@ -1,0 +1,24 @@
+---
+
+---
+
+# ggplot2 -- grammar of graphics
+**ggplot2** is an R package for producing statistical graphics based on the grammar of graphics (hence the gg!).
+
+Main features of ggplot2:
++ ggplot2 has plots with presets like drawing legends and high data-ink ratio. 
++ ggplot2 works iteratively -- you can start with a layer showing the raw data and then add layers of annotations and statistical summaries.
+
+To compose a plots, you have to supply minimally:
+
++ **Data** that you want to visualise and **aes**thetic mappings -- what's on x-axis, what's on y-axis, and how to you want to group and color your data.
++ **Layers** made up of **geom**etric elements: points, lines, boxes, etc. 
+
+You can further adjust your plot:
+
++ using **scale**s to redraw a legend or axes.
++ using **facet**ing to break up the data into subsets for display.
++ using **theme**s which control plot features like the font size 
+  and background colour.
+  
+  
