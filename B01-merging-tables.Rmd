@@ -144,28 +144,6 @@ left_join(trip, hotels, by = "city")
 inner_join(trip, hotels, by = "city") 
 ```
 
-<!-- Lets consider immune assay data on a 8-well slide, we have quantitated whole plate, but we performed our assay only in wells 3 to 6: -->
-<!-- ```{r} -->
-<!-- well <- c(outer(LETTERS[1:4], 1:2, paste0)) # microplate wells rows A to H, and cols 1 to 12  -->
-<!-- slide <- data_frame(well, value = runif(8)) # we have 'read in' some values for each well -->
-<!-- slide -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- metadata <- data_frame(well = well[3:6],  -->
-<!--                        Ab = rep(c("catb","cdh1"), 2)) -->
-<!-- metadata -->
-<!-- ``` -->
-
-<!-- `inner_join` only includes observations that match in both x and y. -->
-<!-- ```{r} -->
-<!-- inner_join(slide, metadata)  -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- left_join(slide, metadata) -->
-<!-- ``` -->
-
 ```{r}
 df1 <- data_frame(x = c(1, 2), y = c(T, F))
 df1

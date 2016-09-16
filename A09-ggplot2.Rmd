@@ -2,12 +2,13 @@
 
 ---
 
-# ggplot2 -- grammar of graphics
+# ggplot2
 **ggplot2** is an R package for producing statistical graphics based on the grammar of graphics (hence the gg!).
 
 Main features of ggplot2:
-+ ggplot2 has plots with presets like drawing legends and high data-ink ratio. 
-+ ggplot2 works iteratively -- you can start with a layer showing the raw data and then add layers of annotations and statistical summaries.
+
++ **ggplot2 works iteratively** -- you start with a layer showing the raw data and then add layers of annotations and statistical summaries.
++ **default** plots include **legend** and are styled using **high data-ink ratio theme**.
 
 To compose a plots, you have to supply minimally:
 
@@ -16,9 +17,43 @@ To compose a plots, you have to supply minimally:
 
 You can further adjust your plot:
 
++ by adding **statistical summaries** of your raw data.
 + using **scale**s to redraw a legend or axes.
 + using **facet**ing to break up the data into subsets for display.
 + using **theme**s which control plot features like the font size 
   and background colour.
-  
-  
+
+ggplot2 is different from base graphics:
+
++ Plots created by base graphics appear only on the screen -- you cannot assign plot to an object for later use. Everything is created in place.
++ You can only draw on top of the plot, you cannot modify or delete existing content.
+
+```{r}
+library(ggplot2)
+library(dplyr)
+```
+
+ggplot2 has builtin dataset `mpg` with fuel economy data from 1999 and 2008 for 38 popular models of car:
+```{r}
+mpg
+```
+
+Key variables: displ -- engine displacement (L), cyl -- number of cylinders, cty -- city miles per gallon, hwy -- highway miles per gallon:
+```{r}
+summary(mpg)
+```
+
+Illustration of iterativity of ggplot creation:
+```{r}
+p <- ggplot(data = mpg) # first add data
+p <- p + aes(x = cty, y = hwy) # add aesthetics
+p <- p + geom_point() # add geom
+p <- p + stat_smooth(method = "lm") # add statistical summary
+p # display plot
+```
+
+More commonly plots are created like this:
+```{r}
+mpg %>% ggplot(aes(x = factor(cyl), y = cty)) + geom_point()
+```
+`aes()` is inside ggplot call. Note that dataset was piped into ggplot and `geom_point()` layer was added (`+`) to the ggplot.
