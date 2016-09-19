@@ -65,17 +65,17 @@ ggplot(df, aes(x)) + # histograms
   geom_histogram() # we specify geom histogram 
 ```
 
-ggplot says: `stat_bin()` using `bins = 30`. *The default is to use bins bins that cover the range of the data. You should always override this value, exploring multiple widths to find the best to illustrate the stories in your data*. Pick better value with `binwidth`, ok lets try:
+ggplot says: `stat_bin()` using `bins = 30`. Pick better value with `binwidth`, also help file notes that `the default is to use bins bins that cover the range of the data. You should always override this value, exploring multiple widths to find the best to illustrate the stories in your data`. OK, Messy Goes to Okido, lets try:
 ```{r}
 ggplot(df, aes(x)) + geom_histogram(binwidth = 0.1)
 ```
 
-Alternatively, you can specify the number of bins:
+Alternatively, you can specify the number of bins (and send some hidden messages along with your data):
 ```{r}
 ggplot(df, aes(x)) + geom_histogram(bins = 5)
 ```
 
-Lets recreate Tartu Marathon 2013 histogram:
+For some more practice, lets recreate Tartu Marathon 2013 histogram:
 ```{r}
 library(lubridate)
 load("data/Tartu_Maraton_2013.RData")
@@ -85,5 +85,40 @@ load("data/Tartu_Maraton_2013.RData")
 tm_2013 %>% mutate(Aeg = unclass(as.duration(hms(Aeg)))/3600) %>% 
   ggplot(aes(Aeg)) + 
   geom_histogram(binwidth = 1/12) # binwidth ~5 minutes
+```
+
+These were histograms with counts on y-axis, but we may want to plot (kernel) density instead:
+```{r}
+ggplot(df, aes(x)) + geom_density()
+```
+
+```{r}
+ggplot(df, aes(x, ..density..)) + geom_histogram()
+```
+
+Kernel density plot and histogram together: 
+```{r}
+ggplot(df, aes(x, ..density..)) + 
+  geom_histogram(binwidth = 0.1) +
+  geom_density()
+```
+
+```{r}
+p <- ggplot(df, aes(x)) + 
+  geom_histogram(aes(y = ..density..), # note that we specify density here, 
+                 binwidth = 0.1, 
+                 fill = "white", color = "black") +
+  geom_density()
+p # we disrected plot to object
+```
+
+We can add vertical line, denoting mean, to our histogram like this:
+```{r}
+p + geom_vline(aes(xintercept = mean(x)), color = "red", linetype = "dashed", size = 1) 
+```
+
+Colored/grouped density plots:
+```{r}
+
 ```
 
