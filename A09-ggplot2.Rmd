@@ -5,12 +5,9 @@
 # ggplot2
 **ggplot2** is an R package for producing statistical graphics based on the grammar of graphics (hence the gg!).
 
-Main features of ggplot2:
++ **ggplot2 works iteratively** -- you start with a layer showing the raw data and then add layers of geoms, annotations, and statistical summaries.
 
-+ **ggplot2 works iteratively** -- you start with a layer showing the raw data and then add layers of annotations and statistical summaries.
-+ **default** plots include **legend** and are styled using **high data-ink ratio theme**.
-
-To compose a plots, you have to supply minimally:
+To compose plots, you have to supply minimally:
 
 + **Data** that you want to visualise and **aes**thetic mappings -- what's on x-axis, what's on y-axis, and how to you want to group and color your data.
 + **Layers** made up of **geom**etric elements: points, lines, boxes, etc. 
@@ -25,35 +22,68 @@ You can further adjust your plot:
 
 ggplot2 is different from base graphics:
 
-+ Plots created by base graphics appear only on the screen -- you cannot assign plot to an object for later use. Everything is created in place.
++ Plots created by base graphics appear only on the screen and you cannot assign plot to an object for later use. Everything is created in place.
 + You can only draw on top of the plot, you cannot modify or delete existing content.
 
+That was theory, you can read more from [ggplot2-book](https://github.com/hadley/ggplot2-book), this is where rubber meets the road:
 ```{r}
-library(ggplot2)
-library(dplyr)
+library(ggplot2) # load ggplot2 library
+library(dplyr) # dplyr is necessary for piping operator and for some data munging
 ```
 
-ggplot2 has builtin dataset `mpg` with fuel economy data from 1999 and 2008 for 38 popular models of car:
+We use ggplot2 builtin dataset `mpg` with fuel economy data from 1999 and 2008 for 38 models of car:
 ```{r}
 mpg
 ```
+Key variables in `mpg` dataset are `displ` -- engine displacement (L), `cyl` -- number of cylinders, `cty` -- city miles per gallon, `hwy` -- highway miles per gallon.
 
-Key variables: displ -- engine displacement (L), cyl -- number of cylinders, cty -- city miles per gallon, hwy -- highway miles per gallon:
-```{r}
-summary(mpg)
+Simple scatterplot to explore relationship between fuel consumption in city traffick (cty) and engine size (displ) is created like this:
+```{r}s
+ggplot(mpg, aes(displ, cty)) + geom_point()
 ```
+**Notice that**: in ggplot first two unnamed arguments to `aes()` are `x` and `y`, so we can easily skip `x =` and `y =` to reduce typing.
 
-Illustration of iterativity of ggplot creation:
+To illustrate layerwise plot creation in ggplot:
 ```{r}
 p <- ggplot(data = mpg) # first add data
 p <- p + aes(x = cty, y = hwy) # add aesthetics
-p <- p + geom_point() # add geom
+p <- p + geom_point() # add geom, specifying plot type 
 p <- p + stat_smooth(method = "lm") # add statistical summary
 p # display plot
 ```
+The **point geom is used to create scatterplots**.
 
-More commonly plots are created like this:
-```{r}
-mpg %>% ggplot(aes(x = factor(cyl), y = cty)) + geom_point()
+Of course, same result is easily achieved by this oneliner:
+```{r, eval=FALSE}
+ggplot(mpg, aes(cty, hwy)) + geom_point() + stat_smooth(method = "lm")
 ```
-`aes()` is inside ggplot call. Note that dataset was piped into ggplot and `geom_point()` layer was added (`+`) to the ggplot.
+
+Differently from R base graphics, where histogram is drawn by special command, ggplot specifies the type of plot by geoms:
+```{r}
+df <- tibble(x = rnorm(10000)) # We create tibble with 10000 random numbers from normal distr.
+ggplot(df, aes(x)) + # histograms 
+  geom_histogram() # we specify geom histogram 
+```
+
+ggplot says: `stat_bin()` using `bins = 30`. *The default is to use bins bins that cover the range of the data. You should always override this value, exploring multiple widths to find the best to illustrate the stories in your data*. Pick better value with `binwidth`, ok lets try:
+```{r}
+ggplot(df, aes(x)) + geom_histogram(binwidth = 0.1)
+```
+
+Alternatively, you can specify the number of bins:
+```{r}
+ggplot(df, aes(x)) + geom_histogram(bins = 5)
+```
+
+Lets recreate Tartu Marathon 2013 histogram:
+```{r}
+library(lubridate)
+load("data/Tartu_Maraton_2013.RData")
+```
+
+```{r}
+tm_2013 %>% mutate(Aeg = unclass(as.duration(hms(Aeg)))/3600) %>% 
+  ggplot(aes(Aeg)) + 
+  geom_histogram(binwidth = 1/12) # binwidth ~5 minutes
+```
+
