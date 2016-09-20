@@ -58,21 +58,21 @@ Of course, same result is easily achieved by this oneliner:
 ggplot(mpg, aes(cty, hwy)) + geom_point() + stat_smooth(method = "lm")
 ```
 
-Differently from R base graphics, where histogram is drawn by special command, ggplot specifies the type of plot by geoms:
+## Histograms and boxplots
+Differently from base R graphics, where histogram is drawn by a special command, ggplot specifies the type of plot by geoms, like `geom_histogram()`:
 ```{r}
-df <- tibble(x = rnorm(10000)) # We create tibble with 10000 random numbers from normal distr.
-ggplot(df, aes(x)) + # histograms 
-  geom_histogram() # we specify geom histogram 
+df <- tibble(x = rnorm(10000)) # For demo we create tibble with 10000 random numbers from normal distribution
+ggplot(df, aes(x)) + geom_histogram() # to plot histogram we specify geom_histogram 
 ```
 
-ggplot says: `stat_bin()` using `bins = 30`. Pick better value with `binwidth`, also help file notes that `the default is to use bins bins that cover the range of the data. You should always override this value, exploring multiple widths to find the best to illustrate the stories in your data`. OK, Messy Goes to Okido, lets try:
+ggplot says: `stat_bin()` using `bins = 30`. Pick better value with `binwidth`, also help file notes that 'the default is to use bins bins that cover the range of the data. You should always override this value, exploring multiple widths to find the best to illustrate the stories in your data'. OK, Messy Goes to Okido, lets try:
 ```{r}
-ggplot(df, aes(x)) + geom_histogram(binwidth = 0.1)
+ggplot(df, aes(x)) + geom_histogram(binwidth = 0.1) # for better granularity, we specify binwith = 0.1
 ```
 
-Alternatively, you can specify the number of bins (and send some hidden messages along with your data):
+Alternatively, you can specify the number of bins (and perhaps send some hidden messages along with your visualisation):
 ```{r}
-ggplot(df, aes(x)) + geom_histogram(bins = 5)
+ggplot(df, aes(x)) + geom_histogram(bins = 5) # if we want to split data into eg. 5 bins
 ```
 
 For some more practice, lets recreate Tartu Marathon 2013 histogram:
@@ -82,16 +82,16 @@ load("data/Tartu_Maraton_2013.RData")
 ```
 
 ```{r}
-tm_2013 %>% mutate(Aeg = unclass(as.duration(hms(Aeg)))/3600) %>% 
-  ggplot(aes(Aeg)) + 
-  geom_histogram(binwidth = 1/12) # binwidth ~5 minutes
+tm <- tm_2013 %>% mutate(Aeg = unclass(as.duration(hms(Aeg)))/3600) %>% filter(complete.cases(.))
+tm %>% ggplot(aes(Aeg)) + geom_histogram(binwidth = 1/12) # we want binwidth ~5 minutes (1/12 hour)
 ```
 
-These were histograms with counts on y-axis, but we may want to plot (kernel) density instead:
+These were histograms with counts on y-axis, but we may want to plot (kernel) density instead, for this we use `geom_density()`:
 ```{r}
 ggplot(df, aes(x)) + geom_density()
 ```
 
+Histogram with densities on y-axis:
 ```{r}
 ggplot(df, aes(x, ..density..)) + geom_histogram()
 ```
@@ -117,8 +117,42 @@ We can add vertical line, denoting mean, to our histogram like this:
 p + geom_vline(aes(xintercept = mean(x)), color = "red", linetype = "dashed", size = 1) 
 ```
 
-Colored/grouped density plots:
+**To compare distributions** we can overlay histograms and density plots. To demonstrate this, let's create dummy dataset of two normal distributions:
 ```{r}
+df2 <- tibble(pop = rep(c("N", "S"), each = 1000), 
+              value = c(rnorm(1000, mean = 1), rnorm(1000, mean = 1.8)))
+df2
+```
 
+When overlaying histograms in ggplot, default action is to 'stack' them one to another, making comparison difficult. We have to specify `position = "identity"` to place them directly onto x-axis (each bar starts from y = 0). Also we specify `alpha =` for some transparency:
+```{r}
+p1 <- df2 %>% ggplot(aes(value, fill = pop)) 
+p1 + geom_histogram(position = "identity", alpha = 0.7, binwidth = 0.3)
+```
+
+Alternatively, it's possible to place comparable bars next to each other by specifying `position = "dodge"`:
+```{r}
+p1 + geom_histogram(position = "dodge", binwidth = 0.3)
+```
+
+Overlaid kernel density plots:
+```{r}
+p2 <- p1 + geom_density(alpha = 0.7)
+p2
+```
+
+To indicate means for these two distributions, we have to calculate means into a new data frame: 
+```{r}
+df2_stats <- df2 %>% group_by(pop) %>% summarise(pop_mean = mean(value))
+p2 + geom_vline(data = df2_stats, aes(xintercept = pop_mean, color = pop), linetype = "dashed", size = 1)
+```
+
+**Boxplots** are created using `geom_boxplot`:
+```{r}
+df2 %>% ggplot(aes(pop, value)) + geom_boxplot()
+```
+
+```{r}
+df2 %>% ggplot(aes(pop, value, fill = pop)) + geom_boxplot()
 ```
 
