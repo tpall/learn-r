@@ -13,6 +13,61 @@ A [regular expression](https://stat.ethz.ch/R-manual/R-devel/library/base/html/r
 + When matching any metacharacter as a regular character, precede it with a double backslash `\\`.
 + The caret `^` and the dollar sign `$` are metacharacters that respectively match the empty string at the beginning and end of a line.
 
+To get the length of a text string (i.e. the number of characters in the string):
+```{r}
+x <- "reformation"
+nchar(x)
+```
+
+`regexpr` returns position of 1st match and its length in a string:
+```{r}
+regexpr("o", x)
+```
+We can see that "o" is the 4th character in a string, with length 1 chracter (useBytes=T).
+
+Lets try vector of strings. We want to return matching strings after underscore:
+```{r}
+y <- c("AreaShape_Area", "AreaShape_Perimeter", "AreaShape_MajorAxisLength", "Intensity_MADIntensity")
+m <- regexpr("[[:alnum:]]*$", y) # to return start and length of match
+m # to have have a look
+```
+
+What the heck we do with this list? With the help of `regmatches` command, you can return matching strings from `regexpr` call:
+```{r}
+regmatches(y, m) # to return matching strings
+```
+
+Tidyverse verbs to this task are `str_locate` and `str_extract`:
+```{r}
+library(stringr)
+str_locate(y, "[[:alnum:]]*$") # if we want only start and end positions
+```
+Note that, `str_locate` returns more conveniently a matrix (instead of a list as in regexpr).
+
+```{r}
+str_extract(y, "[[:alnum:]]*$") # if we want actual strings
+```
+Seems nice and tidy.
+
+To return multiple matches from the string, not just the first one, use `gregexpr`, which returns start position and length of every match:
+```{r}
+regmatches(y, gregexpr("Area", y)) # to return start position and length of every match
+```
+
+Please try to return positions of all upper case letters from y:
+```{r}
+regmatches(y, gregexpr("[[:upper:]]", y))
+```
+
+Tidyverse alternatives to `gregexpr` is `str_locate_all` and `str_extract_all`:
+```{r}
+str_locate_all(y, "e") # to locate all start positions and lengths of letter "e"
+```
+
+```{r}
+str_extract_all(y, "[[:upper:]]") # to extract all upper case letters
+```
+
 `grep(pattern, x)` finds a pattern in x. Pattern -- character string containing a regular expressions (or exact character string for fixed = TRUE).
 
 What really happens when we use `grep` or `grepl` on a vector x.
