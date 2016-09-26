@@ -29,6 +29,7 @@ That was theory, you can read more from [ggplot2-book](https://github.com/hadley
 ```{r}
 library(ggplot2) # load ggplot2 library
 library(dplyr) # dplyr is necessary for piping operator and for some data munging
+library(tidyr)
 ```
 
 We use ggplot2 builtin dataset `mpg` with fuel economy data from 1999 and 2008 for 38 models of car:
@@ -58,7 +59,7 @@ Of course, same result is easily achieved by this oneliner:
 ggplot(mpg, aes(cty, hwy)) + geom_point() + stat_smooth(method = "lm")
 ```
 
-## Histograms and boxplots
+## Histograms
 Differently from base R graphics, where histogram is drawn by a special command, ggplot specifies the type of plot by geoms, like `geom_histogram()`:
 ```{r}
 df <- tibble(x = rnorm(10000)) # For demo we create tibble with 10000 random numbers from normal distribution
@@ -147,12 +148,112 @@ df2_stats <- df2 %>% group_by(pop) %>% summarise(pop_mean = mean(value))
 p2 + geom_vline(data = df2_stats, aes(xintercept = pop_mean, color = pop), linetype = "dashed", size = 1)
 ```
 
+##  Boxplots
+
 **Boxplots** are created using `geom_boxplot`:
 ```{r}
 df2 %>% ggplot(aes(pop, value)) + geom_boxplot()
 ```
 
 ```{r}
-df2 %>% ggplot(aes(pop, value, fill = pop)) + geom_boxplot()
+p3 <- df2 %>% ggplot(aes(pop, value, fill = pop)) + geom_boxplot()
+p3
 ```
+
+Often, it's a good idea to overlay original values to plot. Specially, if there is only few values. Let's add original data points to previous boxplot:
+```{r}
+p3 + geom_point()
+```
+Adding geom_points was not very helpful in this case.
+s
+We can try to jitter these points, where argument `width=` specifies jitter width (default full boxplot width):
+```{r}
+p3 + geom_jitter(width = 0.5)
+```
+
+As shown previously, we can also add summary data (mean) to this plot (large red dots):
+```{r}
+p3 + geom_point(data = df2_stats, aes(y = pop_mean), shape = 16, color = "red", size = 3)
+```
+
+
+## Point shape codes
+It seems impossible to remember available point shape codes in R. The quickest way out of this is to know how to generate an example plot of the shapes quickly. [This is how to do this in ggplot2.](http://www.win-vector.com/blog/2012/04/how-to-remember-point-shape-codes-in-r/)
+```{r}
+ggplot(data=data.frame(x=c(0:25))) + geom_point(size=8, aes(x=x,y=x,shape=x)) +
+  facet_wrap(~ x, scales='free') + xlab('') + ylab('') +
+  scale_shape_identity() +
+  theme(axis.text.x=element_blank(), axis.text.y=element_blank(),
+        axis.ticks=element_blank(), legend.position='none',
+        panel.background=element_blank(),
+        panel.grid.major=element_blank(),
+        panel.border=element_blank())
+```
+
+## Plotting means and error bars
+Summaries and e.g. errorbars can also be calculated on the fly. To illustrate this, we take first smaller sample from our dataset in order to have larger errorbars. Here we add bootstrapped 99% confidence intervals of the mean:
+```{r}
+p4 <- df2 %>% sample_n(50) %>% # to have larger error
+  ggplot(aes(pop, value, fill = pop)) + geom_jitter(color = "gray", width = 1/3) 
+p4 + stat_summary(fun.data = "mean_cl_boot", fun.args = list(conf.int = .99), geom = "pointrange") # poinrange is default geom 
+```
+
+Here we add errorbars, denoting standard error of the mean:
+```{r}
+p4 + stat_summary(fun.y = mean, geom = "point", shape = 95, color = "red", size = 15) + # mean
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.25) # standard deviation
+```
+
+Now we create line graphs with errorbars. First we calculate summary statistics:
+```{r}
+mpg
+mpg_sum <- mpg %>% 
+  filter(cyl %in% c(4,6,8)) %>%  # to include only comparable values
+  group_by(year, cyl) %>% # to compare two years
+  summarise(mean_hwy = mean(hwy), # to calculate mean
+            N = n(), # N to calculate standard error
+            se_hwy = sd(cty)/sqrt(N)) # standard error
+mpg_sum
+```
+
+First we create linegraph, we want two distinct colors for year variable, therefore we coerce year to factor:
+```{r}
+p5 <- mpg_sum %>% ggplot(aes(cyl, mean_hwy, color = factor(year))) 
+p5 + geom_point() + geom_line()
+```
+
+Add also errorbars:
+```{r}
+p5 + geom_point() + geom_line() +
+  geom_errorbar(aes(ymin = mean_hwy + se_hwy, ymax = mean_hwy - se_hwy), width = 0.25)
+```
+
+When the errorbars overlap, use `position_dodge` to move them horizontally.
+```{r}
+pd <- position_dodge(0.1) # move them .05 to the left and right
+```
+
+```{r}
+p5 + geom_point(position = pd) + 
+  geom_line(position = pd) +
+  geom_errorbar(aes(ymin = mean_hwy + se_hwy, ymax = mean_hwy - se_hwy), 
+                   width = 0.25, 
+                   position = pd)
+```
+
+## Barplots
+
+
+```{r}
+p6 <- mpg_sum %>% ggplot(aes(factor(cyl), mean_hwy, fill = factor(year)))
+pd <- position_dodge(1)
+p6 + geom_bar(stat = "identity", position = pd)
+```
+
+
+
+```{r}
+hist(rnorm(1000))
+```
+
 

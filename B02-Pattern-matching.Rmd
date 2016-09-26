@@ -4,14 +4,19 @@
 
 # Find character strings 
 
-Character strings can be matched and manipulated in R by using `regular expressions` in functions `grep`, `grepl`, `sub`, `gsub` and some others.
+Character strings can be matched and manipulated in base R by using `regular expressions` in functions `grep`, `grepl`, `sub`, `gsub`, `regexpr` + `regmatches` and some others. 
+Also tidyverse package 'stringr' contains analogous verbs with more consistent syntax.
 A [regular expression](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html) is a pattern that describes a set of strings.
 
-+ The fundamental building blocks are the regular expressions that match a single character. 
-+ Most characters, including all letters and digits, are regular expressions that match themselves. 
+<!-- + The fundamental building blocks are the regular expressions that match a single character.  -->
++ Most characters, including all letters and digits, are regular expressions that match themselves. Whereas, e.g. `.` matches any single character.
++ You can refer also to a character class, which is a list of characters enclosed between `[` and `]`, e.g. `[[:alnum:]]` is same as `[A-z0-9]`.
++ Most common character classes: `[:alnum:]`, alphanumeric (`[:alpha:]` and `[:digit:]`); `[:alpha:]`, alphabetic (`[:upper:]` and `[:lower:]`); `[:punct:]`, ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` ` { | } ~.; `[:blank:]`, space and tab; etc. [Regular Expressions as used in R](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html)
 + The metacharacters in regular expressions are `. \ | ( ) [ { ^ $ * + ?`, whether these have a special meaning depends on the context. 
 + When matching any metacharacter as a regular character, precede it with a double backslash `\\`.
++ Repetition quantifiers put after regex specify how many times regex is matched: `?`, optional, at most once; `*`, zero or more times; `+`, one or more times; `{n}`, n times; `{n,}`, n or more times; `{n,m}`, n to m times. 
 + The caret `^` and the dollar sign `$` are metacharacters that respectively match the empty string at the beginning and end of a line.
+
 
 To get the length of a text string (i.e. the number of characters in the string):
 ```{r}
@@ -37,7 +42,9 @@ What the heck we do with this list? With the help of `regmatches` command, you c
 regmatches(y, m) # to return matching strings
 ```
 
-Tidyverse verbs to this task are `str_locate` and `str_extract`:
+> Tidyverse's `stringr` library resolves the problem of difficult to work with putputs and produces outputs than can easily be used as inputs.
+
+`stringr` library verbs to fulfill tasks by `regexpr` and `regmatches` are `str_locate` and `str_extract`:
 ```{r}
 library(stringr)
 str_locate(y, "[[:alnum:]]*$") # if we want only start and end positions
@@ -73,90 +80,52 @@ str_extract_all(y, "[[:upper:]]") # to extract all upper case letters
 What really happens when we use `grep` or `grepl` on a vector x.
 By using `grep()` with default arguments gets us vector of the indices of the matching items in x:
 ```{r}
-grep("M", fruit$Gender) %>% head()
+grep("Area", y)
 ```
 
 Using `grep(value = TRUE)` we get character vector containing the selected elements of x:
 ```{r}
-grep("M", fruit$Gender, value = TRUE) %>% head()
+grep("Area", y, value = TRUE)
+```
+
+Tidy way to run `grep` is to use `str_subset()` from `stringr` library:
+```{r}
+str_subset(y, "Area") # note that strings and pattern have changed positions
 ```
 
 However, by using `grepl` we get logical vector showing match for each element:
 ```{r}
-grepl("M", fruit$Gender) %>% head()
+grepl("Area", y)
 ```
 
 Neat thing with the `grepl` is that it's versatile: you can use its result for subsetting or to count matches (TRUE = 1 and FALSE = 0):
 ```{r}
-grepl("M", fruit$Gender) %>% sum
+grepl("Area", y) %>% sum
 ```
 
-We can use `grepl` in `dplyr::filter` to subset data frame:
+Respectively, `stringr` library verb is `str_detect()`:
 ```{r}
-library(dplyr)
-fruit %>% filter(grepl("M", Gender)) %>% tbl_df
+str_detect(y, "Area")
 ```
 
 
-<!-- # Regular expression  -->
-<!-- A pattern that we use to search in strings can be strict (like a nucleotide string "ACAGC") or "fuzzy" ("ACNGY" where N is any nucleotide and Y is C or T). To create fuzzy search patterns we use a system called **regular expression**. As regular expression is both hugely flexible and insanely complicated, we can only scratch the surface here. -->
+We can use `grepl` in `dplyr::filter` to subset data frame. For example we want to look at the participants with first name 'Jaan' in 2013 Tartu Ski Marathon finish protocol:
+```{r}
+tm_2013 %>% filter(grepl(", Jaan", Nimi)) %>% tbl_df # Nimi is name and is given as 'lastname, firstname'.
+```
+Ups, we got 'Jaanus'-es too!
 
-<!-- + By default, regular expressions will match any part of a string.  -->
-<!-- + `^` anchors the regular expression to the start of the string. -->
-<!-- + `$` anchors the the regular expression to end of the string. -->
+Let's add end of a line anchor `$` to get only 'Jaan's and lets use `str_detect` verb:
+```{r}
+tm_2013 %>% filter(str_detect(Nimi, ", Jaan$")) %>% tbl_df # Nimi is name and is given as 'lastname, firstname'. We use tbl_df to print only head of the table.
+```
+Good!
 
-<!-- ```{r} -->
-<!-- x <- c("apple", "ananas", "banana") -->
-<!-- #replaces all a-s at the beginning of strings with e-s -->
-<!-- str_replace_all(x, "^a", "e")  -->
-<!-- #only replaces at the first occurence -->
-<!-- str_replace(x, "a$", "e")  -->
-<!-- #replaces a and the following character at the end of string -->
-<!-- str_replace(x, "a.$", "e") -->
-<!-- #replaces a-s or s-s at the end of string with e-s -->
-<!-- str_replace_all(x, "(a|s)$", "e") -->
-<!-- #replaces a-s or s-s anywhere in the string with e-s -->
-<!-- str_replace_all(x, "a|s", "e") -->
-<!-- ``` -->
+To substitute parts of a string, base R uses `sub` and `gsub` to perform replacement of the first and all matches respectively. `strinr` versions of these verbs are `str_replace` and `str_replace_all`, respectively:
+```{r}
+str_replace(y, "Area", "XXX") # to replace first occurence of Area in each string with XXX
+```
 
-
-<!-- To force to only match a complete string: -->
-<!-- ```{r} -->
-<!-- str_view(x, "^apple$") -->
-<!-- ``` -->
-
-<!-- **patterns that match more than one character:** -->
-
-<!-- + `.` (dot): any character apart from a newline. -->
-<!-- + `\\d`: any digit. -->
-<!-- + `\\s`: any whitespace (space, tab, newline). -->
-<!-- + `\[abc]`: match a, b, or c. -->
-<!-- + `\[!abc]`: match anything except a, b, or c. -->
-
-<!-- To create a regular expression containing `\d` or `\s`, you'll need to escape the `\` for the string, so you'll type `\\\\d` or `\\\\s`. -->
-
-<!-- + `abc|d..f` will match either 'abc', or 'deaf'.  -->
-
-<!-- ```{r} -->
-<!-- str_view(c("abc", "xyz"), "abc | xyz") -->
-<!-- ``` -->
-
-<!-- If precedence gets confusing, use parentheses to make it clear what you want: -->
-<!-- ```{r} -->
-<!-- str_detect(c("grey", "gray"), "gr(e|a)y") -->
-<!-- str_detect(c("grey", "gray"), "gr(?:e|a)y") #unequivocal vers. of the above -->
-
-<!-- ``` -->
-
-<!-- This beauty removes all numbers from text strings. Can be very useful. -->
-<!-- ```{r} -->
-<!-- y <- c("as1", "2we3w", "3e") -->
-<!-- str_replace_all(y, "\\d", "")  -->
-<!-- ``` -->
-
-<!-- Even better, this removes everything except numbers. Yes, you may send us thank-you letters! -->
-<!-- ```{r} -->
-<!-- y<-c("as1", "2we3w", "3e") -->
-<!-- str_replace_all(y, "[A-Za-z_]", "")  -->
-<!-- ``` -->
-
+```{r}
+str_replace_all(y, "Area", "XXX") # replaces all Area-s with XXX
+```
