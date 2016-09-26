@@ -205,15 +205,33 @@ p4 <- p4 + stat_summary(fun.y = mean, geom = "point", shape = 95, color = "red",
 p4
 ```
 
-## Start y or x axis at zero
-In many cases proper visual representation of data requires that e.g. y axis starts from zero. By default, ggplot zooms only into region where data is located and 0 is dropped from axes. To change this behaviour, ggplot has command `expand_limits()` specifying the value(-s) that should be included in each scale:
+## Modify axes, start y or x axis at zero
+Axis labels can be changed using `xlab()` and `ylab()`:
 ```{r}
-p4 + expand_limits(y = 0) # upper and lower axis limits can be specified by supplying vector of two values
+ggplot(mpg, aes(cty, hwy)) +
+  geom_point() +
+  xlab("City driving (miles per gallon)") + # to set x axis label
+  ylab("Highway driving (miles per gallon)") # to set y axis label
 ```
 
-`scale_x_continuous()` and `scale_y_continuous()` have argument limits, which can be used to set axis limits, 
+
+In many cases proper visual representation of data requires that e.g. y axis starts from zero. 
+By default, ggplot zooms only into region where data is located and 0 is dropped from axes. 
+To change this behaviour, ggplot has command `expand_limits()` specifying the value(-s) that should be included in each scale:
 ```{r}
-p4 + scale_y_continuous(limits = c(15, 20))
+p4_5 <- ggplot(mpg, aes(cty, hwy)) + geom_point() 
+p4_5 + expand_limits(x = 0, y = 0) # upper and lower axis limits can be specified by supplying vector of two values
+```
+
+`scale_x_continuous()` and `scale_y_continuous()` have argument limits, which can be used to set axis limits, but values remaining outside limits will be set to `NA`:
+```{r, warning=TRUE}
+p4_5 + scale_y_continuous(limits = c(0, 20))
+```
+Note the warning!
+
+More simply, we can use `xlim()` and `ylim()`:
+```{r}
+p4_5 + xlim(15, 20) + ylim(0, 30)
 ```
 
 
@@ -255,14 +273,21 @@ p5 + geom_point(position = pd) +
 ```
 
 ## Barplots
-Barplot are created similarly to linegraphs, but with `geom_bar` and default stat `counts` needs to changed. Unstacked bars need also `position = position_dodge()` specification:
+Barplots are created using `geom_bar` and default stat `counts` needs to changed to `identity`:
+```{r}
+p6 <- mpg_sum %>% filter(year == 1999) %>% 
+  ggplot(aes(factor(cyl), mean_hwy))
+p6 + geom_bar(stat = "identity")
+```
+Note that bargraph starts at 0.
+
+When adding additional variables to a barplot e.g. via `fill =` you need also unstack the bars by specifying `position = position_dodge()`:
 ```{r}
 pd <- position_dodge(0.9) 
 p6 <- mpg_sum %>% ggplot(aes(factor(cyl), mean_hwy, fill = factor(year)))
 p7 <- p6 + geom_bar(stat = "identity", position = pd)
 p7
 ```
-Note that bargraphs start at 0.
 
 
 ```{r}
