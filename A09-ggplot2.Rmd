@@ -44,19 +44,86 @@ ggplot(mpg, aes(displ, cty)) + geom_point()
 ```
 **Notice that**: in ggplot first two unnamed arguments to `aes()` are `x` and `y`, so we can easily skip `x =` and `y =` to reduce typing.
 
+## Scatterplot
 To illustrate layerwise plot creation in ggplot:
 ```{r}
 p <- ggplot(data = mpg) # first add data
 p <- p + aes(x = cty, y = hwy) # add aesthetics
 p <- p + geom_point() # add geom, specifying plot type 
-p <- p + stat_smooth(method = "lm") # add statistical summary
-p # display plot
+p + stat_smooth(method = "lm") # add statistical summary
 ```
 The **point geom is used to create scatterplots**.
 
-Of course, same result is easily achieved by this oneliner:
+Of course, this result is usually achieved by this oneliner:
 ```{r, eval=FALSE}
 ggplot(mpg, aes(cty, hwy)) + geom_point() + stat_smooth(method = "lm")
+```
+
+## Color, size, shape, and fill
+Other aesthetics like `color`, `shape`, `fill`, and `size` can be used to add additional variables to a plot:
+```{r}
+ggplot(mpg, aes(cty, hwy, color = drv)) + geom_point() # 'colour=' can be used too
+```
+
+## Point shape codes
+While colors and sizes are intuitive, it seems impossible to remember available point shape codes in R. The quickest way out of this is to know how to generate an example plot of the shapes quickly. [This is how to do this in ggplot2.](http://www.win-vector.com/blog/2012/04/how-to-remember-point-shape-codes-in-r/)
+```{r}
+ggplot(data=data.frame(x=c(0:25))) + geom_point(size=8, aes(x=x,y=x,shape=x)) +
+  facet_wrap(~ x, scales='free') + xlab('') + ylab('') +
+  scale_shape_identity() +
+  theme(axis.text.x=element_blank(), axis.text.y=element_blank(),
+        axis.ticks=element_blank(), legend.position='none',
+        panel.background=element_blank(),
+        panel.grid.major=element_blank(),
+        panel.border=element_blank())
+```
+
+
+## Facetting
+Another possibility to add more variables is to use `facet_wrap`:
+```{r}
+ggplot(mpg, aes(cty, hwy)) + 
+  geom_point() + 
+  facet_wrap( ~ drv) # to specify name of a variable preceded by  ̃
+```
+
+Two-way table can be created using `facet_grid` command:
+```{r}
+ggplot(mpg, aes(cty, hwy)) + 
+  geom_point() + 
+  facet_grid(year ~ drv) # to specify row variable ̃column variable
+```
+
+
+## Modify axes, start y or x axis at zero
+Axis labels can be changed using `xlab()` and `ylab()`:
+```{r}
+p + xlab("City driving (miles per gallon)") + # to set x axis label
+  ylab("Highway driving (miles per gallon)") # to set y axis label
+```
+
+The other way around, to remove axis leables, set them to `NULL`:
+```{r}
+p + xlab(NULL) + ylab(NULL)
+```
+
+
+In many cases proper visual representation of data requires that e.g. y axis starts from zero. 
+By default, ggplot zooms only into region where data is located and 0 is dropped from axes. 
+To change this behaviour, ggplot has command `expand_limits()` specifying the value(-s) that should be included in each scale:
+```{r}
+p + expand_limits(x = 0, y = 0) # upper and lower axis limits can be specified by supplying vector of two values
+```
+
+`scale_x_continuous()` and `scale_y_continuous()` have argument limits, which can be used to set axis limits, but values remaining outside limits will be set to `NA`:
+```{r, warning=TRUE}
+p + scale_y_continuous(limits = c(0, 20))
+```
+Note the warning!
+
+More simply, we can use `xlim()` and `ylim()`:
+```{r}
+p + xlim(15, 20) + ylim(0, 30)
 ```
 
 ## Histograms
@@ -149,7 +216,6 @@ p2 + geom_vline(data = df2_stats, aes(xintercept = pop_mean, color = pop), linet
 ```
 
 ##  Boxplots
-
 **Boxplots** are created using `geom_boxplot`:
 ```{r}
 df2 %>% ggplot(aes(pop, value)) + geom_boxplot()
@@ -176,20 +242,6 @@ As shown previously, we can also add summary data (mean) to this plot (large red
 p3 + geom_point(data = df2_stats, aes(y = pop_mean), shape = 16, color = "red", size = 3)
 ```
 
-
-## Point shape codes
-It seems impossible to remember available point shape codes in R. The quickest way out of this is to know how to generate an example plot of the shapes quickly. [This is how to do this in ggplot2.](http://www.win-vector.com/blog/2012/04/how-to-remember-point-shape-codes-in-r/)
-```{r}
-ggplot(data=data.frame(x=c(0:25))) + geom_point(size=8, aes(x=x,y=x,shape=x)) +
-  facet_wrap(~ x, scales='free') + xlab('') + ylab('') +
-  scale_shape_identity() +
-  theme(axis.text.x=element_blank(), axis.text.y=element_blank(),
-        axis.ticks=element_blank(), legend.position='none',
-        panel.background=element_blank(),
-        panel.grid.major=element_blank(),
-        panel.border=element_blank())
-```
-
 ## Plotting means and error bars
 Summaries and e.g. errorbars can also be calculated on the fly. To illustrate this, we take first smaller sample from our dataset in order to have larger errorbars. Here we add bootstrapped 99% confidence intervals of the mean:
 ```{r}
@@ -204,36 +256,6 @@ p4 <- p4 + stat_summary(fun.y = mean, geom = "point", shape = 95, color = "red",
   stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.25) # standard deviation
 p4
 ```
-
-## Modify axes, start y or x axis at zero
-Axis labels can be changed using `xlab()` and `ylab()`:
-```{r}
-ggplot(mpg, aes(cty, hwy)) +
-  geom_point() +
-  xlab("City driving (miles per gallon)") + # to set x axis label
-  ylab("Highway driving (miles per gallon)") # to set y axis label
-```
-
-
-In many cases proper visual representation of data requires that e.g. y axis starts from zero. 
-By default, ggplot zooms only into region where data is located and 0 is dropped from axes. 
-To change this behaviour, ggplot has command `expand_limits()` specifying the value(-s) that should be included in each scale:
-```{r}
-p4_5 <- ggplot(mpg, aes(cty, hwy)) + geom_point() 
-p4_5 + expand_limits(x = 0, y = 0) # upper and lower axis limits can be specified by supplying vector of two values
-```
-
-`scale_x_continuous()` and `scale_y_continuous()` have argument limits, which can be used to set axis limits, but values remaining outside limits will be set to `NA`:
-```{r, warning=TRUE}
-p4_5 + scale_y_continuous(limits = c(0, 20))
-```
-Note the warning!
-
-More simply, we can use `xlim()` and `ylim()`:
-```{r}
-p4_5 + xlim(15, 20) + ylim(0, 30)
-```
-
 
 ## Linegraphs
 Now we create line graphs with errorbars, we use `mpg` data. We calculate mean and standard error of the mean for highway fuel consumption (hwy) per year and per number of cylinders:
@@ -272,8 +294,8 @@ p5 + geom_point(position = pd) +
                    position = pd)
 ```
 
-## Barplots
-Barplots are created using `geom_bar` and default stat `counts` needs to changed to `identity`:
+## Bargraphs
+Bargraphs are created using `geom_bar` and default stat `counts` needs to changed to `identity`:
 ```{r}
 p6 <- mpg_sum %>% filter(year == 1999) %>% 
   ggplot(aes(factor(cyl), mean_hwy))
@@ -281,7 +303,7 @@ p6 + geom_bar(stat = "identity")
 ```
 Note that bargraph starts at 0.
 
-When adding additional variables to a barplot e.g. via `fill =` you need also unstack the bars by specifying `position = position_dodge()`:
+When adding additional variables to a bargraphs e.g. via `fill =` you need also unstack the bars by specifying `position = position_dodge()`:
 ```{r}
 pd <- position_dodge(0.9) 
 p6 <- mpg_sum %>% ggplot(aes(factor(cyl), mean_hwy, fill = factor(year)))
