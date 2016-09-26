@@ -121,7 +121,7 @@ p + geom_vline(aes(xintercept = mean(x)), color = "red", linetype = "dashed", si
 **To compare distributions** we can overlay histograms and density plots. To demonstrate this, let's create dummy dataset of two normal distributions:
 ```{r}
 df2 <- tibble(pop = rep(c("N", "S"), each = 1000), 
-              value = c(rnorm(1000, mean = 1), rnorm(1000, mean = 1.8)))
+              value = c(rnorm(1000, 20, 3), rnorm(1000, 25, 3)))
 df2
 ```
 
@@ -133,7 +133,7 @@ p1 + geom_histogram(position = "identity", alpha = 0.7, binwidth = 0.3)
 
 Alternatively, it's possible to place comparable bars next to each other by specifying `position = "dodge"`:
 ```{r}
-p1 + geom_histogram(position = "dodge", binwidth = 0.3)
+p1 + geom_histogram(position = "dodge", binwidth = 1)
 ```
 
 Overlaid kernel density plots:
@@ -200,13 +200,26 @@ p4 + stat_summary(fun.data = "mean_cl_boot", fun.args = list(conf.int = .99), ge
 
 Here we add errorbars, denoting standard error of the mean:
 ```{r}
-p4 + stat_summary(fun.y = mean, geom = "point", shape = 95, color = "red", size = 15) + # mean
+p4 <- p4 + stat_summary(fun.y = mean, geom = "point", shape = 95, color = "red", size = 15) + # mean
   stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.25) # standard deviation
+p4
 ```
 
-Now we create line graphs with errorbars. First we calculate summary statistics:
+## Start y or x axis at zero
+In many cases proper visual representation of data requires that e.g. y axis starts from zero. By default, ggplot zooms only into region where data is located and 0 is dropped from axes. To change this behaviour, ggplot has command `expand_limits()` specifying the value(-s) that should be included in each scale:
 ```{r}
-mpg
+p4 + expand_limits(y = 0) # upper and lower axis limits can be specified by supplying vector of two values
+```
+
+`scale_x_continuous()` and `scale_y_continuous()` have argument limits, which can be used to set axis limits, 
+```{r}
+p4 + scale_y_continuous(limits = c(15, 20))
+```
+
+
+## Linegraphs
+Now we create line graphs with errorbars, we use `mpg` data. We calculate mean and standard error of the mean for highway fuel consumption (hwy) per year and per number of cylinders:
+```{r}
 mpg_sum <- mpg %>% 
   filter(cyl %in% c(4,6,8)) %>%  # to include only comparable values
   group_by(year, cyl) %>% # to compare two years
@@ -216,13 +229,13 @@ mpg_sum <- mpg %>%
 mpg_sum
 ```
 
-First we create linegraph, we want two distinct colors for year variable, therefore we coerce year to factor:
+`geom_line()` is used to create linegraphs in ggplot. We want two distinct colors for year variable, therefore we coerce year to factor:
 ```{r}
 p5 <- mpg_sum %>% ggplot(aes(cyl, mean_hwy, color = factor(year))) 
 p5 + geom_point() + geom_line()
 ```
 
-Add also errorbars:
+Errorbars can be added by using `geom_errorbar`, which needs arguments `ymin` and `ymax`:
 ```{r}
 p5 + geom_point() + geom_line() +
   geom_errorbar(aes(ymin = mean_hwy + se_hwy, ymax = mean_hwy - se_hwy), width = 0.25)
@@ -230,7 +243,7 @@ p5 + geom_point() + geom_line() +
 
 When the errorbars overlap, use `position_dodge` to move them horizontally.
 ```{r}
-pd <- position_dodge(0.1) # move them .05 to the left and right
+pd <- position_dodge(0.7) # move them 
 ```
 
 ```{r}
@@ -242,18 +255,19 @@ p5 + geom_point(position = pd) +
 ```
 
 ## Barplots
-
-
+Barplot are created similarly to linegraphs, but with `geom_bar` and default stat `counts` needs to changed. Unstacked bars need also `position = position_dodge()` specification:
 ```{r}
+pd <- position_dodge(0.9) 
 p6 <- mpg_sum %>% ggplot(aes(factor(cyl), mean_hwy, fill = factor(year)))
-pd <- position_dodge(1)
-p6 + geom_bar(stat = "identity", position = pd)
+p7 <- p6 + geom_bar(stat = "identity", position = pd)
+p7
 ```
-
+Note that bargraphs start at 0.
 
 
 ```{r}
-hist(rnorm(1000))
+p7 + geom_errorbar(aes(ymin = mean_hwy - se_hwy, ymax = mean_hwy + se_hwy),
+                   position = pd, width = 0.25)
 ```
 
 
