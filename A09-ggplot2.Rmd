@@ -78,7 +78,6 @@ ggplot(data=data.frame(x=c(0:25))) + geom_point(size=8, aes(x=x,y=x,shape=x)) +
         panel.border=element_blank())
 ```
 
-
 ## Facetting
 Another possibility to add more variables is to use `facet_wrap`:
 ```{r}
@@ -125,6 +124,13 @@ More simply, we can use `xlim()` and `ylim()`:
 ```{r}
 p + xlim(15, 20) + ylim(0, 30)
 ```
+
+## Save ggplot
+To save a plot `p` to a .png file use `ggsave`:
+```{r, eval=FALSE}
+ggsave("graphs/my_biutiful_plot.png", plot = p, width = 7, height = 5)
+```
+
 
 ## Histograms
 Differently from base R graphics, where histogram is drawn by a special command, ggplot specifies the type of plot by geoms, like `geom_histogram()`:
