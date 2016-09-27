@@ -125,12 +125,12 @@ More simply, we can use `xlim()` and `ylim()`:
 p + xlim(15, 20) + ylim(0, 30)
 ```
 
-## Save ggplot
-To save a plot `p` to a .png file use `ggsave`:
+## ggsave plot
+`ggsave` recognises .eps/ps, .tex (pictex), .pdf, .jpeg, .tiff, .png, .bmp, .svg, and .wmf (windows only) file extensions. To save a plot `p` to e.g. as `.png` file use:
 ```{r, eval=FALSE}
 ggsave("graphs/my_biutiful_plot.png", plot = p, width = 7, height = 5)
 ```
-
+By default `plot=` is the last plot.
 
 ## Histograms
 Differently from base R graphics, where histogram is drawn by a special command, ggplot specifies the type of plot by geoms, like `geom_histogram()`:
