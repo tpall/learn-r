@@ -43,14 +43,14 @@ regexpr("o", x)
 ```
 We can see that "o" is the 4th character in a 1st string and 2nd character in the 2nd string and is missing (-1) from the last string, all have length 1 chracter (useBytes=T).
 
-Lets try vector of strings. We want to return matching strings *after underscore '_'* and we know that this *match may contain both letters and numbers* and is located at the end of the string:
+Lets try vector of strings. We want to return matching strings **after underscore '_' ** and we know that this **match may contain both letters and numbers** and is located at the end of the string:
 ```{r}
 y <- c("AreaShape_Area", "AreaShape_Perimeter", "AreaShape_MajorAxisLength", "Intensity_MADIntensity")
 m <- regexpr("[[:alnum:]]*$", y) # to return start and length of match
 m # to have have a look: 1st vector is the first match from beginning, 2nd the lenght of match 
 ```
 
-What the heck we do with this list? Don't let you intimidate!
+What the heck we do with this list?
 `regexpr` works with the `regmatches` command, you can return matching strings:
 ```{r}
 regmatches(y, m) # to return matching strings
