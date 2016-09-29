@@ -1,0 +1,21 @@
+---
+title: "Reproducible Data Analysis in R"
+output: html_document
+---
+
+We will cover the full workflow of data analysis, from inputting data to outputting the report, using simple-to-understand yet effective code. The course will include many hands-on tutorials with the possibility of using your own data. Emphasis will be on practical tips that make your data analysis more efficient, reproducible, and less painful. No previous experience with the R language is required. While basic knowledge of statistics doesn't hurt, it is not necessary.
+
+There will be 12 lectures, each lasting 4 academic hours:
+
+1. Introduction to data science. Introduction to R Studio and The R language.
+2. Indexing, Taavi.
+3. Base graphics, Taavi.
+4. Importing and exporting data and graphs, Taavi. The tidyverse 1/2, Ülo.
+5. The tidyverse 2/2, Ülo. Merging data, graphics with ggplot2 1/2, Taavi.
+6. ggplot2 2/2 Taavi.
+7. Exploratory data analysis, Ülo.
+8. Fnd&replace strings, Taavi. EDA, PCA, Ülo.
+9. Data cleaning, normalization, and recoding – Ülo (& Taavi?).
+10. Modelling in R + bootsrapping, Ülo & Taavi.
+11. R programming, Taavi.
+12. Preparing reports in R markdown and version control, Taavi.
