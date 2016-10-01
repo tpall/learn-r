@@ -144,7 +144,7 @@ tm_2013 %>% filter(str_detect(Nimi, ", Jaan$")) %>% tbl_df # Nimi is name and is
 Good!
 
 ## Replace strings
-To substitute parts of a string, base R uses `sub` and `gsub` to perform replacement of the first and all matches respectively. `strinr` versions of these verbs are `str_replace` and `str_replace_all`, respectively:
+To substitute parts of a string, base R uses `sub` and `gsub` to perform replacement of the first and all matches respectively. `stringr` versions of these verbs are `str_replace` and `str_replace_all`, respectively:
 ```{r}
 str_replace(y, "Area", "XXX") # to replace first occurence of Area in each string with XXX
 ```
