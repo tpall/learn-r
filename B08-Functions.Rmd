@@ -131,6 +131,36 @@ sapply(let, function(x) grep(x, letters)) # we need to know the position of each
 ```
 
 ## Functional sequence
+`magrittr` allows to use `%>%` piping operator not only to produce values but also [to produce functions](https://blog.rstudio.org/2014/12/01/magrittr-1-5/). This kind of functional sequences denote input with `.` dot:
+
+```{r}
+library(magrittr)
+mae <- . %>% abs %>% mean(na.rm = TRUE)
+mae(rnorm(10))
+```
+
+This is similar to following function:
+```{r, eval=FALSE}
+mae <- function(x) {
+  mean(abs(x), na.rm = TRUE)
+}
+```
+
+Quite common use case of these functional sequences is inside lapply/sapply:
+
+```{r, eval=FALSE}
+library(dplyr)
+library(readr)
+library(reshape2)
+data <- paths-to-csv-files %>% lapply(. %>% read_csv %>% melt)
+```
+
+It's cool that you can subset these functional sequences and use only parts of them when necessary:
+```{r}
+mae[2](rnorm(5))
+mae[1](rnorm(10))
+```
+
 
 #### Another example
 
@@ -219,6 +249,7 @@ Whitch produces following output:
 
 Seems that the standardised effect size for the drug treatment effect on blood pressure is **`r round(cd, 2)`**, which means it's **`r mansplain_cohensd(cd)`**.
 
+-----------------------------------------------------------------------------------
 + Try to keep your functions in separate sub directory `lib` in your project's dir 
 + load functions using `load(lib/cohens_d.R)`
 

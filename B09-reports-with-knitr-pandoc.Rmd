@@ -2,6 +2,8 @@
 output: html_document
 ---
 
+
+
 # Reports with rmarkdown
 R markdown is a variant of markdown that has embedded R code chunks. R markdown allows you to combine your R code, producing statistics and plots, with write-up. With the help of knitr and pandoc R markdown documents can be converted into reports in html, pdf or MS word format.
 
