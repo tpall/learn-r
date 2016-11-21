@@ -11,7 +11,7 @@ output:
     toc_depth: 4
 ---
 
-```{r fuckup, include = FALSE}
+```{r shutup, include = FALSE}
 library(knitr)
 opts_chunk$set(echo = TRUE, fig.align = 'center')
 set.seed(437385) # from random.org
