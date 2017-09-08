@@ -1,8 +1,6 @@
-# Introduction
+## Introduction
 
 R is [functional programming language](https://en.wikipedia.org/wiki/Functional_programming) and [statistical environment](https://www.r-project.org/about.html).
-
-## About
 R statistical language is based on **S** (R is [GNU](https://en.wikipedia.org/wiki/GNU) S). 
 S was developed by John Chambers (mainly), Rick Becker and Allan Wilks of Bell Laboratories. 
 The first version of S saw light in 1976. 
