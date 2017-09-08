@@ -1,8 +1,20 @@
 name: "reproducible-data-analysis-R"
+output:
+  html_document:
+    theme: cosmo
+    highlight: textmate
+    toc: true
+    toc_depth: 1
 navbar:
   title: "Reproducible Data Analysis in R"
   left:
     - text: "Home"
+      icon: fa-home
       href: index.html
     - text: "About"
+      icon: fa-info
       href: about.html
+      
+      
+
+    

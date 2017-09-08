@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-1.1/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-1.1/highlight.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs && document.readyState && document.readyState === "complete") {
+   window.setTimeout(function() {
+      hljs.initHighlighting();
+   }, 0);
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Reproducible Data Analysis in R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Home
+  </a>
+</li>
+<li>
+  <a href="about.html">
+    <span class="fa fa-info"></span>
+     
+    About
+  </a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#installing-packages">Installing packages</a></li>
+<li><a href="#r-repositories">R repositories</a><ul>
+<li><a href="#search-for-r-functions">Search for R functions</a></li>
+<li><a href="#common-mistakes-in-loading-packages">Common mistakes in loading packages</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="installing-packages" class="section level2">
+<h2>Installing packages</h2>
+<p>To install package, run following command in your R console:</p>
+<pre class="r"><code>install.packages(&quot;packagename&quot;) # eg use &quot;ggplot2&quot; as packagename</code></pre>
+<p>RStudio offers also point-and-click style package install option: <img src="graphs/RStudio_package.install.png" alt="Install packages via RStudio GUI" /></p>
+<p>You will not be able to use a package until you load it with the <code>library()</code> function. After you have installed the packages, you can load any of the packages into your current R session with the <code>library()</code> command, e.g.</p>
+<pre class="r"><code># Load library/package tidyr
+library(tidyr)</code></pre>
+<p>The <code>library(tidyr)</code> command makes available all the funtions in the tidyr package.</p>
+<blockquote>
+<p>R packages are collections of one or more functions with clearly specifed task.</p>
+</blockquote>
+<p>For example, the tidyr package contains following 41 functions:</p>
+<pre class="r"><code>library(tidyr)
+ls(&quot;package:tidyr&quot;)</code></pre>
+<pre><code>##  [1] &quot;%&gt;%&quot;             &quot;complete&quot;        &quot;complete_&quot;      
+##  [4] &quot;crossing&quot;        &quot;crossing_&quot;       &quot;drop_na&quot;        
+##  [7] &quot;drop_na_&quot;        &quot;expand&quot;          &quot;expand_&quot;        
+## [10] &quot;extract&quot;         &quot;extract_&quot;        &quot;extract_numeric&quot;
+## [13] &quot;fill&quot;            &quot;fill_&quot;           &quot;full_seq&quot;       
+## [16] &quot;gather&quot;          &quot;gather_&quot;         &quot;nest&quot;           
+## [19] &quot;nest_&quot;           &quot;nesting&quot;         &quot;nesting_&quot;       
+## [22] &quot;population&quot;      &quot;replace_na&quot;      &quot;separate&quot;       
+## [25] &quot;separate_&quot;       &quot;separate_rows&quot;   &quot;separate_rows_&quot; 
+## [28] &quot;smiths&quot;          &quot;spread&quot;          &quot;spread_&quot;        
+## [31] &quot;table1&quot;          &quot;table2&quot;          &quot;table3&quot;         
+## [34] &quot;table4a&quot;         &quot;table4b&quot;         &quot;table5&quot;         
+## [37] &quot;unite&quot;           &quot;unite_&quot;          &quot;unnest&quot;         
+## [40] &quot;unnest_&quot;         &quot;who&quot;</code></pre>
+</div>
+<div id="r-repositories" class="section level2">
+<h2>R repositories</h2>
+<p>R packages are available from 3 major repositories:</p>
+<ol style="list-style-type: decimal">
+<li><strong>CRAN</strong></li>
+</ol>
+<pre class="r"><code>install.packages(&quot;ggplot2&quot;)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li><strong>Bioconductor</strong> <a href="https://www.bioconductor.org/" class="uri">https://www.bioconductor.org/</a></li>
+</ol>
+<pre class="r"><code># First run biocLite script fron bioconductor.org
+source(&quot;https://bioconductor.org/biocLite.R&quot;)  
+# use &#39;http&#39; in url if &#39;https&#39; is unavailable. 
+biocLite(&quot;GenomicRanges&quot;, suppressUpdates=TRUE)</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li><strong>GitHub</strong> <a href="https://github.com/" class="uri">https://github.com/</a></li>
+</ol>
+<pre class="r"><code>library(devtools)
+install_github(&quot;ramnathv/slidify&quot;) # ramnathv is the user, slidify the package.
+# or alternatively, should we want only to install the missing package while avoiding any side effects that might result from loading the entire package, we use: 
+devtools::install_github(&quot;ramnathv/slidify&quot;)</code></pre>
+<p>or</p>
+<pre class="r"><code>install.packages(&quot;githubinstall&quot;)
+library(githubinstall)
+githubinstall(&quot;AnomalyDetection&quot;)</code></pre>
+<p>also</p>
+<ol start="4" style="list-style-type: decimal">
+<li><code>library(remotes)</code>: functions to install R packages from GitHub, Bitbucket, git, svn repositories, URL-s (also devtools package has functions to install packages from these resources).</li>
+</ol>
+<blockquote>
+<p>NB! As we want to add extra data munging power to the base R, in our course, every R session should start with loading these packages:</p>
+</blockquote>
+<pre class="r"><code>library(dplyr)
+library(tidyr)
+library(reshape2)
+library(ggplot2)
+library(tibble)</code></pre>
+<div id="search-for-r-functions" class="section level3">
+<h3>Search for R functions</h3>
+<p>To find a function containing the word “confusion” in any package:</p>
+<pre class="r"><code>RSiteSearch(&quot;confusion&quot;, restrict = &quot;functions&quot;) # this function is avaible from base R</code></pre>
+<p>will search online to find matches and will open a web browser to display the results.</p>
+<p>The function <code>apropos()</code> will search any <strong>loaded</strong> R packages for a given term. To find functions for creating a confusion matrix within the currently loaded packages:</p>
+<pre class="r"><code>library(dplyr) # lets load package caret
+apropos(&quot;select&quot;) #  search loaded R packages for a word &#39;confusion&#39;</code></pre>
+<pre><code>##  [1] &quot;.selectSuperClasses&quot; &quot;MethodsListSelect&quot;   &quot;select&quot;             
+##  [4] &quot;select_&quot;             &quot;select_all&quot;          &quot;select_at&quot;          
+##  [7] &quot;select_if&quot;           &quot;select_var&quot;          &quot;select_vars&quot;        
+## [10] &quot;select_vars_&quot;        &quot;select.list&quot;         &quot;selectMethod&quot;       
+## [13] &quot;selectSuperClasses&quot;  &quot;socketSelect&quot;        &quot;sql_select&quot;</code></pre>
+<pre class="r"><code>help(&quot;mutate&quot;) # same as ?</code></pre>
+<pre><code>## Help on topic &#39;mutate&#39; was found in the following packages:
+## 
+##   Package               Library
+##   plyr                  /Library/Frameworks/R.framework/Versions/3.4/Resources/library
+##   dplyr                 /Library/Frameworks/R.framework/Versions/3.4/Resources/library
+## 
+## 
+## Using the first match ...</code></pre>
+</div>
+<div id="common-mistakes-in-loading-packages" class="section level3">
+<h3>Common mistakes in loading packages</h3>
+<ul>
+<li>Using the wrong case: help(), Help(), and HELP() - only the first will work.</li>
+<li>Forgetting quotation marks – <code>install.packages(&quot;gclus&quot;)</code> works.</li>
+<li>Using a function from a package that’s not loaded: library(“foo”)</li>
+<li>Forgetting to include the parentheses in a function call. For example <code>help()</code> works, but <code>help</code> doesn’t.</li>
+</ul>
+<blockquote>
+<p>Entering function name without parentheses returns function internals. Very useful!</p>
+</blockquote>
+<pre class="r"><code>ruut  &lt;- function(x) x^2 # lets define function
+ruut # display function internals</code></pre>
+<pre><code>## function(x) x^2</code></pre>
+<pre class="r"><code>ruut(3) # run function</code></pre>
+<pre><code>## [1] 9</code></pre>
+<!-- Even if there are no **function arguments**, you still need the `()` appended to function name to execute function. -->
+<!-- ```{r} -->
+<!-- twoplustwo <- function() 2+2 # here we define our function -->
+<!-- twoplustwo # lets see whats in it -->
+<!-- twoplustwo() # run function -->
+<!-- ``` -->
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
