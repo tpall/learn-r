@@ -116,14 +116,13 @@ help_console <- function(topic, format=c("text", "html", "latex", "Rd"),
 
 
 ```{r}
-library(caret) # lets load package caret
-apropos("confusion") #  search loaded R packages for a word 'confusion'
+library(dplyr) # lets load package caret
+apropos("select") #  search loaded R packages for a word 'confusion'
 ```
 
 
 ```{r, echo=1}
-help("confusionMatrix") # same as ?, only lines 1-25 are shown here
-help_console(confusionMatrix, "text", lines = 1:25)
+help("mutate") # same as ?
 ```
 
 
