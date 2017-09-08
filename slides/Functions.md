@@ -164,7 +164,7 @@ sum_stat(v) # by default this function calculates mean
 ```
 
 ```
-[1] -0.3210855
+[1] 0.338282
 ```
 
 Ellipsis
@@ -196,7 +196,7 @@ mae(rnorm(10))
 ```
 
 ```
-[1] 0.8701861
+[1] 0.724621
 ```
 
 This is similar to following function:
