@@ -2,9 +2,5 @@
 .Rhistory
 .RData
 .Ruserdata
-*.docx
-output/
 .DS_Store
 docs/
-src/demo*.R
-graphs/example.*
