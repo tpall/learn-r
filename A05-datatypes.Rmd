@@ -1,10 +1,7 @@
----
-
----
 
 # Data structures 
 
-+ **Atomic vectors** are arrays that contain a single data type (logical, real, complex, character). 
+- **Atomic vectors** are arrays that contain a single data type (logical, real, complex, character). 
 Each of the following is a one-dimensional atomic vector: 
 
 ```{r}
@@ -19,13 +16,13 @@ class(namez)
 A scalar is an atomic vector with a single element. 
 So `k <- 2` is a shortcut for `k <- c(2)`.
 
-+ A **matrix** is an atomic vector that has a dimension attribute, `dim()`, containing two elements (`nrow`, number of rows and `ncol`, number of columns) 
+- A **matrix** is an atomic vector that has a dimension attribute, `dim()`, containing two elements (`nrow`, number of rows and `ncol`, number of columns) 
 
 ```{r}
 matrix(ages, nrow = 2)
 ```
 
-+ **Lists** are collections of atomic vectors and/or other lists.
+- **Lists** are collections of atomic vectors and/or other lists.
 
 ```{r}
 mylist <- list(passed, ages, namez)
@@ -39,7 +36,7 @@ mylist
 
 ```
 
-+ **Data frames** are a special type of list, where each atomic vector in the collection has the same length. 
+- **Data frames** are a special type of list, where each atomic vector in the collection has the same length. 
 Each vector represents a column (variable) in the data frame.
 
 ```{r}
@@ -47,26 +44,19 @@ exam <- data.frame(name = namez, passed = passed)
 exam
 ```
 
-![Illustration of R data types. Image: [http://yzc.me/2015/12/11/r-intro-1/](http://yzc.me/2015/12/11/r-intro-1/) ](https://raw.githubusercontent.com/Anonymous-Y/BlogImage/master/r-intro-3.jpg)
 
-# Selecting by index
+```{r, fig.cap="Illustration of R data types. Image: http://yzc.me/2015/12/11/r-intro-1"}
+knitr::include_graphics("https://raw.githubusercontent.com/Anonymous-Y/BlogImage/master/r-intro-3.jpg")
+```
+
+
+## Selecting by index
 Index gives the address that specifies the elements of vector/matrix/list or data.frame, which are then automatically selected.
 
 + Indexing begins at 1 (not 0) in R
-+ Indexing operators in R are square brackets -- '[', `[[` and dollar sign `$`  
++ Indexing operators in R are square brackets -- `[`, `[[` and dollar sign `$`  
 + `[` allows selecting more than one element, whereas `[[` and `$` select only one element.
 + Empty index [,] means "select all" -- `a[,1]` means "select all rows and 1st column from `a`".
-
-<!-- ```{r} -->
-<!-- '['(c(1,2,3), 1) == c(1,2,3)[1] # as you can see these are both identical -->
-<!-- ``` -->
-
-<!-- + you can select values, rows or columns by index -->
-
-<!-- + `-` (minus) before index means "not this element" -->
-<!-- + ! means "not" -->
-<!-- + != means "not equal" -->
-<!-- + == means "equal" -->
 
 During initial data exploration it is often necessary to have a look how the head of your table looks like, for this you can use convenience methods `head` and `tail` which are returning first and last elements of a object, respectively:
 ```{r}
@@ -80,7 +70,7 @@ Tip: you can use `tail` to return the very last element of a object with unknown
 tail(LETTERS, n = 1)
 ```
 
-# Vectors
+## Vectors
 
 The combine function `c()` is used to form the vector.
 
@@ -138,16 +128,16 @@ rep(c("poodle","sheltie"), each = 3, times = 2)
 ```
 
 
-# Data frame
+## Data frame
 
-* `data frame`: a collection of vectors where different columns can contain different modes of data (numeric, character, and so on). 
+- `data frame`: a collection of vectors where different columns can contain different modes of data (numeric, character, and so on). 
 Each vector contains only 1 mode of data (`vector1 <- c("a", 2, 3.4)` is automatically coerced to `chr`, but can be manually coerced to numeric or factor). 
 The data frame columns are variables, and the rows are observations. 
 Vectors are bound into matrix/data.frame vertically, with the direction from top to bottom. 
 Column = vector.
 `as.matrix()` has default argument `byrow = FALSE`, change this to fill matrix by rows.
 
-* `tibble::data_frame()` is a more modern version of data.frame (slight differences for the better)
+- `dplyr::data_frame()` is a more modern version of data.frame (slight differences for the better)
 `as_data_frame()` converts to it. 
 `data_frame()` does less than `data.frame()`: 
     + it never changes the type of the inputs (e.g. it never converts strings to factors!), 
@@ -155,12 +145,12 @@ Column = vector.
 
 **Tibbles** have a print method that shows only the first 10 rows, and all the columns that fit on screen. 
 This makes it much easier to work with large data. 
-<!-- In addition to its name, each column reports its type.  -->
-<!-- Tibbles clearly delineate `[` and `[[`: `[` always returns another tibble, `[[` always returns a vector.  -->
-<!-- Some older functions don't work with tibbles because they expect `df[, 1]` to return a vector, not a data frame.  -->
-<!-- If you encounter one of these functions, use `as.data.frame()` to coerce a tibble back to a data frame: -->
 
-![Iris dataset contains sepal and petal measurements of three iris species.](http://articles.concreteinteractive.com/wp-content/uploads/2015/03/irises.png)
+
+```{r,echo=FALSE, fig.cap="Iris dataset contains sepal and petal measurements of three iris species."}
+knitr::include_graphics("http://articles.concreteinteractive.com/wp-content/uploads/2015/03/irises.png")
+```
+
 
 ```{r}
 library(dplyr) # tbl_df 
@@ -194,7 +184,8 @@ dim(my_tab)
 ```
 
 ## Indexing data.frames
-<!-- Data frames can be indexed in several modes. When [ and [[ are used with a single vector index (x[i] or x[[i]]), they index the data frame as if it were a list. -->
+Data frames can be indexed in several modes. 
+When `[` and `[[` are used with a single vector index (`x[i]` or `x[[i]]`), they index the data frame as if it were a list.
 
 We use R `mtcars` dataset to illustrate indexing of a data.frame:
 ```{r}
@@ -290,7 +281,7 @@ levels(my_tab$experiment) # prints the unique levels in a factor vector
 ```
 
 
-# Matrix
+## Matrix
 Matrix: a collection of data elements, which are all numeric, character, or logical.
 
 Why use matrix? The choice between matrix and data.frame comes up only if you have data of the same type.
@@ -329,49 +320,7 @@ m
 t(m) # transposes a matrix
 ```
 
-<!-- Transpose a data frame with 1st column as factor -->
-
-<!-- ```{r} -->
-<!-- n <- exam$name -->
-<!-- df <- as.data.frame(t(exam[,-1])) -->
-<!-- colnames(df) <- n -->
-<!-- df -->
-<!-- ``` -->
-
-<!-- ### Indexing matrices -->
-<!-- Matrices are vectors with a dimension attribute and so all the vector forms of indexing can be used with a single index.  -->
-
-<!-- ```{r} -->
-<!-- m <- matrix(1:12, nrow = 3, dimnames = list(c("a","b","d"), LETTERS[1:4])) -->
-<!-- m -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- m[1,]                 # the first row of matrix m -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- m[1, , drop = FALSE]  # is a 1-row matrix -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- m[, c(TRUE, FALSE, FALSE, TRUE)] # logical indexing -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- m[cbind(c(1,2,1), 3:1)] # matrix numeric index -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- ci <- cbind(c("a", "b", "a"), c("A", "C", "B")) -->
-<!-- m[ci]                 # matrix character index -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- m[,-1]           # delete the first column of m -->
-<!-- ``` -->
-
-# List
+## List
 A list is an ordered collection of objects. 
 Basically, in R you can shove any data structure into list.
 E.g. list may contain a combination of vectors, matrices, data frames, and even other lists, (poodles?). 
@@ -428,29 +377,6 @@ class(mylist[[1]]) # logical vector in this case
 mylist[[c(3,2)]]
 ```
 Be careful, if you won't get `Error in ... : subscript out of bounds`, your script proceeds with this value and returns error in some of the next lines or returns wrong result.
-
-<!-- ### Recursive indexing into lists -->
-<!-- ```{r} -->
-<!-- z <- list(a = list(x = 9, y = "chello"), b = 1:5) # we create list named 'a' inside list 'z' -->
-<!-- z -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- unlist(z) # look what happens if we simplify this list into vector... -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- z$a$x # what's a$x in list z -->
-<!-- ``` -->
-
-
-<!-- ```{r} -->
-<!-- z[[c(1, 2)]] # we get second element of 1st element of list z -->
-<!-- ``` -->
-<!-- ```{r} -->
-<!-- z[[c("a", "x")]] <- "piano" # here we replace z$a$x with "piano" -->
-<!-- z -->
-<!-- ``` -->
 
 Query names of list objects:
 ```{r}

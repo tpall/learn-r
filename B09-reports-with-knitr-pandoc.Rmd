@@ -1,10 +1,6 @@
----
-output: html_document
----
-
-
 
 # Reports with rmarkdown
+
 R markdown is a variant of markdown that has embedded R code chunks. R markdown allows you to combine your R code, producing statistics and plots, with write-up. With the help of knitr and pandoc R markdown documents can be converted into reports in html, pdf or MS word format.
 
 [Quick overview of R markdown document, what it contains and how its structure looks like.](http://kbroman.org/knitr_knutshell/pages/Rmarkdown.html)
@@ -82,7 +78,7 @@ And chunk ends with triple backticks (grave accent):
 
 An R Markdown document usually contains many code chunks. All consequtive chunks are evaluated in order of appearance in a single R session. All objects generated will be preserved in future chunks. It's like running source on your R file without interleaved text. In fact, you can pull out only R code from your R markdown file using knitr command `purl`.
 
-### Chunk options
+## Chunk options
 Chunk output can be customized with knitr [options](http://yihui.name/knitr/options/), arguments set in the `{}` of a chunk header. Some of the frequently used chunk options:
 
 + `include = FALSE` prevents code and results from appearing in the finished file. R Markdown still runs the code in the chunk, and the results can be used by other chunks.
@@ -94,9 +90,4 @@ Chunk output can be customized with knitr [options](http://yihui.name/knitr/opti
 
 To knit this rmarkdown document into a html, pdf or word document hit `Knit` button in the head of source file window in RStudio:
 
-![It is easy to Knit your R markdown document in RStudio.](graphs/knit.png)
-
-
-
-
-
+![It is easy to Knit your R markdown document in RStudio.](images/knit.png)

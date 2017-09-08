@@ -1,20 +1,30 @@
-name: "reproducible-data-analysis-R"
-output:
-  html_document:
-    theme: cosmo
-    highlight: textmate
-    toc: true
-    toc_depth: 1
-navbar:
-  title: "Reproducible Data Analysis in R"
-  left:
-    - text: "Home"
-      icon: fa-home
-      href: index.html
-    - text: "About"
-      icon: fa-info
-      href: about.html
-      
-      
+language:
+  ui:
+    chapter_name: "Chapter "
+bookdown::gitbook:
+  split: "section"
+  config:
+    toc:
+      collapse: subsection
+      scroll_highlight: yes
+      before: null
+      after: null
+    toolbar:
+      position: fixed
+    edit : null
+    download: null
+    search: yes
+    fontsettings:
+      theme: white
+      family: sans
+      size: 2
+    sharing:
+      facebook: yes
+      twitter: yes
+      google: no
+      weibo: no
+      instapper: no
+      vk: no
+      all: ['facebook', 'google', 'twitter']
 
     

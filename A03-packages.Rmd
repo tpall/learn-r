@@ -1,12 +1,14 @@
-## Installing packages
+# Installing packages
 
 To install package, run following command in your R console:
 ```{r, eval=FALSE}
 install.packages("packagename") # eg use "ggplot2" as packagename
 ```
 RStudio offers also point-and-click style package install option:
-![Install packages via RStudio GUI](graphs/RStudio_package.install.png)
 
+```{r, fig.cap="Install packages via RStudio GUI."}
+knitr::include_graphics("images/RStudio_package.install.png")
+```
 
 You will not be able to use a package until you load it with the `library()` function. 
 After you have installed the packages, you can load any of the packages into your current R session with the `library()` command, e.g. 
@@ -55,18 +57,9 @@ install_github("ramnathv/slidify") # ramnathv is the user, slidify the package.
 devtools::install_github("ramnathv/slidify")
 ```
 
-or
-
-```{r eval=FALSE}
-install.packages("githubinstall")
-library(githubinstall)
-githubinstall("AnomalyDetection")
-```
-
 also 
 
 4. `library(remotes)`: functions to install R packages from GitHub, Bitbucket, git, svn repositories, URL-s (also devtools package has functions to install packages from these resources).
-
 
 > NB! As we want to add extra data munging power to the base R, in our course, every R session should start with loading these packages:
 
@@ -79,12 +72,12 @@ library(tibble)
 ```
 
 
-### Search for R functions
+## Search for R functions
 
-To find a function containing the word "confusion" in any package:
+To find a function containing the word "mutate" in any package:
 
 ```{r eval=FALSE}
-RSiteSearch("confusion", restrict = "functions") # this function is avaible from base R
+RSiteSearch("mutate", restrict = "functions") # this function is avaible from base R
 ```
 
 will search online to find matches and will open a web browser to display the results. 
@@ -126,7 +119,7 @@ help("mutate") # same as ?
 ```
 
 
-### Common mistakes in loading packages
+## Common mistakes in loading packages
 
 + Using the wrong case: help(), Help(), and HELP() - only the first will work.
 + Forgetting quotation marks -- `install.packages("gclus")` works.

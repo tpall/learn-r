@@ -1,7 +1,3 @@
----
-
----
-
 
 # R objects
 
@@ -10,7 +6,7 @@ Every object has a class attribute telling R how to handle it.
 Common R data structures are: vectors (numerical, character, logical), matrices, data frames, and lists.
 The basic data structure in R is the vector.
 
-### Class of object
+## Class of object
 An R vector is characterized by a mode that describes its contents: logical, numeric, complex, character.
 
 An R data structure is characterized by a class that describes its structure: matrix, array, factor, time-series, data frame, and list.
@@ -22,7 +18,7 @@ myobject <- list(1,"a")
 class(myobject) # gives the data structure of object 'myobject'
 ```
 
-### R expressions
+## R expressions
 Syntactically correct R expressions (`y <- x * 10`) will be referred to as statements.
 R uses the symbol `<-` for assignments, rather than the typical `=` sign.
 
@@ -34,7 +30,7 @@ y <- x * 10 # here we multiply numeric vector x by 10
 y
 ```
 
-### Assigning value to object
+## Assigning value to object
 
 `a` is an object containing character "b": 
 ```{r}
@@ -50,11 +46,14 @@ a
 
 You can overwrite objects (assign a new value to it):
 ```{r}
-a <- c("poodle","sheltie") # c(1,2) is a vector 
+a <- c("poodle", "sheltie") # c(1,2) is a vector 
 a # a now contains two values: "poodle" and "sheltie"
 ```
 
-![Poodle as innocent victim of overwriting @daily torygraph.](http://www.dailytorygraph.com/wp-content/uploads/2016/03/IMG_2139-700x525.jpg)
+```{r, fig.cap="Poodle as innocent victim of overwriting @daily torygraph."}
+knitr::include_graphics("http://www.dailytorygraph.com/wp-content/uploads/2016/03/IMG_2139-700x525.jpg")
+```
+
 
 You can copy objects under new name: 
 ```{r}
@@ -72,7 +71,7 @@ d
 
 > Never use a function name as object name -- `c` vs. `c()`. You rewrite that function in your environment and you get into trouble!
 
-### Coercing
+## Coercing
 
 ```{r}
 a <- "42"
@@ -91,11 +90,10 @@ class(b)
 
 To coerce the factor `ss` with two levels `10` and `20` into numbers you must convert it to character first: 
 ```{r}
-ss <- as.factor(c(10,20))
+ss <- as.factor(c(10, 20))
 ss
 # lets see what happens if we try to convert ss directly to numeric
 as.numeric(ss)
-
 as.numeric(as.character(ss))
 ```
 
@@ -109,7 +107,6 @@ Nominal variables are categorical, without an implied order.
 diabetes <- c("Type1", "Type2", "Type1", "Type1") # diabetes is a factor with 2 levels
 diabetes # a character vector
 class(diabetes)
-
 diabetes <- factor(diabetes) # coerce to factor
 diabetes # factors
 class(diabetes)
@@ -140,7 +137,7 @@ Numeric variables can be re-coded as factors.
 If sex was coded as 1 for male and 2 for female in the original data, 
 
 ```{r}
-sex <- sample(c(1,2), 21, replace = TRUE) # lets generate data
+sex <- sample(c(1, 2), 21, replace = TRUE) # lets generate data
 sex
 ```
 

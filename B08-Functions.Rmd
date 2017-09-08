@@ -1,6 +1,3 @@
----
-output: html_document
----
 
 # Functions
 
@@ -24,11 +21,10 @@ dedication <- function() {
 }
 ```
 
-Above defined function prints cryptic lyrics (Credit: ME Smith)
+Above defined function prints some cryptic lyrics (Credit: ME Smith)
 ```{r}
 dedication()
 ```
-
 
 But we can tune above function to insert your computer's username into that line instead of that actor:
 ```{r}
@@ -162,7 +158,7 @@ mae[1](rnorm(10))
 ```
 
 
-#### Another example
+### Another example
 
 Let's create function to calculate __standardised effect size, Cohen's d__. First let's simulate some toy data of blood pressure readings from patients with high systolic bp, treated either with drug or placebo: 
 ```{r, fig.width=3}

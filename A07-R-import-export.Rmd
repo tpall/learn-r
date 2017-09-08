@@ -1,15 +1,9 @@
----
-
----
 
 # Getting data in and out of R
 
-![You know nothing. Official promotion logo for Banksy's October 2013 artist residency in New York City. Photo: Banksy](https://upload.wikimedia.org/wikipedia/en/2/2c/Banksy_Better_Out_Than_In_New_York_City_2013.png)
-
-<!-- When planning to import your data from external files to R, then -->
-
-<!-- + avoid whitespaces in your file names, replace these with `.`,`_` or `-` -->
-<!-- + don't use special characters like `,` `?` `#` `*` `@` `$` `%` `|` `^` `{` `}` `(` `)` `[` `]` `\` `/` -->
+```{r, fig.cap="You know nothing. Official promotion logo for Banksy's October 2013 artist residency in New York City. Photo: Banksy."}
+knitr::include_graphics("https://upload.wikimedia.org/wikipedia/en/2/2c/Banksy_Better_Out_Than_In_New_York_City_2013.png")
+```
 
 ## Import tabular data
 `read.table`, `read.csv`, `read.delim` functions allow to create data frames, where different columns may contain different type of data -- `numeric`, `character` etc. 
@@ -48,7 +42,7 @@ airquality <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/datas
 head(airquality)
 ```
 
-### `readr` package
+## `readr` package
 You can import tabular data using read_ functions from `readr` package. Compared to base R functions like `read.csv()`, `readr` is much faster (important for very large datasets) and gives more convenient output: 
 
 + it never converts strings to factors, 
@@ -98,66 +92,6 @@ Importantly, `read_` functions expect specific delimiter: comma for _csv, tab fo
 library(readr)
 ```
 
-<!-- #### Change column type -->
-<!-- ```{r, eval=FALSE} -->
-<!-- read_csv("mypath.csv", col_types = col(x = col_integer(), treatment = col_character())) -->
-<!-- ``` -->
-
-<!-- You can specify the following types of columns: -->
-
-<!-- + `col_integer()` (i) and `col_double()` (d) specify integer and doubles. -->
-<!-- + `col_logical()` (l) parses TRUE, T, FALSE and F into a logical vector. -->
-<!-- + `col_character()` (c) leaves strings as is. -->
-<!-- + `col_number()` (n) is a more flexible parser for numbers embedded in other strings. It will look for the first number in a string, ignoring non-numeric prefixes and suffixes. -->
-<!-- + `col_factor()` (f) allows you to load data directly into a factor if you know what the levels are. -->
-<!-- + `col_skip()` (_, -) completely ignores a column. -->
-<!-- + `col_date()` (D), `col_datetime()` (T) and `col_time()` (t) parse into dates, date times, and times. -->
-
-<!-- Each column parser has a one letter abbreviation, which you can use instead of the full function call (assuming you're happy with the default arguments): -->
-
-<!-- ```{r, eval=FALSE} -->
-<!-- read_csv("mypath.csv", col_types = cols(x = "i", treatment = "c")) -->
-<!-- ``` -->
-
-<!-- Each `col_XYZ()` function also has a corresponding `parse_XYZ()` that you can use on a character vector. -->
-
-<!-- ```{r} -->
-<!-- parse_integer(c("1", "2", "3")) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- parse_logical(c("TRUE", "FALSE", "NA")) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- parse_number(c("$1000", "20%", "3,000")) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- parse_datetime("2010-10-01T2010") -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- parse_date("2010-10-01") -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- parse_time("20:10:01") -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- parse_date("01/02/15", "%m/%d/%y") -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- parse_date("01/02/15", "%d/%m/%y") -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- parse_date("01/02/15", "%y/%m/%d") -->
-<!-- ``` -->
-
-
 ## Import MS Excel
 There are several libraries and functions available to import MS excel workbooks into R, like `XLConnect`,`gdata::read.xls()`, `xlsx`. 
 `XLConnect` is a powerful package for working with .xls(x) files, but it depends on Java and has memory limitations: you'll never know when your script crashes. 
@@ -175,35 +109,6 @@ dim(z)
 
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Extract tables from messy spreadsheets with jailbreakr <a href="https://t.co/9wJfDj0cLM">https://t.co/9wJfDj0cLM</a> <a href="https://twitter.com/hashtag/rstats?src=hash">#rstats</a> <a href="https://twitter.com/hashtag/DataScience?src=hash">#DataScience</a></p>&mdash; R-bloggers (@Rbloggers) <a href="https://twitter.com/Rbloggers/status/766226281859997697">August 18, 2016</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js"charset="utf-8"></script>
-
-## Import ODS
-To import Open Document Spreadsheets .ods files into R you can try [following approach](https://github.com/chainsawriot/readODS).
-```{r, eval = FALSE}
-library(readODS)
-read_ods("table.ods", header = TRUE) ## return only the first sheet
-read_ods("multisheet.ods", sheet = 2) ## return the second sheet 
-```
-
-<!-- ## PDF tables -->
-<!-- PDF table extractor -- `Tabula` - exists as both a server application, accessed via a web browser, or as a service using the tabula extractor Java application. The (`tabulizer` R package)[https://github.com/ropenscilabs/tabulizer] provides a wrapper for tabula extractor (bundled within the package), that lets you access the service via it's command line calls. (One dependency you do need to take care of is to have Java installed; adding Java into an RStudio docker container would be one way of taking care of this.) -->
-
-<!-- You can try this code with [more instructions on `github`](https://github.com/ropenscilabs/tabulizer) to install package (if rJava is installed successfully...). -->
-<!-- ```{r, eval=FALSE} -->
-<!-- devtools::install_github("ropenscilabs/tabulizer") -->
-<!-- library("tabulizer") -->
-<!-- f <- system.file("examples", "data.pdf", package = "tabulizer") -->
-<!-- out1 <- extract_tables(f) -->
-<!-- str(out1) -->
-<!-- ``` -->
-
-## Import SPSS, SAS etc.
-`foreign` package provies functions for reading and writing data stored by Minitab, S, SAS, SPSS, Stata, etc.
-
-```{r, eval=FALSE}
-library(foreign)
-mydata <- read.spss("mydata.sav") # import spss data file, returns list
-mydata <- read.spss("mydata.sav", to.data.frame = TRUE) # returns data.frame
-```
 
 ## Import all datasets from directory
 We can use `sapply(X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)` or `lapply(X, FUN, ...)` functions to iterate through vector or list of files, respectively.
@@ -229,21 +134,6 @@ data_files # ups, we have only one file
 datasets <- sapply(data_files, read.table, simplify = FALSE, USE.NAMES = TRUE) # sapply returns vector or matrix, simplify = FALSE outputs list
 str(datasets)
 ```
-
-<!-- If you have datasets with same column names, you can import all datasets as a list and rbind them into one data.frame. Here we concatenate our single data.frame in `datasets` object. -->
-
-<!-- `do.call(rbind, my_list_of_dataframes)` is base R solution to this task. -->
-<!-- ```{r} -->
-<!-- nrow(datasets[[1]]) # how many rows in our original data? datasets is a list. -->
-<!-- rbound_datasets <-  do.call(rbind, c(datasets, datasets)) # bind dataframes in list by rows -->
-<!-- nrow(rbound_datasets) # how many rows we have now -->
-<!-- ``` -->
-
-<!-- Alternative solution is `bind_rows` from `dplyr` package. -->
-<!-- ```{r} -->
-<!-- rbound_datasets2 <- dplyr::bind_rows(c(datasets, datasets)) -->
-<!-- nrow(rbound_datasets2) # how many rows we have now -->
-<!-- ``` -->
 
 ## Import text file
 Probably, the most basic form of data to import into R is a simple text file.

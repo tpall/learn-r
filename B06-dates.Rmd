@@ -1,20 +1,6 @@
----
-
----
-
-<!-- # Using Dates and Times in R -->
-<!-- % Bonnie Dixon -->
-<!-- % 14-02-10 15:09:57 -->
-
-<!-- *Today at the [Davis R Users' -->
-<!-- Group](http://www.noamross.net/davis-r-users-group.html), [Bonnie -->
-<!-- Dixon](http://ffhi.ucdavis.edu/people/directory/bmdixon) gave a tutorial on the -->
-<!-- various ways to handle dates and times in R. Bonnie provided this great script -->
-<!-- which walks through essential classes, functions, and packages. Here it is piped through -->
-<!-- `knitr::spin`. The original R script can be found as a gist -->
-<!-- [here](https://gist.github.com/noamross/8928124).* -->
 
 # Date and time classes
+
 Three date and time classes are built-in in R, `Date`, `POSIXct`, and `POSIXlt`.
 
 ## Date
@@ -216,11 +202,8 @@ trunc(mft1.lt, "mins")
 + `POSIXlt` enables easy extraction of specific components
 + and there is also `chron` package when you don't need to deal with timezones and daylight savings time.
 
-## Manipulating times and dates
-
-### lubridate
+## Manipulating times and dates with **lubridate**
 This package is a wrapper for POSIXct with more intuitive syntax.
-
 
 ```{r}
 library(lubridate)
@@ -492,33 +475,4 @@ mean(sleep$sleep.time)/3600
 ```{r}
 mean(sleep$efficiency)
 ```
-
-<!-- We can also plot sleep duration and efficiency across the week: -->
-<!-- ```{r} -->
-<!-- par(mar = c(5, 4, 4, 4)) -->
-<!-- plot(round_date(sleep$rise.time, "day"), sleep$efficiency,  -->
-<!--      type = "o", col = "blue", xlab = "Morning", ylab = NA) -->
-<!-- par(new = TRUE) -->
-<!-- plot(round_date(sleep$rise.time, "day"), sleep$sleep.time/3600,  -->
-<!--      type = "o", col = "red", axes = FALSE, ylab = NA, xlab = NA) -->
-<!-- axis(side = 4) -->
-<!-- mtext(side = 4, line = 2.5, col = "red", "Sleep duration") -->
-<!-- mtext(side = 2, line = 2.5, col = "blue", "Sleep efficiency") -->
-<!-- ``` -->
-
-<!-- More resources on times and dates -->
-<!-- Date and time tutorials for R: -->
-
-<!-- + [http://www.stat.berkeley.edu/classes/s133/dates.html](http://www.stat.berkeley.edu/classes/s133/dates.html) -->
-<!-- + [http://science.nature.nps.gov/im/datamgmt/statistics/r/fundamentals/dates.cfm](http://science.nature.nps.gov/im/datamgmt/statistics/r/fundamentals/dates.cfm) -->
-<!-- + [http://en.wikibooks.org/wiki/R_Programming/Times_and_Dates](http://en.wikibooks.org/wiki/R_Programming/Times_and_Dates) -->
-
-<!-- [lubridate](http://www.jstatsoft.org/v40/i03/paper) -->
-
-<!-- Time zone and daylight saving time info: -->
-
-<!-- + [http://www.timeanddate.com/](http://www.timeanddate.com/) -->
-<!-- + [http://en.wikipedia.org/wiki/List_of_tz_database_time_zones](http://en.wikipedia.org/wiki/List_of_tz_database_time_zones) -->
-<!-- + [http://www.twinsun.com/tz/tz-link.htm](http://www.twinsun.com/tz/tz-link.htm) -->
-<!-- + Also see the R help file at `?Sys.timezone` -->
 

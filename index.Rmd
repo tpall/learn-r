@@ -1,6 +1,15 @@
 ---
 title: "Reproducible Data Analysis in R"
-author: "Ülo Maiväli^1^, Taavi Päll^2,3^"
+author: "Ülo Maiväli, Taavi Päll"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: 
+   bookdown::gitbook:
+     highlight: tango
+documentclass: book
+cover-image: "images/cover.png"
+github-repo: tpall/learn-r
+description: "This book gathers information on using R, RStudio, rmarkdown and Git/github on reproducible data analysis pipeline."
 ---
 
 ```{r shutup, include = FALSE}
@@ -13,10 +22,3 @@ options(lubridate.verbose = FALSE, "getSymbols.warning4.0" = FALSE)
 ^1^[Institute of Technology, University of Tartu](http://www.tuit.ut.ee/en), 
 ^2^[Institute of Molecular and Cell Biology, University of Tartu](http://www.tymri.ut.ee), 
 ^3^[Department of Chemistry and Biotechnology, Tallinn University of Technology](http://www.ttu.ee/faculty-of-science/department-of-gene-technology/)
-
-```{r collectfiles, echo = FALSE, message = FALSE, results = 'asis'}
-# Here we collect all child .Rmd files and parse them with knit_child and cat output into main document
-allfiles <- list.files()
-chapters <- allfiles[grepl("[A-Z0-9]{3}-.*.Rmd", allfiles)]
-cat(sapply(chapters, knitr::knit_child, quiet = TRUE))
-```

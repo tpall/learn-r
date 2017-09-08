@@ -1,62 +1,60 @@
-## Introduction
+
+# Introduction
 
 R is [functional programming language](https://en.wikipedia.org/wiki/Functional_programming) and [statistical environment](https://www.r-project.org/about.html).
-R statistical language is based on **S** (R is [GNU](https://en.wikipedia.org/wiki/GNU) S). 
-S was developed by John Chambers (mainly), Rick Becker and Allan Wilks of Bell Laboratories. 
-The first version of S saw light in 1976. 
-The aim of the S language was "to turn ideas into software, quickly and faithfully".
-R was initially written by Robert Gentleman and Ross Ihaka at the University of Auckland Statistics Department. 
-The project is relatively new, conceived in 1992, with an initial version released in 1994 and a first stable beta version in 2000.
+R, together with rmarkdown and Git/github has rich and growing ecosystem that enables reproducible data carpentry and statistical analysis and dissemination of nicely formatted analysis results.
 
-
-### R pros
-
-+ Just about any type of data analysis can be done in R. 
-
-```{r cranpackages, echo=FALSE, message=FALSE}
-# Load saved CRAN package data to environment
-load("data/Available_CRAN_Packages.RData")
-t <- t[[1]] # t is list of length 1 containing data.frame
+```{r, echo=FALSE, message=FALSE}
 library(dplyr)
-tn <- t %>% group_by(Date) %>% summarise(Packages = n())
-cap <- paste("There are about eight packages supplied with the R distribution. The number of available CRAN packages grows exponentially, featuring", length(unique(t$Package)), "available packages as of", t$Date[1],".")
-```
-
-```{r plotcranpackages, echo=FALSE, message=FALSE, fig.show='asis', fig.align='center', fig.cap=cap}
 library(ggplot2)
 library(lubridate)
-tn %>% ggplot(aes(ymd(Date), cumsum(Packages), group = 1)) + 
-  geom_line() + ylab("Number of packages") + xlab("Years") + 
+# Load saved CRAN package data to environment
+rpkg <- readRDS("data/Available_CRAN_Packages.rds")
+rpkg_n <- group_by(rpkg, Date) %>% summarise(Packages = n())
+cap <- sprintf("The number of available CRAN packages grows exponentially, featuring %s available packages as of %s.", length(unique(rpkg$Package)), rpkg$Date[1])
+```
+
+```{r,echo=FALSE,message=FALSE,fig.show='asis', fig.align='center', fig.cap=cap}
+ggplot(rpkg_n, aes(ymd(Date), cumsum(Packages), group = 1)) + 
+  geom_line() + 
+  ylab("Number of packages") + 
+  xlab("Years") + 
   ggtitle("Available CRAN Packages")
 ```
 
 
-+ R contains advanced statistical routines not yet available in other packages \@ref(fig:plotcranpackages).  
-+ R provides reproducibility in data analysis, and yet is very flexible (everyone can write their parallel solution to any problem). 
-+ R has the most comprehensive feature set available to visualize complex data. 
-+ The results of any analytic step can easily be saved, manipulated, and used as input for additional analyses. 
-+ R can import/export data from text files, pdf-s, database-management systems, statistical packages, and specialized data stores. 
-+ R can also access data directly from web pages, social media sites, and a wide range of online data services.  
-+ R provides a natural language for quickly programming recently published methods.  
-+ Most operations in R are much quicker than manipulating tables in MS Excel or LO Calc. 
-+ R has a large community of users -- most questions can be quickly answered by googling.  
-+ For a non-programmer R is easier to learn than Python, etc. (Ülo: most users do not program in R, and don't need to.)  
+**R pros**    
+
+- Just about any type of data analysis can be done in R. 
+- R contains advanced statistical routines not yet available in other packages.  
+- R provides reproducibility in data analysis, and yet is very flexible (everyone can write their parallel solution to any problem). 
+- R has the most comprehensive feature set available to visualize complex data. 
+- The results of any analytic step can easily be saved, manipulated, and used as input for additional analyses. 
+- R can import/export data from text files, pdf-s, database-management systems, statistical packages, and specialized data stores. 
+- R can also access data directly from web pages, social media sites, and a wide range of online data services.  
+- R provides a natural language for quickly programming recently published methods.  
+- Most operations in R are much quicker than manipulating tables in MS Excel or LO Calc. 
+- R has a large community of users -- most questions can be quickly answered by googling.  
+- For a non-programmer R is easier to learn than Python, etc. (Ülo: most users do not program in R, and don't need to.)  
 
 A key reason that R is a good thing is because it is a language. The power of language is abstraction. The way to make abstractions in R is to write functions [(Burns, 2011)](http://www.burns-stat.com/pages/Tutor/R_inferno.pdf).
 
-### R cons (none is the deal breaker):
+**R cons** (none is the deal breaker):    
 
-+ With R you must know exactly, what you want to do – in terms of your immediate atomic goals in data massage, methods of statistical analysis, and the overall strategy of analysis. 
-+ It is **like getting your own keys to daddy's F-16 fighter plane**. Get a setting wrong **and boom!**
+- With R you must know exactly, what you want to do – in terms of your immediate atomic goals in data massage, methods of statistical analysis, and the overall strategy of analysis. 
+- It is **like getting your own keys to daddy's F-16 fighter plane**. Get a setting wrong **and boom!**
+- R has uneven inbuilt help – but a lot of users who are willing to help you.
 
-![Unlike your daddy's F-16, it's similarly annoying but safe to crash your R session. Image: [The Brofessional](http://www.thebrofessional.net/guy-builds-incredible-working-replica-dutch-f-16-military-fighter-jet-scratch/)](http://nkpzz1l56ai473pu632f0nui.wpengine.netdna-cdn.com/wp-content/uploads/2015/01/amazing-model-airplane-remote-control-replica-of-dutch-orange-f-16-fighter-jet-672x377.jpg)
 
-+ R has uneven inbuilt help – but a lot of users who are willing to help you.
+```{r, echo=FALSE, fig.cap="Unlike your daddy's F-16, it's similarly annoying but safe to crash your R session. Image: [The Brofessional](http://www.thebrofessional.net/guy-builds-incredible-working-replica-dutch-f-16-military-fighter-jet-scratch/)"}
+knitr::include_graphics("http://nkpzz1l56ai473pu632f0nui.wpengine.netdna-cdn.com/wp-content/uploads/2015/01/amazing-model-airplane-remote-control-replica-of-dutch-orange-f-16-fighter-jet-672x377.jpg")
+```
 
-### Alternatives
+**Alternatives**    
+
 You can prepend "Some say, .." to these statements:
 
-+ MS Excel might be better for inputting data into tables.
-+ Graphpad Prism is much more foolproof and easier to use as a statistical tool (but has limited functionality). There is a free web version of Graphpad – [check it out](http://www.graphpad.com/quickcalcs/).  
-+ Python is more widely spread as a general purpose programming language -- it is also arguably better in working with external databases (which we won't). 
+- MS Excel might be better for inputting data into tables.
+- Graphpad Prism is much more foolproof and easier to use as a statistical tool (but has limited functionality). There is a free web version of Graphpad – [check it out](http://www.graphpad.com/quickcalcs/).  
+- Python is more widely spread as a general purpose programming language -- it is also arguably better in working with external databases (which we won't). 
 
