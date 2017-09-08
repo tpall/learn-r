@@ -1,0 +1,8 @@
+name: "reproducible-data-analysis-R"
+navbar:
+  title: "Reproducible Data Analysis in R"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "About"
+      href: about.html
