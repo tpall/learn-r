@@ -80,7 +80,7 @@ In RStudio if you type the name of the function without parentheses eg. `scale` 
 + RStudio: `Help` menu contains section `Cheatsheets`.
 + `Ctrl + Enter` (`Cmd + Enter` on a Mac) in RStudio: sends the current line (or current selection) from the editor to the console and runs it. 
 + `Alt + -` in RStudio: gives assignment operator `<-`. 
-+ `Ctrl + Shift + M` (Ctrl + Cmd + M on a Mac) in RStudio: gives piping operator `%>%`. 
++ `Ctrl + Shift + M` (Shift + Cmd + M on a Mac) in RStudio: gives piping operator `%>%`. 
 + `Ctrl + Shift + C` (Ctrl + Cmd + C on a Mac) in RStudio: comment/uncomment lines.
 + [RStudio cheat sheet with more tips](https://www.rstudio.com/wp-content/uploads/2016/01/rstudio-IDE-cheatsheet.pdf).
 + R is case-sensitive. 

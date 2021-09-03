@@ -4,25 +4,151 @@
 
 # Find character strings 
 
-Character strings can be matched and manipulated in R by using `regular expressions` in functions `grep`, `grepl`, `sub`, `gsub` and some others.
-A `regular expression` is a pattern that describes a set of strings.
+Character strings can be matched and manipulated in base R by using `regular expressions` in functions `grep`, `grepl`, `sub`, `gsub`, `regexpr` + `regmatches` and some others. 
+Also tidyverse package 'stringr' contains analogous verbs with more consistent syntax.
+A [regular expression](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html) is a pattern that describes a set of strings.
 
-+ The fundamental building blocks are the regular expressions that match a single character. 
-+ Most characters, including all letters and digits, are regular expressions that match themselves. 
+<!-- + The fundamental building blocks are the regular expressions that match a single character.  -->
++ [Regular Expressions as used in R](https://stat.ethz.ch/R-manual/R-devel/library/base/html/regex.html)
++ Most characters, including all letters and digits, are regular expressions that match themselves. Whereas, e.g. `.` matches any single character.
++ You can refer also to a character class, which is a list of characters enclosed between `[` and `]`, e.g. `[[:alnum:]]` is same as `[A-z0-9]`.
++ Most common character classes:
+      - `[:alnum:]` includes alphanumerics (`[:alpha:]` and `[:digit:]`); 
+      - `[:alpha:]`, includes alphabetic characters (`[:upper:]` and `[:lower:]` case);
+      - `[:punct:]` includes punctuation characters ! " # $ % & ' ( ) * + , - . / : ; < = > ? @ [ \ ] ^ _ ` ` { | } ~.; 
+      - `[:blank:]` includes space and tab; etc. 
 + The metacharacters in regular expressions are `. \ | ( ) [ { ^ $ * + ?`, whether these have a special meaning depends on the context. 
 + When matching any metacharacter as a regular character, precede it with a double backslash `\\`.
-
++ Repetition quantifiers put after regex specify how many times regex is matched: `?`, optional, at most once; `*`, zero or more times; `+`, one or more times; `{n}`, n times; `{n,}`, n or more times; `{n,m}`, n to m times. 
 + The caret `^` and the dollar sign `$` are metacharacters that respectively match the empty string at the beginning and end of a line.
 
-`grep(pattern, x)` finds a pattern in x. Pattern -- character string containing a regular expression (or exact character string for fixed = TRUE).
+## Common operations with regular expressions
 
++ Locate a pattern match (positions)
++ Extract a matched pattern
++ Identify a match to a pattern
++ Replace a matched pattern
 
-We can use grepl to filter data frame:
+## Get string length
+To get the length of a text string (i.e. the number of characters in the string):
 ```{r}
-library(dplyr)
-fruit_males <- fruit %>% filter(grepl("M", Gender)) %>% tbl_df
-fruit_males
+x <- c("reformation", "post", "TLC")
+nchar(x)
+```
+
+## Locate and extract strings
+`regexpr` returns position of 1st match and its length in a string:
+```{r}
+regexpr("o", x)
+```
+We can see that "o" is the 4th character in a 1st string and 2nd character in the 2nd string and is missing (-1) from the last string, all have length 1 chracter (useBytes=T).
+
+Lets try vector of strings. We want to return matching strings **after underscore '_' ** and we know that this **match may contain both letters and numbers** and is located at the end of the string:
+```{r}
+y <- c("AreaShape_Area", "AreaShape_Perimeter", "AreaShape_MajorAxisLength", "Intensity_MADIntensity")
+m <- regexpr("[[:alnum:]]*$", y) # to return start and length of match
+m # to have have a look: 1st vector is the first match from beginning, 2nd the lenght of match 
+```
+
+What the heck we do with this list?
+`regexpr` works with the `regmatches` command, you can return matching strings:
+```{r}
+regmatches(y, m) # to return matching strings
+```
+
+> Tidyverse's `stringr` library resolves the problem of difficult to work with putputs and produces outputs than can easily be used as inputs.
+
+`stringr` library verbs to fulfill tasks by `regexpr` and `regmatches` are `str_locate` and `str_extract`:
+```{r}
+library(stringr)
+str_locate(y, "[[:alnum:]]*$") # if we want only start and end positions
+```
+Note that, `str_locate` returns more conveniently a matrix (instead of a list as in regexpr).
+
+```{r}
+str_extract(y, "[[:alnum:]]*$") # if we want actual strings
+```
+Seems nice and tidy.
+
+To return multiple matches from the string, not just the first one, use `gregexpr`, which returns start position and length of every match:
+```{r}
+regmatches(y, gregexpr("Area", y)) # to return start position and length of every match
+```
+
+Please try to return positions of all upper case letters from y:
+```{r}
+regmatches(y, gregexpr("[[:upper:]]", y))
+```
+
+Tidyverse alternatives to `gregexpr` is `str_locate_all` and `str_extract_all`:
+```{r}
+str_locate_all(y, "e") # to locate all start positions and lengths of letter "e"
+```
+
+```{r}
+str_extract_all(y, "[[:upper:]]") # to extract all upper case letters
+```
+
+## Use of string extraction in dplyr
+
+```{r}
+
 ```
 
 
+## Find matching elements in vector
+`grep(pattern, x)` finds a pattern in x. Pattern -- character string containing a regular expressions (or exact character string for fixed = TRUE).
 
+What really happens when we use `grep` or `grepl` on a vector x.
+By using `grep()` with default arguments gets us vector of the indices of the matching items in x:
+```{r}
+grep("Area", y)
+```
+
+Using `grep(value = TRUE)` we get character vector containing the selected elements of x:
+```{r}
+grep("Area", y, value = TRUE)
+```
+
+Tidy way to run `grep` is to use `str_subset()` from `stringr` library:
+```{r}
+str_subset(y, "Area") # note that strings and pattern have changed positions
+```
+
+However, by using `grepl` we get logical vector showing match for each element:
+```{r}
+grepl("Area", y)
+```
+
+Neat thing with the `grepl` is that it's versatile: you can use its result for subsetting or to count matches (TRUE = 1 and FALSE = 0):
+```{r}
+grepl("Area", y) %>% sum
+```
+
+Respectively, `stringr` library verb is `str_detect()`:
+```{r}
+str_detect(y, "Area")
+```
+
+## Filter variables
+We can use `grepl` in `dplyr::filter` to subset data frame. For example we want to look at the participants with first name 'Jaan' in 2013 Tartu Ski Marathon finish protocol:
+```{r}
+tm_2013 %>% filter(grepl(", Jaan", Nimi)) %>% tbl_df # Nimi is name and is given as 'lastname, firstname'.
+```
+Ups, we got 'Jaanus'-es too!
+
+Let's add end of a line anchor `$` to get only 'Jaan's and lets use `str_detect` verb:
+```{r}
+tm_2013 %>% filter(str_detect(Nimi, ", Jaan$")) %>% tbl_df # Nimi is name and is given as 'lastname, firstname'. We use tbl_df to print only head of the table.
+```
+Good!
+
+## Replace strings
+To substitute parts of a string, base R uses `sub` and `gsub` to perform replacement of the first and all matches respectively. `stringr` versions of these verbs are `str_replace` and `str_replace_all`, respectively:
+```{r}
+str_replace(y, "Area", "XXX") # to replace first occurence of Area in each string with XXX
+```
+
+```{r}
+str_replace_all(y, "Area", "XXX") # replaces all Area-s with XXX
+```

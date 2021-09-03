@@ -1,0 +1,246 @@
+Functions
+========================================================
+author: Taavi Päll
+date: `r Sys.Date()`
+autosize: true
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(fig.align = "center")
+```
+
+
+A piece of code
+========================================================
+
+- A function is a piece of code to carry out a specified task
+- It may accept arguments (or not) and it may return zero to more values or objects.
+
+General form of R function
+========================================================
+
+General form of R function is following:
+
+```
+function(argslist) expr
+```
+
++ **arglist**	-- empty or one or more 'name' or 'name=expression' terms.
++ **expr** -- an R expression.
+
+A piece of code to carry out a specified task
+==============================
+
+Example function with no arguments, doing only one thing:
+```{r}
+dedication <- function() {
+  cat("And Pierce Brosnan how dare you prescribe\n
+      Sad grief and bed wet pills")
+}
+dedication() # to run function
+```
+
+Function interacting with your computer
+=============================
+
+Updated function to insert your computer's username into that line instead of that actor:
+```{r}
+not_medication <- function() cat(paste("And", system("whoami",T), "how dare you prescribe\n
+Sad grief and bed wet pills"))
+not_medication() # to run function
+```
+
+
+Specify arguments
+========================================================
+
++ When calling a function you can specify arguments by position, by complete name, or by partial name.
+
+```{r, fig.width=3, fig.height=3}
+myplot <- function(xval, yval) {
+  plot(x = xval, y = yval)
+}
+myplot(rnorm(10), rnorm(10, 1, 1)) # by position
+```
+
+====================================================
+
+by complete name
+```{r, fig.width=3, fig.height=3}
+myplot(xval = rnorm(10), yval = rnorm(10, 1, 1)) # by complete name
+```
+
+
+========================================================
+
+by partial name
+```{r, fig.width=3, fig.height=3}
+myplot(xv = rnorm(10), y = rnorm(10, 1, 1)) # by partial name
+```
+
+Naming and braces
+===========================================
+
++ Function names must be concise, [like in previous slides](http://thefall.org/discography/data/album31.html)
++ Multiline function's body must be enclosed by braces `{}`.
+
+Onliners don't need braces:
+```{r}
+plusone <- function(x) x + 1
+plusone(1)
+```
+
+Local vs global environment
+=================================
+
++ The objects in the function are in a local environment and won’t appear in your global environment
+```{r}
+fun1 <- function(x) {
+     x + 1 # function returns the result of this expression
+}
+fun1(1) 
+```
+
+
+================================
+
+Here, function directs the result into an object y within function environment:
+```{r}
+fun2 <- function(x) {
+    y <- 3 * x - 1 
+}
+fun2(5)
+```
+
+No result is outputted!
++ `return()` can be used to pass the value of object created inside function to outside.
+Can you fix this function?
+
+Default arguments
+=================================
+
++ Some arguments have default values specified 
++ Arguments without a default must have a value supplied
+
+```{r}
+sum_stat <- function(x, f = "mean"){
+  do.call(f, list(x))
+}
+
+v <- rnorm(10)
+sum_stat(v) # by default this function calculates mean
+```
+
+Ellipsis
+===================================
+
++ ... , or ellipsis, in the function definition allows other arguments to be passed into the function, and passed onto to another function:
+```{r,fig.width=3, fig.height=3}
+myplot <- function(xval, yval, ...) plot(x = xval, y = yval, ...)
+myplot(rnorm(10), rnorm(10, 1, 1), col = "red", pch = 5) # we pass color and shape arguments to plot function
+```
+
+Functional sequence
+====================================
++ `%>%` also allows to produce functions
++ sometimes the function is applied instantly and produces a result, and sometimes it is not, in which case the function itself is returned
++ in this case, there is no initial value, so we replace that with the dot `.` placeholder
+
+===================================
+
+Functional sequence:
+```{r}
+library(dplyr)
+mae <- . %>% abs %>% mean(na.rm = TRUE)
+mae(rnorm(10))
+```
+
+This is similar to following function:
+```{r, eval=FALSE}
+mae <- function(x) {
+  mean(abs(x), na.rm = TRUE)
+}
+```
+
+Use of functional sequence inside loop
+===================================
+
+Common use case of these functional sequences is inside lapply/sapply:
+```{r, eval=FALSE}
+library(dplyr)
+library(readr)
+library(reshape2)
+
+data <- paths-to-csv-files %>% 
+  lapply(. %>% read_csv %>% melt)
+```
+
+Pipes: lambda expressions
+=====================
++ Sometimes there is needed more than one operation performed inside one step in pipe.
++ You can define function outside the pipe OR perform these steps inside pipe:
+
+```{r, eval=FALSE}
+value %>%
+  foo %>% {  
+    x <- bar(.) 
+    y <- baz(.)  
+    x * y 
+  } %>%
+  and_so_on
+```
+
+
+Concluding
+====================================
+
++ Try to keep your functions in separate sub directory lib in your project’s dir
+  - load functions using load("lib/cohens_d.R")
++ Good function is:
+  - short
+  - performs one task
+  - has intuitive short name
+  
+  
+Loops
+================================
+
++ 'Looping', 'cycling', 'iterating' or just replicating instructions
+  - grouping the parts that need to be repeated
+  - automating a multi-step process by organizing sequences of actions or ‘batch’ processes 
+ 
+=================================
+
+Calculate col means of mtcars data using for loop:
+```{r}
+means <- c(1:ncol(mtcars))
+for(i in seq_along(mtcars)){
+  means[[i]] <- mean(mtcars[[i]], na.rm = TRUE)
+}
+head(means)
+```
+When we want __medians__, we need to repeat all these lines, but replace mean with median. Not very efficient.
+
+  
+Apply-sapply-lapply
+===================================
+
++  Functions to manipulate slices of data from matrices, arrays, lists and dataframes in a repetitive way
++ crossing the data in a number of ways and avoid explicit use of loop constructs
+
+
+=====================================
+
+Lets replace for loop with apply to calculate col means of mtcars:
+```{r}
+apply(mtcars[,1:5], 2, mean, na.rm = TRUE) 
+```
+Note, second argument to apply function specifies subscript which the function is applied over. For a matrix **1 indicates rows, 2 indicates columns**.
+
+=====================================
+Define your own functions: 
+```{r}
+apply(mtcars, 2, function(x) length(x[x<6]))
+```
+
+
+

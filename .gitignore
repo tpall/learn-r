@@ -3,4 +3,8 @@
 .RData
 .Ruserdata
 *.docx
-packrat/lib*/
+output/
+.DS_Store
+docs/
+src/demo*.R
+graphs/example.*
