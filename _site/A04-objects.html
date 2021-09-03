@@ -283,10 +283,10 @@ class(myobject) # gives the data structure of object &#39;myobject&#39;</code></
 <p>Here we create a vector named <code>x</code> containing five random numbers from a standard normal distribution.</p>
 <pre class="r"><code>x &lt;- rnorm(5)
 x</code></pre>
-<pre><code>## [1] -0.5702418 -1.1435298  0.0366271  0.6018088 -1.0882662</code></pre>
+<pre><code>## [1] -1.0442139 -0.2470396  0.8387891  0.2207232 -2.4201052</code></pre>
 <pre class="r"><code>y &lt;- x * 10 # here we multiply numeric vector x by 10
 y</code></pre>
-<pre><code>## [1]  -5.702418 -11.435298   0.366271   6.018088 -10.882662</code></pre>
+<pre><code>## [1] -10.442139  -2.470396   8.387891   2.207232 -24.201052</code></pre>
 </div>
 <div id="assigning-value-to-object" class="section level3">
 <h3>Assigning value to object</h3>
@@ -378,14 +378,14 @@ status</code></pre>
 <p>Continuous variables have order &amp; amount (<code>class: numeric or integer</code>). Numeric variables can be re-coded as factors. If sex was coded as 1 for male and 2 for female in the original data,</p>
 <pre class="r"><code>sex &lt;- sample(c(1,2), 21, replace = TRUE) # lets generate data
 sex</code></pre>
-<pre><code>##  [1] 1 1 2 2 2 2 1 1 1 2 2 1 2 1 2 1 1 2 2 1 2</code></pre>
+<pre><code>##  [1] 2 1 2 2 1 2 1 2 1 2 1 2 2 2 1 1 1 1 2 1 1</code></pre>
 <p>then, <code>factor()</code> converts the variable to an unordered factor.<br />
 The order of the labels must match the order of the levels. Sex would be treated as categorical, the labels “Male” and “Female” would appear in the output instead of 1 and 2</p>
 <pre class="r"><code>sex &lt;- factor(sex, levels = c(1, 2), labels = c(&quot;Male&quot;, &quot;Female&quot;))
 sex</code></pre>
-<pre><code>##  [1] Male   Male   Female Female Female Female Male   Male   Male   Female
-## [11] Female Male   Female Male   Female Male   Male   Female Female Male  
-## [21] Female
+<pre><code>##  [1] Female Male   Female Female Male   Female Male   Female Male   Female
+## [11] Male   Female Female Female Male   Male   Male   Male   Female Male  
+## [21] Male  
 ## Levels: Male Female</code></pre>
 </div>
 </div>

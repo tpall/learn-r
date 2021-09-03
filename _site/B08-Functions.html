@@ -305,10 +305,10 @@ plusone(1)</code></pre>
 
 v &lt;- rnorm(10)
 sum_stat(v) # by default this function calculates mean</code></pre>
-<pre><code>## [1] -0.2175828</code></pre>
+<pre><code>## [1] 0.1665958</code></pre>
 <p>But we can also calculate median, if we change f argument:</p>
 <pre class="r"><code>sum_stat(v, f = &quot;median&quot;) # </code></pre>
-<pre><code>## [1] -0.1340288</code></pre>
+<pre><code>## [1] 0.08405953</code></pre>
 </div>
 <div id="ellipsis" class="section level2">
 <h2>Ellipsis</h2>
@@ -322,7 +322,7 @@ v2 &lt;- c(NA, v, NA, NA)
 sum_stat2(v2) # NA-s start to give trouble, as mean fun has na.rm = FALSE argument</code></pre>
 <pre><code>## [1] NA</code></pre>
 <pre class="r"><code>sum_stat2(v2, na.rm = TRUE) # here we pass na.rm = TRUE to our function and voila!</code></pre>
-<pre><code>## [1] -0.2175828</code></pre>
+<pre><code>## [1] 0.1665958</code></pre>
 </div>
 <div id="function-environment" class="section level2">
 <h2>Function environment</h2>
@@ -383,7 +383,7 @@ sapply(let, function(x) grep(x, letters)) # we need to know the position of each
 ##     extract</code></pre>
 <pre class="r"><code>mae &lt;- . %&gt;% abs %&gt;% mean(na.rm = TRUE)
 mae(rnorm(10))</code></pre>
-<pre><code>## [1] 0.3492383</code></pre>
+<pre><code>## [1] 0.3738672</code></pre>
 <p>This is similar to following function:</p>
 <pre class="r"><code>mae &lt;- function(x) {
   mean(abs(x), na.rm = TRUE)
@@ -395,10 +395,10 @@ library(reshape2)
 data &lt;- paths-to-csv-files %&gt;% lapply(. %&gt;% read_csv %&gt;% melt)</code></pre>
 <p>It’s cool that you can subset these functional sequences and use only parts of them when necessary:</p>
 <pre class="r"><code>mae[2](rnorm(5))</code></pre>
-<pre><code>## [1] -0.1874935</code></pre>
+<pre><code>## [1] -0.08107047</code></pre>
 <pre class="r"><code>mae[1](rnorm(10))</code></pre>
-<pre><code>##  [1] 0.8668523 0.1760657 0.3534173 1.5142194 1.6535306 0.2217994 0.4985716
-##  [8] 0.4403901 0.3487218 0.8558192</code></pre>
+<pre><code>##  [1] 0.1349907 0.1078951 0.4913877 0.7392715 0.1872039 0.5809973 0.9443478
+##  [8] 0.9121680 1.0462058 1.6341211</code></pre>
 <div id="another-example" class="section level4">
 <h4>Another example</h4>
 <p>Let’s create function to calculate <strong>standardised effect size, Cohen’s d</strong>. First let’s simulate some toy data of blood pressure readings from patients with high systolic bp, treated either with drug or placebo:</p>
@@ -435,7 +435,7 @@ m &lt;- data.frame(bp = c(sample(70:190, 56, replace = T, prob = probs_h),
 <p>Cohen’s d is interpreted that d values of 0.2, 0.5, and 0.8 represent small, medium, and large effect sizes respectively:</p>
 <pre class="r"><code>bp &lt;- split(m$bp, m$tr) # to split data frame into two vectors
 cohensd(bp$placebo, bp$drug) # to input treatment groups as vectors</code></pre>
-<pre><code>## [1] 1.115438</code></pre>
+<pre><code>## [1] 0.49963</code></pre>
 <p>Because our function arguments are two vectors x1 and x2 and we had data frame in the long format, we had to split data frame into vectors. [Can we embed these two vectors into data frame in the long format (two cols - one col per vector)?]</p>
 <p>We can try to wrap this function into another function to use on our data frame:</p>
 <pre class="r"><code>cohens_d &lt;- function(data, values, group){
@@ -444,7 +444,7 @@ cohensd(bp$placebo, bp$drug) # to input treatment groups as vectors</code></pre>
 }</code></pre>
 <pre class="r"><code>cd &lt;- cohens_d(m, &quot;bp&quot;, &quot;tr&quot;)
 cd</code></pre>
-<pre><code>## [1] 1.115438</code></pre>
+<pre><code>## [1] 0.49963</code></pre>
 <p>Now we can create function to insert word explaining the size of the effect into text:</p>
 <pre class="r"><code>mansplain_cohensd &lt;- function(x) {
   if(x&lt;=0.2) return(&quot;small&quot;) 
@@ -455,10 +455,10 @@ cd</code></pre>
 
 cdv &lt;- mansplain_cohensd(cd)
 cdv</code></pre>
-<pre><code>## [1] &quot;large&quot;</code></pre>
+<pre><code>## [1] &quot;medium&quot;</code></pre>
 <pre><code>Seems that the standardised effect size for the drug treatment effect on blood pressure is **` r round(cd, 2)`**, which means it&#39;s **` r mansplain_cohensd(cd)`**.</code></pre>
 <p>Whitch produces following output:</p>
-<p>Seems that the standardised effect size for the drug treatment effect on blood pressure is <strong>1.12</strong>, which means it’s <strong>large</strong>.</p>
+<p>Seems that the standardised effect size for the drug treatment effect on blood pressure is <strong>0.5</strong>, which means it’s <strong>medium</strong>.</p>
 <hr />
 <ul>
 <li>Try to keep your functions in separate sub directory <code>lib</code> in your project’s dir</li>

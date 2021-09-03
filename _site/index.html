@@ -3196,7 +3196,7 @@ Extract tables from messy spreadsheets with jailbreakr <a href="https://t.co/9wJ
 <pre><code>## Time difference of 5 mins</code></pre>
 <p>Get the current time (in POSIXct by default):</p>
 <div class="sourceCode" id="cb592"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb592-1"><a href="#cb592-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Sys.time</span>()</span></code></pre></div>
-<pre><code>## [1] &quot;2021-09-03 11:55:04 EEST&quot;</code></pre>
+<pre><code>## [1] &quot;2021-09-03 12:02:31 EEST&quot;</code></pre>
 <p>See the internal integer representation in seconds:</p>
 <div class="sourceCode" id="cb594"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb594-1"><a href="#cb594-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unclass</span>(mft1)</span></code></pre></div>
 <pre><code>## [1] 1394550855
@@ -3328,7 +3328,7 @@ Extract tables from messy spreadsheets with jailbreakr <a href="https://t.co/9wJ
 <pre><code>## [1] &quot;2014-03-12 EET&quot;</code></pre>
 <p>Get the current time or date as an instant (<code>Sys.time()</code>):</p>
 <div class="sourceCode" id="cb643"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb643-1"><a href="#cb643-1" aria-hidden="true" tabindex="-1"></a><span class="fu">now</span>()</span></code></pre></div>
-<pre><code>## [1] &quot;2021-09-03 11:55:04 EEST&quot;</code></pre>
+<pre><code>## [1] &quot;2021-09-03 12:02:31 EEST&quot;</code></pre>
 <p>Shortcut for <code>Sys.Date()</code></p>
 <div class="sourceCode" id="cb645"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb645-1"><a href="#cb645-1" aria-hidden="true" tabindex="-1"></a><span class="fu">today</span>()</span></code></pre></div>
 <pre><code>## [1] &quot;2021-09-03&quot;</code></pre>
@@ -3343,7 +3343,7 @@ Extract tables from messy spreadsheets with jailbreakr <a href="https://t.co/9wJ
 <p>An interval is the span of time that occurs between two specified instants.</p>
 <div class="sourceCode" id="cb653"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb653-1"><a href="#cb653-1" aria-hidden="true" tabindex="-1"></a>time.to.xmas <span class="ot">&lt;-</span> <span class="fu">interval</span>(<span class="fu">now</span>(), <span class="fu">dmy</span>(<span class="st">&quot;24-12-2016&quot;</span>))</span>
 <span id="cb653-2"><a href="#cb653-2" aria-hidden="true" tabindex="-1"></a>time.to.xmas</span></code></pre></div>
-<pre><code>## [1] 2021-09-03 11:55:04 EEST--2016-12-24 02:00:00 EET</code></pre>
+<pre><code>## [1] 2021-09-03 12:02:31 EEST--2016-12-24 02:00:00 EET</code></pre>
 <p>Check whether a certain instant occured with a specified interval:</p>
 <div class="sourceCode" id="cb655"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb655-1"><a href="#cb655-1" aria-hidden="true" tabindex="-1"></a>rstudio.webinar <span class="sc">%within%</span> time.to.xmas</span></code></pre></div>
 <pre><code>## [1] FALSE</code></pre>

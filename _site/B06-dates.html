@@ -372,7 +372,7 @@ rstudio.webinar</code></pre>
 <pre><code>## Time difference of 5 mins</code></pre>
 <p>Get the current time (in POSIXct by default):</p>
 <pre class="r"><code>Sys.time()</code></pre>
-<pre><code>## [1] &quot;2021-09-03 11:54:40 EEST&quot;</code></pre>
+<pre><code>## [1] &quot;2021-09-03 12:02:06 EEST&quot;</code></pre>
 <p>See the internal integer representation in seconds:</p>
 <pre class="r"><code>unclass(mft1)</code></pre>
 <pre><code>## [1] 1394550855
@@ -504,7 +504,7 @@ mft1.dechr</code></pre>
 <pre><code>## [1] &quot;2014-03-12 EET&quot;</code></pre>
 <p>Get the current time or date as an instant (<code>Sys.time()</code>):</p>
 <pre class="r"><code>now()</code></pre>
-<pre><code>## [1] &quot;2021-09-03 11:54:40 EEST&quot;</code></pre>
+<pre><code>## [1] &quot;2021-09-03 12:02:07 EEST&quot;</code></pre>
 <p>Shortcut for <code>Sys.Date()</code></p>
 <pre class="r"><code>today()</code></pre>
 <pre><code>## [1] &quot;2021-09-03&quot;</code></pre>
@@ -519,7 +519,7 @@ mft1.dechr</code></pre>
 <p>An interval is the span of time that occurs between two specified instants.</p>
 <pre class="r"><code>time.to.xmas &lt;- interval(now(), dmy(&quot;24-12-2016&quot;))
 time.to.xmas</code></pre>
-<pre><code>## [1] 2021-09-03 11:54:40 EEST--2016-12-24 02:00:00 EET</code></pre>
+<pre><code>## [1] 2021-09-03 12:02:07 EEST--2016-12-24 02:00:00 EET</code></pre>
 <p>Check whether a certain instant occured with a specified interval:</p>
 <pre class="r"><code>rstudio.webinar %within% time.to.xmas</code></pre>
 <pre><code>## [1] FALSE</code></pre>
