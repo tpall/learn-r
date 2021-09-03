@@ -40,25 +40,21 @@ When you open a project in RStudio several actions are taken:
 
 ```{r, eval=FALSE}
 MyProject/
-  |-- src/ # contains R script
+  |-- scripts/ # contains R script
   |-- data/ # contains raw data, read only
-  |-- lib/ # contains R functions (R scipts defining functions)
-  |-- graphs/ # output graphs
+  |-- output or results/ # contains R functions (R scipts defining functions)
+  |-- plots, graphs or figures/ # output graphs
+  |-- report.Rmd # expected to be in project root
 ```
 
-Where are we?
-```{r}
-getwd() # Prints the current working directory
+Where am I?
+```{r, eval=FALSE}
+getwd() # shows active working directory.
 ```
 
-But if you want set working directory by your self:
-```{r eval=FALSE}
-# Sets working directory, into which things are saved by default and from which stuff is imported
-setwd("/Users/ulomaivali/Dropbox/") # mac
-setwd("C:/Users/ulomaivali/Dropbox/") # windows
-setwd("~/Dropbox/R course/") # linux, ~/ references to user home directory
-```
+Using **R projects** together with **here** <https://here.r-lib.org> package in your scripts makes `getwd()` and `setwd()` useless.   
 
+> There is a blue cube button in files tab in RStudio that directs you back to your project folder.
 
 
 ### Getting help
