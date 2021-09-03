@@ -19,7 +19,7 @@ options(lubridate.verbose = FALSE, "getSymbols.warning4.0" = FALSE)
 ```
 
 ^1^[University of Tartu, Institute of Technology](http://www.tuit.ut.ee/en),      
-^2^[Tallinn University of Technology, Department of Gene Technology](http://www.ttu.ee/faculty-of-science/department-of-gene-technology/)
+^2^[University of Tartu, Institute of Biomedicine and Translational Medicine](https://www.biomeditsiin.ut.ee/en/institute/department-microbiology)
 
 ```{r collectfiles, echo = FALSE, message = FALSE, results = 'asis'}
 # Here we collect all child .Rmd files and parse them with knit_child and cat output into main document
