@@ -79,54 +79,6 @@ library(tibble)
 ```
 
 
-### Search for R functions
-
-To find a function containing the word "confusion" in any package:
-
-```{r eval=FALSE}
-RSiteSearch("confusion", restrict = "functions") # this function is avaible from base R
-```
-
-will search online to find matches and will open a web browser to display the results. 
-
-
-The function `apropos()` will search any **loaded** R packages for a given term. 
-To find functions for creating a confusion matrix within the currently loaded packages:
-
-```{r, echo=FALSE, message=FALSE}
-help_console <- function(topic, format=c("text", "html", "latex", "Rd"),
-                         lines=NULL, before=NULL, after=NULL) {  
-  format=match.arg(format)
-  if (!is.character(topic)) topic <- deparse(substitute(topic))
-  helpfile = utils:::.getHelpFile(help(topic))
-
-  hs <- capture.output(switch(format, 
-                              text=tools:::Rd2txt(helpfile),
-                              html=tools:::Rd2HTML(helpfile),
-                              latex=tools:::Rd2latex(helpfile),
-                              Rd=tools:::prepare_Rd(helpfile)
-                              )
-                      )
-  if(!is.null(lines)) hs <- hs[lines]
-  hs <- c(before, hs, after)
-  cat(hs, sep="\n")
-  invisible(hs)
-}
-```
-
-
-```{r}
-library(caret) # lets load package caret
-apropos("confusion") #  search loaded R packages for a word 'confusion'
-```
-
-
-```{r, echo=1}
-help("confusionMatrix") # same as ?, only lines 1-25 are shown here
-help_console(confusionMatrix, "text", lines = 1:25)
-```
-
-
 ### Common mistakes in loading packages
 
 + Using the wrong case: help(), Help(), and HELP() - only the first will work.

@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>A08-tidy_data.knit</title>
+
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Reproducible Data Analysis in R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<hr />
+<hr />
+<div id="tidy-data" class="section level1">
+<h1>Tidy data</h1>
+<p>To standardize data analysis, you must start by standardizing data structure. Tidy data arranges values so that the relationships between variables in a data set will parallel the relationship between vectors in R’s storage objects. R stores tabular data as a data frame, a list of atomic vectors arranged to look like a table. Each column in the table is a vector. In tidy data, each variable in the data set is assigned to its own column, i.e., its own vector in the data frame. As a result, you can extract all the values of a variable in a tidy data set by extracting the column vector that contains the variable, i.e. table1$cases. Because R does vector calculations element by element, it is fastest when you compare vectors directly side-by-side.</p>
+<ul>
+<li>value is the result of a single measurement (167 cm). = cell</li>
+<li>variable is what you measure (length, height), or a factor (sex, treatment). = column</li>
+<li>observation or data point is a set of measurements that made under similar conditions (John’s height and weight measured on 23.04.2012). = row</li>
+<li>Observational unit (who or what was measured): subject no. 1, etc. = 1st column</li>
+<li>Type of observational unit: humans, mice, cell lysates, etc. = table</li>
+</ul>
+<p>Tidy data: each value is in its own “cell”, each variable in its own column, each observation in its own row, and each type of observational unit in its own table - useful for grouping, summarizing, filtering, and plotting. In a tidy table the order of columns is:</p>
+<ol style="list-style-type: decimal">
+<li>Observational unit</li>
+<li>Factors &amp; everything that was not measured (values fixed at experimental planning stage)</li>
+<li>Measured Vars.</li>
+</ol>
+<p>Keeping the data in this form allows multiple tools to be used in sequence. NB! There are always more possible Vars in your data than were measured – do weight and height and get BMI as a bonus.</p>
+<div id="melt-data-into-long-format" class="section level2">
+<h2>Melt data into long format</h2>
+<p>First we load a bunch of <strong>tidyverse</strong> backages:</p>
+<pre class="r"><code>library(tidyr)
+library(tibble)
+library(reshape2)
+library(dplyr)
+library(readr)</code></pre>
+<p><code>reshape2::melt(df)</code> - treats the variables that contain factors or strings as ‘id.vars’, which remain fixed; and melts all numeric columns.</p>
+<p>We start by making a mock table:</p>
+<pre class="r"><code>subject &lt;- c(&quot;Tim&quot;, &quot;Ann&quot;, &quot;Jill&quot;)
+sex &lt;- c(&quot;M&quot;, &quot;F&quot;, &quot;F&quot;)
+control &lt;- c(23, 31, 30)
+experiment_1 &lt;- c(34, 38, 36)
+experiment_2 &lt;- c(40, 42, 44)
+df &lt;- tibble(subject, sex, control, experiment_1, experiment_2)
+df</code></pre>
+<pre><code>## # A tibble: 3 x 5
+##   subject sex   control experiment_1 experiment_2
+##   &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+## 1 Tim     M          23           34           40
+## 2 Ann     F          31           38           42
+## 3 Jill    F          30           36           44</code></pre>
+<p>Next we melt it by providing the df as the only argument to <code>reshape2::melt</code>:</p>
+<pre class="r"><code>melt(df) # this gives identical result.</code></pre>
+<pre><code>## Using subject, sex as id variables</code></pre>
+<pre><code>##   subject sex     variable value
+## 1     Tim   M      control    23
+## 2     Ann   F      control    31
+## 3    Jill   F      control    30
+## 4     Tim   M experiment_1    34
+## 5     Ann   F experiment_1    38
+## 6    Jill   F experiment_1    36
+## 7     Tim   M experiment_2    40
+## 8     Ann   F experiment_2    42
+## 9    Jill   F experiment_2    44</code></pre>
+<p>We can also use pipe operator (<code>%&gt;%</code>):</p>
+<pre class="r"><code>df_melted &lt;- df %&gt;% melt %&gt;% tbl_df # we further convert dataframe to a tibble by tbl_df</code></pre>
+<pre><code>## Using subject, sex as id variables</code></pre>
+<pre class="r"><code>df_melted</code></pre>
+<pre><code>## # A tibble: 9 x 4
+##   subject sex   variable     value
+##   &lt;chr&gt;   &lt;chr&gt; &lt;fct&gt;        &lt;dbl&gt;
+## 1 Tim     M     control         23
+## 2 Ann     F     control         31
+## 3 Jill    F     control         30
+## 4 Tim     M     experiment_1    34
+## 5 Ann     F     experiment_1    38
+## 6 Jill    F     experiment_1    36
+## 7 Tim     M     experiment_2    40
+## 8 Ann     F     experiment_2    42
+## 9 Jill    F     experiment_2    44</code></pre>
+<p>Here we are more explicit about arguments to <code>melt()</code>. If you provide only <code>id.vars</code> or <code>measure.vars</code>, <code>R</code> will assume that all other variables belong to the argument that was not provided:</p>
+<pre class="r"><code>df %&gt;% melt(id.vars = c(&quot;subject&quot;, &quot;sex&quot;),   # all the variables to keep, but not split apart 
+                        measure.vars = c(&quot;control&quot;, &quot;experiment_1&quot;, &quot;experiment_2&quot;),
+                     variable.name = &quot;experiment&quot;, # Name of the destination column for factors that are taken from names of melted columns
+                     value.name = &quot;nr.of.counts&quot; # name of the newly made column which contains the values
+) %&gt;% tbl_df</code></pre>
+<pre><code>## # A tibble: 9 x 4
+##   subject sex   experiment   nr.of.counts
+##   &lt;chr&gt;   &lt;chr&gt; &lt;fct&gt;               &lt;dbl&gt;
+## 1 Tim     M     control                23
+## 2 Ann     F     control                31
+## 3 Jill    F     control                30
+## 4 Tim     M     experiment_1           34
+## 5 Ann     F     experiment_1           38
+## 6 Jill    F     experiment_1           36
+## 7 Tim     M     experiment_2           40
+## 8 Ann     F     experiment_2           42
+## 9 Jill    F     experiment_2           44</code></pre>
+<p>Alternatively we can use <code>tidyr::gather</code> to melt tables:</p>
+<ul>
+<li>1st argument (here <code>key = experiment</code>) names the key factor or character column, whose values will be the names of the columns, which are melted into a single column.</li>
+<li>The 2nd argument (here <code>value = value</code>) is the name of the resultant single column, which contains the values.</li>
+<li>The third argument (here <code>3:ncol(df)</code>) specifies the columns, which are melted into a single column; in the version <code>c(-subject, -sex)</code> every column except these 2 is melted.</li>
+</ul>
+<pre class="r"><code>df %&gt;% gather(key = experiment, value = value, 3:ncol(df))</code></pre>
+<pre><code>## # A tibble: 9 x 4
+##   subject sex   experiment   value
+##   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;        &lt;dbl&gt;
+## 1 Tim     M     control         23
+## 2 Ann     F     control         31
+## 3 Jill    F     control         30
+## 4 Tim     M     experiment_1    34
+## 5 Ann     F     experiment_1    38
+## 6 Jill    F     experiment_1    36
+## 7 Tim     M     experiment_2    40
+## 8 Ann     F     experiment_2    42
+## 9 Jill    F     experiment_2    44</code></pre>
+<pre class="r"><code># df_melted3&lt;-df %&gt;% gather(experiment, value, 3:ncol(df)) works as well.</code></pre>
+<pre class="r"><code>df %&gt;% gather(experiment, value, c(-subject, -sex))</code></pre>
+<pre><code>## # A tibble: 9 x 4
+##   subject sex   experiment   value
+##   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;        &lt;dbl&gt;
+## 1 Tim     M     control         23
+## 2 Ann     F     control         31
+## 3 Jill    F     control         30
+## 4 Tim     M     experiment_1    34
+## 5 Ann     F     experiment_1    38
+## 6 Jill    F     experiment_1    36
+## 7 Tim     M     experiment_2    40
+## 8 Ann     F     experiment_2    42
+## 9 Jill    F     experiment_2    44</code></pre>
+</div>
+<div id="cast-melted-table-back-into-wide" class="section level2">
+<h2>Cast melted table back into wide</h2>
+<p>While there is only one correct tidy long format, there exist several possible wide formats. Which one to choose depends on what you want to use the wide table for (i.e., on the specific statistical application)</p>
+<pre class="r"><code>df_melted %&gt;% dcast(subject + sex ~ value)</code></pre>
+<pre><code>##   subject sex 23 30 31 34 36 38 40 42 44
+## 1     Ann   F NA NA 31 NA NA 38 NA 42 NA
+## 2    Jill   F NA 30 NA NA 36 NA NA NA 44
+## 3     Tim   M 23 NA NA 34 NA NA 40 NA NA</code></pre>
+<p>Uups!</p>
+<pre class="r"><code>df_melted %&gt;% dcast(subject + sex ~ variable)</code></pre>
+<pre><code>##   subject sex control experiment_1 experiment_2
+## 1     Ann   F      31           38           42
+## 2    Jill   F      30           36           44
+## 3     Tim   M      23           34           40</code></pre>
+<p><code>dcast()</code> starts with melted data and reshapes it into a wide format using a formula. The format is <code>newdata &lt;- dcast(md, formula, FUN)</code> where md is the melted data. The formula takes the form:</p>
+<ul>
+<li><code>rowvar1 + rowvar2 + … ~ colvar1 + colvar2 + …</code></li>
+<li><code>rowvar1 + rowvar2 + …</code> define the rows, and</li>
+<li><code>colvar1 + colvar2 + …</code> define the columns.</li>
+</ul>
+<blockquote>
+<p>Important! the right-hand argument to the equation <code>~</code> is the column that contains the factor levels or character vectors that will be tranformed into column names of the wide table.</p>
+</blockquote>
+<p>We can use <code>tidyr::spread()</code> as an alternative to <code>dcast()</code>. Here <strong>variable</strong> is the factor or character column, whose values will be transformed into column names and <strong>value</strong> is the name of the column, which contains all the values that are spread into the new columns.</p>
+<pre class="r"><code>df_melted %&gt;% spread(key = variable, value = value)</code></pre>
+<pre><code>## # A tibble: 3 x 5
+##   subject sex   control experiment_1 experiment_2
+##   &lt;chr&gt;   &lt;chr&gt;   &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+## 1 Ann     F          31           38           42
+## 2 Jill    F          30           36           44
+## 3 Tim     M          23           34           40</code></pre>
+</div>
+<div id="separate" class="section level2">
+<h2>Separate</h2>
+<p>Separate separates one column into many:</p>
+<pre class="r"><code>df &lt;- tibble(country = c(&quot;Albania&quot;), disease.cases = c(&quot;80/1000&quot;))
+df</code></pre>
+<pre><code>## # A tibble: 1 x 2
+##   country disease.cases
+##   &lt;chr&gt;   &lt;chr&gt;        
+## 1 Albania 80/1000</code></pre>
+<p>We want to separate <code>80/1000</code> at the slash. Default action of separate is to look at the any sequence of non-alphanumeric values:</p>
+<pre class="r"><code>df %&gt;% separate(disease.cases, into = c(&quot;cases&quot;, &quot;thousand&quot;)) # works ok in this case!</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   country cases thousand
+##   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   
+## 1 Albania 80    1000</code></pre>
+<p>We can supply regular expression, matching <code>/</code>:</p>
+<pre class="r"><code>df %&gt;% separate(disease.cases, into = c(&quot;cases&quot;, &quot;thousand&quot;), sep = &quot;/&quot;) #match slash</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   country cases thousand
+##   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   
+## 1 Albania 80    1000</code></pre>
+<pre class="r"><code>df %&gt;% separate(disease.cases, into = c(&quot;cases&quot;, &quot;thousand&quot;), sep = &quot;\\W&quot;) # any non-alphanumeric</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   country cases thousand
+##   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   
+## 1 Albania 80    1000</code></pre>
+<pre class="r"><code>df %&gt;% separate(disease.cases, into=c(&quot;cases&quot;, &quot;thousand&quot;), sep = 2)</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   country cases thousand
+##   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   
+## 1 Albania 80    /1000</code></pre>
+<pre class="r"><code>df %&gt;% separate(disease.cases, into=c(&quot;cases&quot;, &quot;thousand&quot;), sep = -6)</code></pre>
+<pre><code>## # A tibble: 1 x 3
+##   country cases thousand
+##   &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;   
+## 1 Albania 8     0/1000</code></pre>
+<pre class="r"><code>df &lt;- tibble(index = c(1, 2), taxon = c(&quot;Procaryota; Bacteria; Alpha-Proteobacteria; Escharichia&quot;, &quot;Eukaryota; Chordata&quot;))
+df %&gt;% separate(taxon, c(&#39;riik&#39;, &#39;hmk&#39;, &quot;klass&quot;, &quot;perekond&quot;), sep = &#39;;&#39;, extra = &quot;merge&quot;, fill = &quot;right&quot;)</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   index riik       hmk         klass                   perekond      
+##   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;                   &lt;chr&gt;         
+## 1     1 Procaryota &quot; Bacteria&quot; &quot; Alpha-Proteobacteria&quot; &quot; Escharichia&quot;
+## 2     2 Eukaryota  &quot; Chordata&quot;  &lt;NA&gt;                    &lt;NA&gt;</code></pre>
+<p>Some special cases:</p>
+<pre class="r"><code>df &lt;- tibble(index = c(1, 2), taxon = c(&quot;Procaryota || Bacteria || Alpha-Proteobacteria || Escharichia&quot;, &quot;Eukaryota || Chordata&quot;))
+df %&gt;% separate(taxon, c(&quot;riik&quot;, &quot;hmk&quot;, &quot;klass&quot;, &quot;perekond&quot;), sep = &quot;\\|\\|&quot;, extra = &quot;merge&quot;, fill = &quot;right&quot;)</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   index riik          hmk          klass                    perekond      
+##   &lt;dbl&gt; &lt;chr&gt;         &lt;chr&gt;        &lt;chr&gt;                    &lt;chr&gt;         
+## 1     1 &quot;Procaryota &quot; &quot; Bacteria &quot; &quot; Alpha-Proteobacteria &quot; &quot; Escharichia&quot;
+## 2     2 &quot;Eukaryota &quot;  &quot; Chordata&quot;   &lt;NA&gt;                     &lt;NA&gt;</code></pre>
+<pre class="r"><code>df &lt;- tibble(index = c(1, 2), taxon = c(&quot;Procaryota.Bacteria.Alpha-Proteobacteria.Escharichia&quot;, &quot;Eukaryota.Chordata&quot;))
+df %&gt;% separate(taxon, c(&#39;riik&#39;, &#39;hmk&#39;, &quot;klass&quot;, &quot;perekond&quot;), sep = &#39;[.]&#39;, extra = &quot;merge&quot;, fill = &quot;right&quot;)</code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   index riik       hmk      klass                perekond   
+##   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;                &lt;chr&gt;      
+## 1     1 Procaryota Bacteria Alpha-Proteobacteria Escharichia
+## 2     2 Eukaryota  Chordata &lt;NA&gt;                 &lt;NA&gt;</code></pre>
+<pre class="r"><code>df &lt;- tibble(index = c(1, 2), taxon = c(&quot;Procaryota.Bacteria,Alpha-Proteobacteria.Escharichia&quot;, &quot;Eukaryota.Chordata&quot;))
+df %&gt;% separate(taxon, c(&#39;riik&#39;, &#39;hmk&#39;, &quot;klass&quot;, &quot;perekond&quot;), sep = &#39;[,\\.]&#39;, extra = &quot;merge&quot;, fill = &quot;right&quot;) </code></pre>
+<pre><code>## # A tibble: 2 x 5
+##   index riik       hmk      klass                perekond   
+##   &lt;dbl&gt; &lt;chr&gt;      &lt;chr&gt;    &lt;chr&gt;                &lt;chr&gt;      
+## 1     1 Procaryota Bacteria Alpha-Proteobacteria Escharichia
+## 2     2 Eukaryota  Chordata &lt;NA&gt;                 &lt;NA&gt;</code></pre>
+<pre class="r"><code># [,\\.] separates by dot or comma. Isn&#39;t that cool?</code></pre>
+<p>The companion FUN to separate is <code>unite()</code> - see help (if you should feel the need for it, which you probably wont).</p>
+<div id="find-and-replace-helps-to-deal-with-unruly-labelling-inside-columns-containing-strings" class="section level3">
+<h3>Find and replace helps to deal with unruly labelling inside columns containing strings</h3>
+<p>The idea is to find a pattern in a collection of strings and replace it with something else. <code>String == character vector</code>.</p>
+<p>To find and replace we use <code>str_replace_all()</code>, whose base R analogue is <code>gsub()</code>:</p>
+<pre class="r"><code>library(stringr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;stringr&#39;</code></pre>
+<pre><code>## The following object is masked _by_ &#39;.GlobalEnv&#39;:
+## 
+##     fruit</code></pre>
+<pre class="r"><code>str_replace_all(c(&quot;t0&quot;, &quot;t1&quot;, &quot;t12&quot;), &quot;t&quot;, &quot;&quot;) %&gt;% as.numeric() </code></pre>
+<pre><code>## [1]  0  1 12</code></pre>
+<p>Now we have a numeric time column, which can be used in plotting.</p>
+<p>or</p>
+<p>Here we do the same thing more elegantly by directly parsing numbers from a character string:</p>
+<pre class="r"><code>parse_number(c(&quot;t0&quot;, &quot;t1&quot;, &quot;t12&quot;))</code></pre>
+<pre><code>## [1]  0  1 12</code></pre>
+</div>
+</div>
+<div id="it-is-high-time-to-learn-the-5-verbs-of-dplyr" class="section level2">
+<h2>It is high time to learn the 5 verbs of dplyr</h2>
+<p>NB! Check the data wrangling cheatsheet and help for further details</p>
+<div id="select" class="section level3">
+<h3>select</h3>
+<p><code>select</code> selects, renames, and re-orders columns</p>
+<p>To select columns from sex to value:</p>
+<pre class="r"><code>df_melted</code></pre>
+<pre><code>## # A tibble: 9 x 4
+##   subject sex   variable     value
+##   &lt;chr&gt;   &lt;chr&gt; &lt;fct&gt;        &lt;dbl&gt;
+## 1 Tim     M     control         23
+## 2 Ann     F     control         31
+## 3 Jill    F     control         30
+## 4 Tim     M     experiment_1    34
+## 5 Ann     F     experiment_1    38
+## 6 Jill    F     experiment_1    36
+## 7 Tim     M     experiment_2    40
+## 8 Ann     F     experiment_2    42
+## 9 Jill    F     experiment_2    44</code></pre>
+<pre class="r"><code>df_melted %&gt;% select(sex:value)</code></pre>
+<pre><code>## # A tibble: 9 x 3
+##   sex   variable     value
+##   &lt;chr&gt; &lt;fct&gt;        &lt;dbl&gt;
+## 1 M     control         23
+## 2 F     control         31
+## 3 F     control         30
+## 4 M     experiment_1    34
+## 5 F     experiment_1    38
+## 6 F     experiment_1    36
+## 7 M     experiment_2    40
+## 8 F     experiment_2    42
+## 9 F     experiment_2    44</code></pre>
+<p>To select just 2 columns and rename <em>subject</em> to <em>SUBJ</em>:</p>
+<pre class="r"><code>df_melted %&gt;% select(sex, value, SUBJ=subject)</code></pre>
+<pre><code>## # A tibble: 9 x 3
+##   sex   value SUBJ 
+##   &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;
+## 1 M        23 Tim  
+## 2 F        31 Ann  
+## 3 F        30 Jill 
+## 4 M        34 Tim  
+## 5 F        38 Ann  
+## 6 F        36 Jill 
+## 7 M        40 Tim  
+## 8 F        42 Ann  
+## 9 F        44 Jill</code></pre>
+<p>To select all cols, except sex and value, and rename the <em>subject</em> col:</p>
+<pre class="r"><code>df_melted %&gt;% select(-sex, -value, SUBJ=subject)</code></pre>
+<pre><code>## # A tibble: 9 x 2
+##   SUBJ  variable    
+##   &lt;chr&gt; &lt;fct&gt;       
+## 1 Tim   control     
+## 2 Ann   control     
+## 3 Jill  control     
+## 4 Tim   experiment_1
+## 5 Ann   experiment_1
+## 6 Jill  experiment_1
+## 7 Tim   experiment_2
+## 8 Ann   experiment_2
+## 9 Jill  experiment_2</code></pre>
+</div>
+<div id="mutate" class="section level3">
+<h3>mutate</h3>
+<p>Mutate adds new columns (and transmute creates new columns while losing the previous columns - see the cheatsheet and help)</p>
+<p>Here we firstly create a new column, which contains log-transformed values from the <em>value</em> column, and name it <em>log.value</em>. And secondly we create a new col <em>strange.value</em>, which contains the results of a really silly data transformation including taking a square root.</p>
+<pre class="r"><code>df_melted %&gt;% mutate(log.value = log10(value), strange.value= sqrt(value - log.value))</code></pre>
+<pre><code>## # A tibble: 9 x 6
+##   subject sex   variable     value log.value strange.value
+##   &lt;chr&gt;   &lt;chr&gt; &lt;fct&gt;        &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;
+## 1 Tim     M     control         23      1.36          4.65
+## 2 Ann     F     control         31      1.49          5.43
+## 3 Jill    F     control         30      1.48          5.34
+## 4 Tim     M     experiment_1    34      1.53          5.70
+## 5 Ann     F     experiment_1    38      1.58          6.03
+## 6 Jill    F     experiment_1    36      1.56          5.87
+## 7 Tim     M     experiment_2    40      1.60          6.20
+## 8 Ann     F     experiment_2    42      1.62          6.35
+## 9 Jill    F     experiment_2    44      1.64          6.51</code></pre>
+<p>The same with transmute: note the dropping of some of the original cols, keeping the original <em>subject</em> col and renaming the <em>sex</em> col.</p>
+<pre class="r"><code>df_melted %&gt;% transmute(subject, gender=sex, log.value = log10(value))</code></pre>
+<pre><code>## # A tibble: 9 x 3
+##   subject gender log.value
+##   &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt;
+## 1 Tim     M           1.36
+## 2 Ann     F           1.49
+## 3 Jill    F           1.48
+## 4 Tim     M           1.53
+## 5 Ann     F           1.58
+## 6 Jill    F           1.56
+## 7 Tim     M           1.60
+## 8 Ann     F           1.62
+## 9 Jill    F           1.64</code></pre>
+</div>
+<div id="filter" class="section level3">
+<h3>filter</h3>
+<p>Filter filters rows</p>
+<p>Keep rows that have sex level “M” and value &gt;30.</p>
+<pre class="r"><code>df_melted %&gt;% filter(sex==&quot;M&quot; &amp; value &lt; 30)</code></pre>
+<pre><code>## # A tibble: 1 x 4
+##   subject sex   variable value
+##   &lt;chr&gt;   &lt;chr&gt; &lt;fct&gt;    &lt;dbl&gt;
+## 1 Tim     M     control     23</code></pre>
+<p>Keep rows that have sex level “M” or value &gt;30.</p>
+<pre class="r"><code>df_melted %&gt;% filter(sex==&quot;M&quot; | value &lt; 30)</code></pre>
+<pre><code>## # A tibble: 3 x 4
+##   subject sex   variable     value
+##   &lt;chr&gt;   &lt;chr&gt; &lt;fct&gt;        &lt;dbl&gt;
+## 1 Tim     M     control         23
+## 2 Tim     M     experiment_1    34
+## 3 Tim     M     experiment_2    40</code></pre>
+<p>Keep rows that have sex level not “M” (which in this case equals “F”) or value &gt;30.</p>
+<pre class="r"><code>df_melted %&gt;% filter(sex != &quot;M&quot; | value &lt;= 30)</code></pre>
+<pre><code>## # A tibble: 7 x 4
+##   subject sex   variable     value
+##   &lt;chr&gt;   &lt;chr&gt; &lt;fct&gt;        &lt;dbl&gt;
+## 1 Tim     M     control         23
+## 2 Ann     F     control         31
+## 3 Jill    F     control         30
+## 4 Ann     F     experiment_1    38
+## 5 Jill    F     experiment_1    36
+## 6 Ann     F     experiment_2    42
+## 7 Jill    F     experiment_2    44</code></pre>
+<p>Filtering with regular expression: we keep the rows where <em>subject</em> starts with the letter “T”</p>
+<pre class="r"><code>library(stringr)
+df_melted %&gt;% filter(subject==(str_subset(subject, &quot;^T&quot;))) </code></pre>
+<pre><code>## # A tibble: 3 x 4
+##   subject sex   variable     value
+##   &lt;chr&gt;   &lt;chr&gt; &lt;fct&gt;        &lt;dbl&gt;
+## 1 Tim     M     control         23
+## 2 Tim     M     experiment_1    34
+## 3 Tim     M     experiment_2    40</code></pre>
+<p>As you can see there are endless vistas here, open for a regular expression fanatic. I so wish I was one!</p>
+</div>
+<div id="summarise" class="section level3">
+<h3>summarise</h3>
+<p>Summarise does just that</p>
+<p>Here we generate common summary statistics for our value variable. This is all right in a limited sort of way.</p>
+<pre class="r"><code>df_melted %&gt;% summarise(MEAN= mean(value), SD= sd(value), MAD=mad(value), N= n(), unique_values_sex= n_distinct(sex))</code></pre>
+<pre><code>## # A tibble: 1 x 5
+##    MEAN    SD   MAD     N unique_values_sex
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;             &lt;int&gt;
+## 1  35.3  6.61  7.41     9                 2</code></pre>
+<p>To do something more exiting we must first group our observations by some facto(s) levels.</p>
+</div>
+<div id="group_by" class="section level3">
+<h3>group_by</h3>
+<p>Groups values for summarising or mutating</p>
+<p>When we summarise by <em>sex</em> we will get two values for each summary statistic: for males and females. Aint that sexy?!</p>
+<pre class="r"><code>df_melted %&gt;% group_by(sex) %&gt;% summarise(MEAN= mean(value), SD= sd(value), MAD=mad(value), N= n(), unique_values_sex= n_distinct(sex))</code></pre>
+<pre><code>## # A tibble: 2 x 6
+##   sex    MEAN    SD   MAD     N unique_values_sex
+##   &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;             &lt;int&gt;
+## 1 F      36.8  5.67  8.15     6                 1
+## 2 M      32.3  8.62  8.90     3                 1</code></pre>
+<p>Now we group first by <em>variable</em> and then inside each group again by <em>sex</em>. This is getting complicated …</p>
+<pre class="r"><code>df_melted %&gt;% group_by(variable, sex) %&gt;% summarise(MEAN= mean(value), SD= sd(value), MAD=mad(value), N= n(), unique_values_sex= n_distinct(sex))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;variable&#39;. You can override using the `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 6 x 7
+## # Groups:   variable [3]
+##   variable     sex    MEAN     SD   MAD     N unique_values_sex
+##   &lt;fct&gt;        &lt;chr&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;             &lt;int&gt;
+## 1 control      F      30.5  0.707 0.741     2                 1
+## 2 control      M      23   NA     0         1                 1
+## 3 experiment_1 F      37    1.41  1.48      2                 1
+## 4 experiment_1 M      34   NA     0         1                 1
+## 5 experiment_2 F      43    1.41  1.48      2                 1
+## 6 experiment_2 M      40   NA     0         1                 1</code></pre>
+<p>Now we group first by sex and then by variable. Spot the difference!</p>
+<pre class="r"><code>df_melted %&gt;% group_by(sex, variable) %&gt;% summarise(MEAN= mean(value), SD= sd(value), MAD=mad(value), N= n(), unique_values_sex= n_distinct(sex))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;sex&#39;. You can override using the `.groups` argument.</code></pre>
+<pre><code>## # A tibble: 6 x 7
+## # Groups:   sex [2]
+##   sex   variable      MEAN     SD   MAD     N unique_values_sex
+##   &lt;chr&gt; &lt;fct&gt;        &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;             &lt;int&gt;
+## 1 F     control       30.5  0.707 0.741     2                 1
+## 2 F     experiment_1  37    1.41  1.48      2                 1
+## 3 F     experiment_2  43    1.41  1.48      2                 1
+## 4 M     control       23   NA     0         1                 1
+## 5 M     experiment_1  34   NA     0         1                 1
+## 6 M     experiment_2  40   NA     0         1                 1</code></pre>
+<p>Here we group and then mutate (meaning that the resulting table has as many rows — but more column — than the original table).</p>
+<pre class="r"><code>df_melted %&gt;% group_by(sex) %&gt;% mutate(normalised.value=value/mean(value), n2.val=value/sd(value))</code></pre>
+<pre><code>## # A tibble: 9 x 6
+## # Groups:   sex [2]
+##   subject sex   variable     value normalised.value n2.val
+##   &lt;chr&gt;   &lt;chr&gt; &lt;fct&gt;        &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Tim     M     control         23            0.711   2.67
+## 2 Ann     F     control         31            0.842   5.47
+## 3 Jill    F     control         30            0.814   5.29
+## 4 Tim     M     experiment_1    34            1.05    3.94
+## 5 Ann     F     experiment_1    38            1.03    6.70
+## 6 Jill    F     experiment_1    36            0.977   6.35
+## 7 Tim     M     experiment_2    40            1.24    4.64
+## 8 Ann     F     experiment_2    42            1.14    7.41
+## 9 Jill    F     experiment_2    44            1.19    7.76</code></pre>
+<p>Compare with a “straight” mutate to note the difference in values.</p>
+<pre class="r"><code>df_melted %&gt;% mutate(normalised.value=value/mean(value), n2.val=value/sd(value))</code></pre>
+<pre><code>## # A tibble: 9 x 6
+##   subject sex   variable     value normalised.value n2.val
+##   &lt;chr&gt;   &lt;chr&gt; &lt;fct&gt;        &lt;dbl&gt;            &lt;dbl&gt;  &lt;dbl&gt;
+## 1 Tim     M     control         23            0.651   3.48
+## 2 Ann     F     control         31            0.877   4.69
+## 3 Jill    F     control         30            0.849   4.54
+## 4 Tim     M     experiment_1    34            0.962   5.14
+## 5 Ann     F     experiment_1    38            1.08    5.75
+## 6 Jill    F     experiment_1    36            1.02    5.44
+## 7 Tim     M     experiment_2    40            1.13    6.05
+## 8 Ann     F     experiment_2    42            1.19    6.35
+## 9 Jill    F     experiment_2    44            1.25    6.65</code></pre>
+<!-- ## A more realistic example: -->
+<!-- Its not unheard of of one having to analyse a table with less than perfect structure. Yes, life really does suck. Here some column names need to be renamed for consistency, an empty column has to be dropped and column *OTU* must be cleansed from NAs. We will also convert the df to tibble. -->
+<!-- ```{r} -->
+<!-- y1 <- read.csv("/Users/ulomaivali/Dropbox/Viia kartul/Viia_original.csv") -->
+<!-- y1<- y1 %>% rename(KARS2=KARS2.7, TS1=TS1.26, kars1=karS1) %>% -->
+<!--   select(-Col53)%>% -->
+<!--   drop_na(OTU) %>%  -->
+<!--   as_data_frame() -->
+<!-- names(y1)  -->
+<!-- y1 -->
+<!-- ``` -->
+<!-- Woeh, it wasnt too bad, I guess. -->
+<!-- Next we drop the first col *X*, which kind of popped up unannounced, and melt the table. -->
+<!-- ```{r} -->
+<!-- y2<-y1[,-1] %>% melt -->
+<!-- as_data_frame(y2) -->
+<!-- ``` -->
+<!-- This is the explicit melt - same result. -->
+<!-- ```{r} -->
+<!-- y3<-y1[,-1] %>% melt(id.vars=c("OTU","TAXON.ID"),   # all the variables to keep, but not split apart  -->
+<!--                 variable.name="experiment", # Name of the destination column for factors that are taken from names of melted columns -->
+<!--                 value.name="nr.of.counts" # name of the newly made single value column -->
+<!-- )%>% as_data_frame() -->
+<!-- y3 -->
+<!-- ``` -->
+<!-- or tidyr::gather - same result again -->
+<!-- ```{r} -->
+<!-- y4<-y1 %>% gather(key="experiment", value="nr.of.counts", 4:ncol(y1)) %>% select(-X) -->
+<!-- y4 -->
+<!-- all.equal(y3, y4) -->
+<!-- ``` -->
+<!-- and dcast to cast the table back into wide format... -->
+<!-- (This is just for show --- in reality we usually work with a porpose in mind.) -->
+<!-- ```{r} -->
+<!-- w1<-y4%>% dcast(OTU+TAXON.ID~experiment) %>% as_data_frame() -->
+<!-- w1 -->
+<!-- ``` -->
+<!-- or tidyr::spread --- same result -->
+<!-- ```{r} -->
+<!-- w2<-y4 %>% spread(key=experiment, value=nr.of.counts) %>% as_data_frame() -->
+<!-- w2 -->
+<!-- ``` -->
+<!-- and finally, tidyr::separate sepatates the content of the column *TAXON.ID* into several columns -->
+<!-- ```{r} -->
+<!-- y5<-y4%>%separate(TAXON.ID, c("riik", "hmk", "klass", "selts", "sgk", "prk", "liik"), sep=';', extra="merge") -->
+<!-- y5 -->
+<!-- ``` -->
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

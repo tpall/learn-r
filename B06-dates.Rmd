@@ -430,7 +430,7 @@ bed.times
 ```
 
 ```{r}
-mean(bed.times)  # doesn't work, gives aritmetic mean
+mean(bed.times)  # doesn't work, gives arithmetic mean
 ```
 
 The **clock has a circular scale**, which ends where it begins, so we need to use circular statistics.

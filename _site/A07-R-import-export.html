@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>A07-R-import-export.knit</title>
+
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Reproducible Data Analysis in R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<hr />
+<hr />
+<div id="getting-data-in-and-out-of-r" class="section level1">
+<h1>Getting data in and out of R</h1>
+<div class="figure">
+<img src="https://upload.wikimedia.org/wikipedia/en/2/2c/Banksy_Better_Out_Than_In_New_York_City_2013.png" alt="" />
+<p class="caption">Really? Photo: Banksy</p>
+</div>
+<!-- When planning to import your data from external files to R, then -->
+<!-- + avoid whitespaces in your file names, replace these with `.`,`_` or `-` -->
+<!-- + don't use special characters like `,` `?` `#` `*` `@` `$` `%` `|` `^` `{` `}` `(` `)` `[` `]` `\` `/` -->
+<div id="import-tabular-data" class="section level2">
+<h2>Import tabular data</h2>
+<p><code>read.table</code>, <code>read.csv</code>, <code>read.delim</code> functions allow to create data frames, where different columns may contain different type of data – <code>numeric</code>, <code>character</code> etc. <code>read.table</code> is the basic function with values separated by white space <code>""</code> (one or more spaces, tabs, newlines). <code>read.csv</code> is a wrapper around it and expects comma <code>,</code> as a field separator and <code>read.delim</code> expects <code>tab</code> separator <code>\t</code>.</p>
+<p>Other important arguments of <code>read.table</code> are:</p>
+<ul>
+<li><code>dec = "."</code> the character used in the file for decimal points. In many cases ignorant people use comma as decimal separator.</li>
+<li><code>stringsAsFactors =</code> default setting is TRUE and character data is converted into factors.</li>
+<li><code>na.string = "NA"</code> a character vector of strings which are to be interpreted as NA values. Blank fields are also considered to be missing values in logical, integer, numeric and complex fields.<br />
+</li>
+<li><code>skip =</code> the number of lines of the data file to skip before beginning to read data.</li>
+</ul>
+<p>We use survey data (%) of eating fruits and vegetables within last 7 days from Estonian <a href="http://www.tai.ee/en/">Institute for Health Development</a>. Don’t mind the file extension .csv, it’s values are tab separated. TAI offers different download formats, but mostly in useless forms (even for .csv and .txt files). Only “Tabeldieraldusega pealkirjata tekst (.csv)” and “Semikooloneraldusega pealkirjata tekst (.csv)” are in a suitable rectangular format, although lacking column headers. We have to identify and add column headers separately and fix character encoding.</p>
+<pre class="r"><code>fruit &lt;- read.table(&quot;data/TKU10m.csv&quot;) # tab separated text
+colnames(fruit) &lt;- c(&quot;Year&quot;, &quot;Foodstuff&quot;, &quot;Consumption&quot;, &quot;Gender&quot;, &quot;AGE16-24&quot;, &quot;AGE25-34&quot;, &quot;AGE35-44&quot;, &quot;AGE45-54&quot;, &quot;AGE55-64&quot;)
+head(fruit)</code></pre>
+<pre><code>##   Year Foodstuff     Consumption Gender AGE16-24 AGE25-34 AGE35-44 AGE45-54
+## 1 1994   Puuvili Ei s\xf6\xf6nud  Mehed     32.3     24.8     33.8     34.0
+## 2 1994   Puuvili Ei s\xf6\xf6nud Naised     14.7     15.0     18.1     22.8
+## 3 1994   Puuvili   1-2 p\xe4eval  Mehed     40.3     45.1     40.4     43.3
+## 4 1994   Puuvili   1-2 p\xe4eval Naised     40.0     43.8     43.2     46.2
+## 5 1994   Puuvili   3-5 p\xe4eval  Mehed     22.6     23.0     17.7     16.3
+## 6 1994   Puuvili   3-5 p\xe4eval Naised     32.0     24.8     25.8     26.0
+##   AGE55-64
+## 1     52.4
+## 2     39.0
+## 3     33.3
+## 4     42.1
+## 5     11.9
+## 6     15.2</code></pre>
+<pre class="r"><code># Lets translate some variables to english by changing factor labels
+fruit$Foodstuff  &lt;- factor(fruit$Foodstuff, levels = c(&quot;K\xf6\xf6givili&quot;,&quot;Puuvili&quot;), labels = c(&quot;Vegetables&quot;, &quot;Fruits&quot;))
+fruit$Consumption &lt;-  factor(fruit$Consumption, levels = c(&quot;Ei s\xf6\xf6nud&quot;, &quot;1-2 p\xe4eval&quot;, &quot;3-5 p\xe4eval&quot;, &quot;6-7 p\xe4eval&quot;), labels = c(&quot;No&quot;, &quot;1-2 days&quot;, &quot;3-5 days&quot;, &quot;6-7 days&quot;))
+fruit$Gender &lt;-  factor(fruit$Gender, levels = c(&quot;Mehed&quot;, &quot;Naised&quot;), labels = c(&quot;Males&quot;, &quot;Females&quot;))                            
+head(fruit)</code></pre>
+<pre><code>##   Year Foodstuff Consumption  Gender AGE16-24 AGE25-34 AGE35-44 AGE45-54
+## 1 1994    Fruits          No   Males     32.3     24.8     33.8     34.0
+## 2 1994    Fruits          No Females     14.7     15.0     18.1     22.8
+## 3 1994    Fruits    1-2 days   Males     40.3     45.1     40.4     43.3
+## 4 1994    Fruits    1-2 days Females     40.0     43.8     43.2     46.2
+## 5 1994    Fruits    3-5 days   Males     22.6     23.0     17.7     16.3
+## 6 1994    Fruits    3-5 days Females     32.0     24.8     25.8     26.0
+##   AGE55-64
+## 1     52.4
+## 2     39.0
+## 3     33.3
+## 4     42.1
+## 5     11.9
+## 6     15.2</code></pre>
+<p>Table of downloadable R .csv datasets to play around and test things is for example available <a href="https://vincentarelbundock.github.io/Rdatasets/datasets.html">here</a>. As you can see, you can use URL to download data directly from web.</p>
+<pre class="r"><code>airquality &lt;- read.csv(&quot;https://vincentarelbundock.github.io/Rdatasets/csv/datasets/airquality.csv&quot;)
+head(airquality)</code></pre>
+<pre><code>##   X Ozone Solar.R Wind Temp Month Day
+## 1 1    41     190  7.4   67     5   1
+## 2 2    36     118  8.0   72     5   2
+## 3 3    12     149 12.6   74     5   3
+## 4 4    18     313 11.5   62     5   4
+## 5 5    NA      NA 14.3   56     5   5
+## 6 6    28      NA 14.9   66     5   6</code></pre>
+<div id="readr-package" class="section level3">
+<h3><code>readr</code> package</h3>
+<p>You can import tabular data using read_ functions from <code>readr</code> package. Compared to base R functions like <code>read.csv()</code>, <code>readr</code> is much faster (important for very large datasets) and gives more convenient output:</p>
+<ul>
+<li>it never converts strings to factors,</li>
+<li>can parse date/times, and</li>
+<li>it leaves the column names as in raw data.</li>
+</ul>
+<p>We can compare what happens with column names in case of <code>read.csv</code> and <code>read_csv</code>:</p>
+<p><code>base::read.csv</code> changes column names (1st row):</p>
+<pre class="r"><code>read.csv(textConnection(&quot;1 column, my data
+               2,3
+               4,5&quot;))</code></pre>
+<pre><code>##   X1.column my.data
+## 1         2       3
+## 2         4       5</code></pre>
+<p><code>readr::read_csv</code> leaves column names intact:</p>
+<pre class="r"><code>library(readr)
+read_csv(&quot;1 column, my data
+              2,3
+              4,5&quot;)  </code></pre>
+<pre><code>## # A tibble: 2 x 2
+##   `1 column` `my data`
+##        &lt;dbl&gt;     &lt;dbl&gt;
+## 1          2         3
+## 2          4         5</code></pre>
+<p>Note also that in case of <code>read_csv</code> you can directly paste your comma separated text into function (instead trough textConnection).</p>
+<p>The first two arguments of <code>read_csv()</code> are:</p>
+<ul>
+<li><code>file</code>: path (or URL) to the file you want to load. Readr can automatically decompress files ending in .zip, .gz, .bz2, and .xz.</li>
+<li><code>col_names</code>: column names. 3 options: TRUE (the default); FALSE numbers columns sequentially from X1 to Xn. A character vector, used as column names. If these don’t match up with the columns in the data, you’ll get a warning message.</li>
+</ul>
+<!-- `read_fwf()` reads fixed width files. You can specify fields either by their widths with `fwf_widths()` or their position with `fwf_positions()`.  -->
+<p><code>read_table()</code> reads a common variation of fixed width files where columns are separated by white space.</p>
+<pre class="r"><code>install.packages(&quot;readr&quot;)
+library(readr)
+read_table() # read the type of textual data where each column is separate by whitespace
+read_csv() # reads comma delimited files, 
+read_tsv() # reads tab delimited files, 
+read_delim() # reads in files with a user supplied delimiter.</code></pre>
+<p>Importantly, <code>read_</code> functions expect specific delimiter: comma for _csv, tab for _tsv etc., and only <code>read_delim</code> has argument for specifying delimiter to be used.</p>
+<!-- #### Change column type -->
+<!-- ```{r, eval=FALSE} -->
+<!-- read_csv("mypath.csv", col_types = col(x = col_integer(), treatment = col_character())) -->
+<!-- ``` -->
+<!-- You can specify the following types of columns: -->
+<!-- + `col_integer()` (i) and `col_double()` (d) specify integer and doubles. -->
+<!-- + `col_logical()` (l) parses TRUE, T, FALSE and F into a logical vector. -->
+<!-- + `col_character()` (c) leaves strings as is. -->
+<!-- + `col_number()` (n) is a more flexible parser for numbers embedded in other strings. It will look for the first number in a string, ignoring non-numeric prefixes and suffixes. -->
+<!-- + `col_factor()` (f) allows you to load data directly into a factor if you know what the levels are. -->
+<!-- + `col_skip()` (_, -) completely ignores a column. -->
+<!-- + `col_date()` (D), `col_datetime()` (T) and `col_time()` (t) parse into dates, date times, and times. -->
+<!-- Each column parser has a one letter abbreviation, which you can use instead of the full function call (assuming you're happy with the default arguments): -->
+<!-- ```{r, eval=FALSE} -->
+<!-- read_csv("mypath.csv", col_types = cols(x = "i", treatment = "c")) -->
+<!-- ``` -->
+<!-- Each `col_XYZ()` function also has a corresponding `parse_XYZ()` that you can use on a character vector. -->
+<!-- ```{r} -->
+<!-- parse_integer(c("1", "2", "3")) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- parse_logical(c("TRUE", "FALSE", "NA")) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- parse_number(c("$1000", "20%", "3,000")) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- parse_datetime("2010-10-01T2010") -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- parse_date("2010-10-01") -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- parse_time("20:10:01") -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- parse_date("01/02/15", "%m/%d/%y") -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- parse_date("01/02/15", "%d/%m/%y") -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- parse_date("01/02/15", "%y/%m/%d") -->
+<!-- ``` -->
+</div>
+</div>
+<div id="import-ms-excel" class="section level2">
+<h2>Import MS Excel</h2>
+<p>There are several libraries and functions available to import MS excel workbooks into R, like <code>XLConnect</code>,<code>gdata::read.xls()</code>, <code>xlsx</code>. <code>XLConnect</code> is a powerful package for working with .xls(x) files, but it depends on Java and has memory limitations: you’ll never know when your script crashes. <code>readxl</code> package contains only two verbs and is very easy to use.</p>
+<pre class="r"><code>library(readxl)
+xlsfile &lt;- &quot;data/ECIS_140317_MFT_1.xls&quot; # 96-well multi frequency real-time impedance data
+sheets &lt;- excel_sheets(xlsfile) 
+sheets</code></pre>
+<pre><code>##  [1] &quot;Details&quot;    &quot;Comments&quot;   &quot;Z 1000 Hz&quot;  &quot;R 1000 Hz&quot;  &quot;C 1000 Hz&quot; 
+##  [6] &quot;Z 2000 Hz&quot;  &quot;R 2000 Hz&quot;  &quot;C 2000 Hz&quot;  &quot;Z 4000 Hz&quot;  &quot;R 4000 Hz&quot; 
+## [11] &quot;C 4000 Hz&quot;  &quot;Z 8000 Hz&quot;  &quot;R 8000 Hz&quot;  &quot;C 8000 Hz&quot;  &quot;Z 16000 Hz&quot;
+## [16] &quot;R 16000 Hz&quot; &quot;C 16000 Hz&quot; &quot;Z 32000 Hz&quot; &quot;R 32000 Hz&quot; &quot;C 32000 Hz&quot;
+## [21] &quot;Z 64000 Hz&quot; &quot;R 64000 Hz&quot; &quot;C 64000 Hz&quot;</code></pre>
+<pre class="r"><code>z &lt;- read_excel(xlsfile, sheets[3]) # we import 3rd sheet &quot;Z 1000 Hz&quot;
+dim(z)</code></pre>
+<pre><code>## [1] 647  97</code></pre>
+<blockquote class="twitter-tweet" data-lang="en">
+<p lang="en" dir="ltr">
+Extract tables from messy spreadsheets with jailbreakr <a href="https://t.co/9wJfDj0cLM">https://t.co/9wJfDj0cLM</a> <a href="https://twitter.com/hashtag/rstats?src=hash">#rstats</a> <a href="https://twitter.com/hashtag/DataScience?src=hash">#DataScience</a>
+</p>
+— R-bloggers (<span class="citation">@Rbloggers</span>) <a href="https://twitter.com/Rbloggers/status/766226281859997697">August 18, 2016</a>
+</blockquote>
+<script async src="https://platform.twitter.com/widgets.js"charset="utf-8"></script>
+</div>
+<div id="import-ods" class="section level2">
+<h2>Import ODS</h2>
+<p>To import Open Document Spreadsheets .ods files into R you can try <a href="https://github.com/chainsawriot/readODS">following approach</a>.</p>
+<pre class="r"><code>library(readODS)
+read_ods(&quot;table.ods&quot;, header = TRUE) ## return only the first sheet
+read_ods(&quot;multisheet.ods&quot;, sheet = 2) ## return the second sheet </code></pre>
+<!-- ## PDF tables -->
+<!-- PDF table extractor -- `Tabula` - exists as both a server application, accessed via a web browser, or as a service using the tabula extractor Java application. The (`tabulizer` R package)[https://github.com/ropenscilabs/tabulizer] provides a wrapper for tabula extractor (bundled within the package), that lets you access the service via it's command line calls. (One dependency you do need to take care of is to have Java installed; adding Java into an RStudio docker container would be one way of taking care of this.) -->
+<!-- You can try this code with [more instructions on `github`](https://github.com/ropenscilabs/tabulizer) to install package (if rJava is installed successfully...). -->
+<!-- ```{r, eval=FALSE} -->
+<!-- devtools::install_github("ropenscilabs/tabulizer") -->
+<!-- library("tabulizer") -->
+<!-- f <- system.file("examples", "data.pdf", package = "tabulizer") -->
+<!-- out1 <- extract_tables(f) -->
+<!-- str(out1) -->
+<!-- ``` -->
+</div>
+<div id="import-spss-sas-etc." class="section level2">
+<h2>Import SPSS, SAS etc.</h2>
+<p><code>foreign</code> package provies functions for reading and writing data stored by Minitab, S, SAS, SPSS, Stata, etc.</p>
+<pre class="r"><code>library(foreign)
+mydata &lt;- read.spss(&quot;mydata.sav&quot;) # import spss data file, returns list
+mydata &lt;- read.spss(&quot;mydata.sav&quot;, to.data.frame = TRUE) # returns data.frame</code></pre>
+</div>
+<div id="import-all-datasets-from-directory" class="section level2">
+<h2>Import all datasets from directory</h2>
+<p>We can use <code>sapply(X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)</code> or <code>lapply(X, FUN, ...)</code> functions to iterate through vector or list of files, respectively. Three dots <code>...</code> shows that you can pass further arguments to your function (FUN).</p>
+<pre class="r"><code>data_files &lt;- list.files(path = &quot;data&quot;, pattern = &quot;.csv&quot;, full.names = TRUE) # 
+data_files # ups, we have only one file</code></pre>
+<pre><code>## [1] &quot;data/test.csv&quot;   &quot;data/test2.csv&quot;  &quot;data/TKU10m.csv&quot;</code></pre>
+<pre class="r"><code>datasets &lt;- sapply(data_files, read.table, simplify = FALSE, USE.NAMES = TRUE) # sapply returns vector or matrix, simplify = FALSE outputs list
+str(datasets)</code></pre>
+<pre><code>## List of 3
+##  $ data/test.csv  :&#39;data.frame&#39;: 6 obs. of  3 variables:
+##   ..$ V1: chr [1:6] &quot;name,&quot; &quot;ana,&quot; &quot;bob,&quot; &quot;dad,&quot; ...
+##   ..$ V2: chr [1:6] &quot;age,&quot; &quot;23.2,&quot; &quot;12,&quot; &quot;78.5,&quot; ...
+##   ..$ V3: chr [1:6] &quot;sex&quot; &quot;m&quot; &quot;f&quot; &quot;m&quot; ...
+##  $ data/test2.csv :&#39;data.frame&#39;: 6 obs. of  3 variables:
+##   ..$ V1: chr [1:6] &quot;name;&quot; &quot;ana;&quot; &quot;bob;&quot; &quot;dad;&quot; ...
+##   ..$ V2: chr [1:6] &quot;age;&quot; &quot;23,2;&quot; &quot;12;&quot; &quot;78,5;&quot; ...
+##   ..$ V3: chr [1:6] &quot;sex&quot; &quot;m&quot; &quot;f&quot; &quot;m&quot; ...
+##  $ data/TKU10m.csv:&#39;data.frame&#39;: 176 obs. of  9 variables:
+##   ..$ V1: int [1:176] 1994 1994 1994 1994 1994 1994 1994 1994 1994 1994 ...
+##   ..$ V2: chr [1:176] &quot;Puuvili&quot; &quot;Puuvili&quot; &quot;Puuvili&quot; &quot;Puuvili&quot; ...
+##   ..$ V3: chr [1:176] &quot;Ei s\xf6\xf6nud&quot; &quot;Ei s\xf6\xf6nud&quot; &quot;1-2 p\xe4eval&quot; &quot;1-2 p\xe4eval&quot; ...
+##   ..$ V4: chr [1:176] &quot;Mehed&quot; &quot;Naised&quot; &quot;Mehed&quot; &quot;Naised&quot; ...
+##   ..$ V5: num [1:176] 32.3 14.7 40.3 40 22.6 32 4.8 13.3 21.3 17.6 ...
+##   ..$ V6: num [1:176] 24.8 15 45.1 43.8 23 24.8 7.1 16.3 22.1 15.7 ...
+##   ..$ V7: num [1:176] 33.8 18.1 40.4 43.2 17.7 25.8 8.1 12.9 25 16.1 ...
+##   ..$ V8: num [1:176] 34 22.8 43.3 46.2 16.3 26 6.4 5.1 31.7 19.6 ...
+##   ..$ V9: num [1:176] 52.4 39 33.3 42.1 11.9 15.2 2.4 3.7 39 28.4 ...</code></pre>
+<!-- If you have datasets with same column names, you can import all datasets as a list and rbind them into one data.frame. Here we concatenate our single data.frame in `datasets` object. -->
+<!-- `do.call(rbind, my_list_of_dataframes)` is base R solution to this task. -->
+<!-- ```{r} -->
+<!-- nrow(datasets[[1]]) # how many rows in our original data? datasets is a list. -->
+<!-- rbound_datasets <-  do.call(rbind, c(datasets, datasets)) # bind dataframes in list by rows -->
+<!-- nrow(rbound_datasets) # how many rows we have now -->
+<!-- ``` -->
+<!-- Alternative solution is `bind_rows` from `dplyr` package. -->
+<!-- ```{r} -->
+<!-- rbound_datasets2 <- dplyr::bind_rows(c(datasets, datasets)) -->
+<!-- nrow(rbound_datasets2) # how many rows we have now -->
+<!-- ``` -->
+</div>
+<div id="import-text-file" class="section level2">
+<h2>Import text file</h2>
+<p>Probably, the most basic form of data to import into R is a simple text file.</p>
+<p>Here we write our data to external file <code>ex.data</code> and read it into R using <code>scan()</code> function. Importantly, <code>scan()</code> reads vectors of data which all have the same mode. Default data type is numeric, strings can be specified with the <code>what = ""</code> argument.</p>
+<pre class="r"><code>cat(&quot;my title line&quot;, &quot;2 3 5 7&quot;, &quot;11 13 17&quot;, file = &quot;ex.data&quot;, sep = &quot;\n&quot;)
+pp &lt;- scan(&quot;ex.data&quot;, skip = 1) # we skip 1st line with title text or we get error
+unlink(&quot;ex.data&quot;) # tidy up, unlink deletes the file(s) or directories specified
+pp</code></pre>
+<pre><code>## [1]  2  3  5  7 11 13 17</code></pre>
+<p>In case you dont wan’t or can’t save your text into file (bad for reproducibility!), it’s possible to use <code>textConnection()</code> function to input data into R. <code>\n</code> is a newline character.</p>
+<p><code>readLines</code> reads “unorganized” data, this is the function that will read input into R so that we can manipulate it further.</p>
+<pre class="r"><code>zzz &lt;- textConnection(&quot;my title line 2 3 5 7 11 13 17 9&quot;) 
+pp &lt;- readLines(zzz) # zzz is a connection object
+pp</code></pre>
+<pre><code>## [1] &quot;my title line 2 3 5 7 11 13 17 9&quot;</code></pre>
+<pre class="r"><code>close(zzz) # close connection</code></pre>
+<pre class="r"><code>pp &lt;- scan(textConnection(&quot;my title line\n2 3 5 7\n11 13 17 9&quot;), skip = 1)
+pp</code></pre>
+<pre><code>## [1]  2  3  5  7 11 13 17  9</code></pre>
+<p>Text in <code>textConnection</code> call can be already structured, so you can quickly import copy-paste data from screen into R.</p>
+<pre class="r"><code>zzz &lt;- textConnection(&quot;my title line 
+                      2 3 5 7
+                      11 13 17 9&quot;)
+a &lt;- scan(zzz, skip = 2) # lets skip 1st two lines
+a</code></pre>
+<pre><code>## [1] 11 13 17  9</code></pre>
+<p>Scanned data can be coerced into rectangular matrix. We have 2 rows of numbers in our text string shown above therefore we set <code>nrow = 2</code> and we need to specify that data is inserted into matrix rowwise <code>byrow = TRUE</code> (default option is FALSE) to keep original data structure.</p>
+<pre class="r"><code>matrix(pp, nrow = 2, byrow = TRUE)</code></pre>
+<pre><code>##      [,1] [,2] [,3] [,4]
+## [1,]    2    3    5    7
+## [2,]   11   13   17    9</code></pre>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

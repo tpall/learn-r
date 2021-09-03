@@ -179,9 +179,7 @@ The idea is to find a pattern in a collection of strings and replace it with som
 To find and replace we use `str_replace_all()`, whose base R analogue is `gsub()`:
 ```{r}
 library(stringr)
-bad.df <- tibble(time = c("t0", "t1", "t12"), value = c(2, 4, 9))
-bad.df$time <- str_replace_all(bad.df$time, "t", "") %>% as.numeric() 
-
+str_replace_all(c("t0", "t1", "t12"), "t", "") %>% as.numeric() 
 ```
 
 Now we have a numeric time column, which can be used in plotting.
@@ -190,7 +188,7 @@ or
 
 Here we do the same thing more elegantly by directly parsing numbers from a character string:
 ```{r readr}
-bad.df$time <- parse_number(bad.df$time)
+parse_number(c("t0", "t1", "t12"))
 ```
 
 

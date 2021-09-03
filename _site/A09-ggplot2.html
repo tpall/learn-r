@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>A09-ggplot2.knit</title>
+
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Reproducible Data Analysis in R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<hr />
+<hr />
+<div id="ggplot2" class="section level1">
+<h1>ggplot2</h1>
+<p><strong>ggplot2</strong> is an R package for producing statistical graphics based on the grammar of graphics (hence the gg!).</p>
+<ul>
+<li><strong>ggplot2 works iteratively</strong> – you start with a layer showing the raw data and then add layers of geoms, annotations, and statistical summaries.</li>
+</ul>
+<p>To compose plots, you have to supply minimally:</p>
+<ul>
+<li><strong>Data</strong> that you want to visualise and <strong>aes</strong>thetic mappings – what’s on x-axis, what’s on y-axis, and how to you want to group and color your data.</li>
+<li><strong>Layers</strong> made up of <strong>geom</strong>etric elements: points, lines, boxes, etc.</li>
+</ul>
+<p>You can further adjust your plot:</p>
+<ul>
+<li>by adding <strong>statistical summaries</strong> of your raw data.</li>
+<li>using <strong>scale</strong>s to redraw a legend or axes.</li>
+<li>using <strong>facet</strong>ing to break up the data into subsets for display.</li>
+<li>using <strong>theme</strong>s which control plot features like the font size and background colour.</li>
+</ul>
+<p>ggplot2 is different from base graphics:</p>
+<ul>
+<li>Plots created by base graphics appear only on the screen and you cannot assign plot to an object for later use. Everything is created in place.</li>
+<li>You can only draw on top of the plot, you cannot modify or delete existing content.</li>
+</ul>
+<p>That was theory, you can read more from <a href="https://github.com/hadley/ggplot2-book">ggplot2-book</a>, this is where rubber meets the road:</p>
+<pre class="r"><code>library(ggplot2) # load ggplot2 library
+library(dplyr) # dplyr is necessary for piping operator and for some data munging
+library(tidyr)</code></pre>
+<p>We use ggplot2 builtin dataset <code>mpg</code> with fuel economy data from 1999 and 2008 for 38 models of car:</p>
+<pre class="r"><code>mpg</code></pre>
+<pre><code>## # A tibble: 234 x 11
+##    manufacturer model    displ  year   cyl trans   drv     cty   hwy fl    class
+##    &lt;chr&gt;        &lt;chr&gt;    &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt; &lt;int&gt; &lt;int&gt; &lt;chr&gt; &lt;chr&gt;
+##  1 audi         a4         1.8  1999     4 auto(l… f        18    29 p     comp…
+##  2 audi         a4         1.8  1999     4 manual… f        21    29 p     comp…
+##  3 audi         a4         2    2008     4 manual… f        20    31 p     comp…
+##  4 audi         a4         2    2008     4 auto(a… f        21    30 p     comp…
+##  5 audi         a4         2.8  1999     6 auto(l… f        16    26 p     comp…
+##  6 audi         a4         2.8  1999     6 manual… f        18    26 p     comp…
+##  7 audi         a4         3.1  2008     6 auto(a… f        18    27 p     comp…
+##  8 audi         a4 quat…   1.8  1999     4 manual… 4        18    26 p     comp…
+##  9 audi         a4 quat…   1.8  1999     4 auto(l… 4        16    25 p     comp…
+## 10 audi         a4 quat…   2    2008     4 manual… 4        20    28 p     comp…
+## # … with 224 more rows</code></pre>
+<p>Key variables in <code>mpg</code> dataset are <code>displ</code> – engine displacement (L), <code>cyl</code> – number of cylinders, <code>cty</code> – city miles per gallon, <code>hwy</code> – highway miles per gallon.</p>
+<p>Simple scatterplot to explore relationship between fuel consumption in city traffick (cty) and engine size (displ) is created like this:</p>
+<pre class="{r}s"><code>ggplot(mpg, aes(displ, cty)) + geom_point()</code></pre>
+<p><strong>Notice that</strong>: in ggplot first two unnamed arguments to <code>aes()</code> are <code>x</code> and <code>y</code>, so we can easily skip <code>x =</code> and <code>y =</code> to reduce typing.</p>
+<div id="scatterplot" class="section level2">
+<h2>Scatterplot</h2>
+<p>To illustrate layerwise plot creation in ggplot:</p>
+<pre class="r"><code>p &lt;- ggplot(data = mpg) # first add data
+p &lt;- p + aes(x = cty, y = hwy) # add aesthetics
+p &lt;- p + geom_point() # add geom, specifying plot type 
+p + stat_smooth(method = &quot;lm&quot;) # add statistical summary</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-3-1.png" width="672" /> The <strong>point geom is used to create scatterplots</strong>.</p>
+<p>Of course, this result is usually achieved by this oneliner:</p>
+<pre class="r"><code>ggplot(mpg, aes(cty, hwy)) + geom_point() + stat_smooth(method = &quot;lm&quot;)</code></pre>
+</div>
+<div id="color-size-shape-and-fill" class="section level2">
+<h2>Color, size, shape, and fill</h2>
+<p>Other aesthetics like <code>color</code>, <code>shape</code>, <code>fill</code>, and <code>size</code> can be used to add additional variables to a plot:</p>
+<pre class="r"><code>ggplot(mpg, aes(cty, hwy, color = drv)) + geom_point() # &#39;colour=&#39; can be used too</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="point-shape-codes" class="section level2">
+<h2>Point shape codes</h2>
+<p>While colors and sizes are intuitive, it seems impossible to remember available point shape codes in R. The quickest way out of this is to know how to generate an example plot of the shapes quickly. <a href="http://www.win-vector.com/blog/2012/04/how-to-remember-point-shape-codes-in-r/">This is how to do this in ggplot2.</a></p>
+<pre class="r"><code>ggplot(data=data.frame(x=c(0:25))) + geom_point(size=8, aes(x=x,y=x,shape=x)) +
+  facet_wrap(~ x, scales=&#39;free&#39;) + xlab(&#39;&#39;) + ylab(&#39;&#39;) +
+  scale_shape_identity() +
+  theme(axis.text.x=element_blank(), axis.text.y=element_blank(),
+        axis.ticks=element_blank(), legend.position=&#39;none&#39;,
+        panel.background=element_blank(),
+        panel.grid.major=element_blank(),
+        panel.border=element_blank())</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="facetting" class="section level2">
+<h2>Facetting</h2>
+<p>Another possibility to add more variables is to use <code>facet_wrap</code>:</p>
+<pre class="r"><code>ggplot(mpg, aes(cty, hwy)) + 
+  geom_point() + 
+  facet_wrap( ~ drv) # to specify name of a variable preceded by  ̃</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Two-way table can be created using <code>facet_grid</code> command:</p>
+<pre class="r"><code>ggplot(mpg, aes(cty, hwy)) + 
+  geom_point() + 
+  facet_grid(year ~ drv) # to specify row variable ̃column variable</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="modify-axes-start-y-or-x-axis-at-zero" class="section level2">
+<h2>Modify axes, start y or x axis at zero</h2>
+<p>Axis labels can be changed using <code>xlab()</code> and <code>ylab()</code>:</p>
+<pre class="r"><code>p + xlab(&quot;City driving (miles per gallon)&quot;) + # to set x axis label
+  ylab(&quot;Highway driving (miles per gallon)&quot;) # to set y axis label</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>The other way around, to remove axis leables, set them to <code>NULL</code>:</p>
+<pre class="r"><code>p + xlab(NULL) + ylab(NULL)</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p>In many cases proper visual representation of data requires that e.g. y axis starts from zero. By default, ggplot zooms only into region where data is located and 0 is dropped from axes. To change this behaviour, ggplot has command <code>expand_limits()</code> specifying the value(-s) that should be included in each scale:</p>
+<pre class="r"><code>p + expand_limits(x = 0, y = 0) # upper and lower axis limits can be specified by supplying vector of two values</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><code>scale_x_continuous()</code> and <code>scale_y_continuous()</code> have argument limits, which can be used to set axis limits, but values remaining outside limits will be set to <code>NA</code>:</p>
+<pre class="r"><code>p + scale_y_continuous(limits = c(0, 20))</code></pre>
+<pre><code>## Warning: Removed 145 rows containing missing values (geom_point).</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-12-1.png" width="672" /> Note the warning!</p>
+<p>More simply, we can use <code>xlim()</code> and <code>ylim()</code>:</p>
+<pre class="r"><code>p + xlim(15, 20) + ylim(0, 30)</code></pre>
+<pre><code>## Warning: Removed 119 rows containing missing values (geom_point).</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+<div id="ggsave-plot" class="section level2">
+<h2>ggsave plot</h2>
+<p><code>ggsave</code> recognises .eps/ps, .tex (pictex), .pdf, .jpeg, .tiff, .png, .bmp, .svg, and .wmf (windows only) file extensions. To save a plot <code>p</code> to e.g. as <code>.png</code> file use:</p>
+<pre class="r"><code>ggsave(&quot;graphs/my_biutiful_plot.png&quot;, plot = p, width = 7, height = 5)</code></pre>
+<p>By default <code>plot=</code> is the last plot.</p>
+</div>
+<div id="histograms" class="section level2">
+<h2>Histograms</h2>
+<p>Differently from base R graphics, where histogram is drawn by a special command, ggplot specifies the type of plot by geoms, like <code>geom_histogram()</code>:</p>
+<pre class="r"><code>df &lt;- tibble(x = rnorm(10000)) # For demo we create tibble with 10000 random numbers from normal distribution
+ggplot(df, aes(x)) + geom_histogram() # to plot histogram we specify geom_histogram </code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>ggplot says: <code>stat_bin()</code> using <code>bins = 30</code>. Pick better value with <code>binwidth</code>, also help file notes that ‘the default is to use bins bins that cover the range of the data. You should always override this value, exploring multiple widths to find the best to illustrate the stories in your data’. OK, Messy Goes to Okido, lets try:</p>
+<pre class="r"><code>ggplot(df, aes(x)) + geom_histogram(binwidth = 0.1) # for better granularity, we specify binwith = 0.1</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p>Alternatively, you can specify the number of bins (and perhaps send some hidden messages along with your visualisation):</p>
+<pre class="r"><code>ggplot(df, aes(x)) + geom_histogram(bins = 5) # if we want to split data into eg. 5 bins</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p>For some more practice, lets recreate Tartu Marathon 2013 histogram:</p>
+<pre class="r"><code>library(lubridate)
+load(&quot;data/Tartu_Maraton_2013.RData&quot;)</code></pre>
+<pre class="r"><code>tm &lt;- tm_2013 %&gt;% mutate(Aeg = unclass(as.duration(hms(Aeg)))/3600) %&gt;% filter(complete.cases(.))</code></pre>
+<pre><code>## Warning in .parse_hms(..., order = &quot;HMS&quot;, quiet = quiet): Some strings failed to
+## parse, or all strings are NAs</code></pre>
+<pre class="r"><code>tm %&gt;% ggplot(aes(Aeg)) + geom_histogram(binwidth = 1/12) # we want binwidth ~5 minutes (1/12 hour)</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<p>These were histograms with counts on y-axis, but we may want to plot (kernel) density instead, for this we use <code>geom_density()</code>:</p>
+<pre class="r"><code>ggplot(df, aes(x)) + geom_density()</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p>Histogram with densities on y-axis:</p>
+<pre class="r"><code>ggplot(df, aes(x, ..density..)) + geom_histogram()</code></pre>
+<pre><code>## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p>Kernel density plot and histogram together:</p>
+<pre class="r"><code>ggplot(df, aes(x, ..density..)) + 
+  geom_histogram(binwidth = 0.1) +
+  geom_density()</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
+<pre class="r"><code>p &lt;- ggplot(df, aes(x)) + 
+  geom_histogram(aes(y = ..density..), # note that we specify density here, 
+                 binwidth = 0.1, 
+                 fill = &quot;white&quot;, color = &quot;black&quot;) +
+  geom_density()
+p # we disrected plot to object</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p>We can add vertical line, denoting mean, to our histogram like this:</p>
+<pre class="r"><code>p + geom_vline(aes(xintercept = mean(x)), color = &quot;red&quot;, linetype = &quot;dashed&quot;, size = 1) </code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><strong>To compare distributions</strong> we can overlay histograms and density plots. To demonstrate this, let’s create dummy dataset of two normal distributions:</p>
+<pre class="r"><code>df2 &lt;- tibble(pop = rep(c(&quot;N&quot;, &quot;S&quot;), each = 1000), 
+              value = c(rnorm(1000, 20, 3), rnorm(1000, 25, 3)))
+df2</code></pre>
+<pre><code>## # A tibble: 2,000 x 2
+##    pop   value
+##    &lt;chr&gt; &lt;dbl&gt;
+##  1 N      22.8
+##  2 N      16.9
+##  3 N      19.2
+##  4 N      19.2
+##  5 N      14.8
+##  6 N      15.2
+##  7 N      16.1
+##  8 N      22.3
+##  9 N      20.3
+## 10 N      22.0
+## # … with 1,990 more rows</code></pre>
+<p>When overlaying histograms in ggplot, default action is to ‘stack’ them one to another, making comparison difficult. We have to specify <code>position = "identity"</code> to place them directly onto x-axis (each bar starts from y = 0). Also we specify <code>alpha =</code> for some transparency:</p>
+<pre class="r"><code>p1 &lt;- df2 %&gt;% ggplot(aes(value, fill = pop)) 
+p1 + geom_histogram(position = &quot;identity&quot;, alpha = 0.7, binwidth = 0.3)</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-26-1.png" width="672" /></p>
+<p>Alternatively, it’s possible to place comparable bars next to each other by specifying <code>position = "dodge"</code>:</p>
+<pre class="r"><code>p1 + geom_histogram(position = &quot;dodge&quot;, binwidth = 1)</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
+<p>Overlaid kernel density plots:</p>
+<pre class="r"><code>p2 &lt;- p1 + geom_density(alpha = 0.7)
+p2</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p>To indicate means for these two distributions, we have to calculate means into a new data frame:</p>
+<pre class="r"><code>df2_stats &lt;- df2 %&gt;% group_by(pop) %&gt;% summarise(pop_mean = mean(value))
+p2 + geom_vline(data = df2_stats, aes(xintercept = pop_mean, color = pop), linetype = &quot;dashed&quot;, size = 1)</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-29-1.png" width="672" /></p>
+</div>
+<div id="boxplots" class="section level2">
+<h2>Boxplots</h2>
+<p><strong>Boxplots</strong> are created using <code>geom_boxplot</code>:</p>
+<pre class="r"><code>df2 %&gt;% ggplot(aes(pop, value)) + geom_boxplot()</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<pre class="r"><code>p3 &lt;- df2 %&gt;% ggplot(aes(pop, value, fill = pop)) + geom_boxplot()
+p3</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<p>Often, it’s a good idea to overlay original values to plot. Specially, if there is only few values. Let’s add original data points to previous boxplot:</p>
+<pre class="r"><code>p3 + geom_point()</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-32-1.png" width="672" /> Adding geom_points was not very helpful in this case. s We can try to jitter these points, where argument <code>width=</code> specifies jitter width (default full boxplot width):</p>
+<pre class="r"><code>p3 + geom_jitter(width = 0.5)</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<p>As shown previously, we can also add summary data (mean) to this plot (large red dots):</p>
+<pre class="r"><code>p3 + geom_point(data = df2_stats, aes(y = pop_mean), shape = 16, color = &quot;red&quot;, size = 3)</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+</div>
+<div id="plotting-means-and-error-bars" class="section level2">
+<h2>Plotting means and error bars</h2>
+<p>Summaries and e.g. errorbars can also be calculated on the fly. To illustrate this, we take first smaller sample from our dataset in order to have larger errorbars. Here we add bootstrapped 99% confidence intervals of the mean:</p>
+<pre class="r"><code>p4 &lt;- df2 %&gt;% sample_n(50) %&gt;% # to have larger error
+  ggplot(aes(pop, value, fill = pop)) + geom_jitter(color = &quot;gray&quot;, width = 1/3) 
+p4 + stat_summary(fun.data = &quot;mean_cl_boot&quot;, fun.args = list(conf.int = .99), geom = &quot;pointrange&quot;) # poinrange is default geom </code></pre>
+<pre><code>## Warning: Computation failed in `stat_summary()`:
+## The `Hmisc` package is required.</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<p>Here we add errorbars, denoting standard error of the mean:</p>
+<pre class="r"><code>p4 &lt;- p4 + stat_summary(fun.y = mean, geom = &quot;point&quot;, shape = 95, color = &quot;red&quot;, size = 15) + # mean
+  stat_summary(fun.data = mean_se, geom = &quot;errorbar&quot;, width = 0.25) # standard deviation</code></pre>
+<pre><code>## Warning: `fun.y` is deprecated. Use `fun` instead.</code></pre>
+<pre class="r"><code>p4</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+</div>
+<div id="linegraphs" class="section level2">
+<h2>Linegraphs</h2>
+<p>Now we create line graphs with errorbars, we use <code>mpg</code> data. We calculate mean and standard error of the mean for highway fuel consumption (hwy) per year and per number of cylinders:</p>
+<pre class="r"><code>mpg_sum &lt;- mpg %&gt;% 
+  filter(cyl %in% c(4,6,8)) %&gt;%  # to include only comparable values
+  group_by(year, cyl) %&gt;% # to compare two years
+  summarise(mean_hwy = mean(hwy), # to calculate mean
+            N = n(), # N to calculate standard error
+            se_hwy = sd(cty)/sqrt(N)) # standard error</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;year&#39;. You can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>mpg_sum</code></pre>
+<pre><code>## # A tibble: 6 x 5
+## # Groups:   year [2]
+##    year   cyl mean_hwy     N se_hwy
+##   &lt;int&gt; &lt;int&gt;    &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt;
+## 1  1999     4     28.4    45  0.632
+## 2  1999     6     22.3    45  0.249
+## 3  1999     8     17.0    27  0.317
+## 4  2008     4     29.3    36  0.382
+## 5  2008     6     23.5    34  0.327
+## 6  2008     8     18      43  0.287</code></pre>
+<p><code>geom_line()</code> is used to create linegraphs in ggplot. We want two distinct colors for year variable, therefore we coerce year to factor:</p>
+<pre class="r"><code>p5 &lt;- mpg_sum %&gt;% ggplot(aes(cyl, mean_hwy, color = factor(year))) 
+p5 + geom_point() + geom_line()</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-38-1.png" width="672" /></p>
+<p>Errorbars can be added by using <code>geom_errorbar</code>, which needs arguments <code>ymin</code> and <code>ymax</code>:</p>
+<pre class="r"><code>p5 + geom_point() + geom_line() +
+  geom_errorbar(aes(ymin = mean_hwy + se_hwy, ymax = mean_hwy - se_hwy), width = 0.25)</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-39-1.png" width="672" /></p>
+<p>When the errorbars overlap, use <code>position_dodge</code> to move them horizontally.</p>
+<pre class="r"><code>pd &lt;- position_dodge(0.7) # move them </code></pre>
+<pre class="r"><code>p5 + geom_point(position = pd) + 
+  geom_line(position = pd) +
+  geom_errorbar(aes(ymin = mean_hwy + se_hwy, ymax = mean_hwy - se_hwy), 
+                   width = 0.25, 
+                   position = pd)</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-41-1.png" width="672" /></p>
+</div>
+<div id="bargraphs" class="section level2">
+<h2>Bargraphs</h2>
+<p>Bargraphs are created using <code>geom_bar</code> and default stat <code>counts</code> needs to changed to <code>identity</code>:</p>
+<pre class="r"><code>p6 &lt;- mpg_sum %&gt;% filter(year == 1999) %&gt;% 
+  ggplot(aes(factor(cyl), mean_hwy))
+p6 + geom_bar(stat = &quot;identity&quot;)</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-42-1.png" width="672" /> Note that bargraph starts at 0.</p>
+<p>When adding additional variables to a bargraphs e.g. via <code>fill =</code> you need also unstack the bars by specifying <code>position = position_dodge()</code>:</p>
+<pre class="r"><code>pd &lt;- position_dodge(0.9) 
+p6 &lt;- mpg_sum %&gt;% ggplot(aes(factor(cyl), mean_hwy, fill = factor(year)))
+p7 &lt;- p6 + geom_bar(stat = &quot;identity&quot;, position = pd)
+p7</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
+<pre class="r"><code>p7 + geom_errorbar(aes(ymin = mean_hwy - se_hwy, ymax = mean_hwy + se_hwy),
+                   position = pd, width = 0.25)</code></pre>
+<p><img src="A09-ggplot2_files/figure-html/unnamed-chunk-44-1.png" width="672" /></p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>A06-base-graphics.knit</title>
+
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Reproducible Data Analysis in R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<hr />
+<hr />
+<div id="base-graphics" class="section level1">
+<h1>Base graphics</h1>
+<p>Some say that R base graphics is only good for <strong>quick and dirty</strong> data exploration, but not very straightforward for creating polished publication quality graphs (but you can master it if you really dive into it).</p>
+<pre class="r"><code>library(help = &quot;graphics&quot;) # complete list of functions</code></pre>
+<p>Base R has extensive set of graphical parameters, which can be set or query using function <code>par</code>:</p>
+<pre class="r"><code>par() # set or look at the available graphical parameters</code></pre>
+<div id="scatterplot" class="section level2">
+<h2>Scatterplot</h2>
+<p>Scatterplots can be created using <code>plot()</code>. If we use <code>plot()</code> command with only one variable, we get graph with values versus index. We can use this representation to find out where we have gross outliers in our variable.</p>
+<pre class="r"><code>plot(iris$Sepal.Length)</code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p>Even more sensible use of scatterplot is visualizing relationship between variables. Here, we explore the relationship between sepal length and width in different iris species.</p>
+<pre class="r"><code>plot(iris$Sepal.Length, iris$Sepal.Width)</code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-4-1.png" width="672" /> Looks OK-ish. But we don’t know witch dot belongs to which of the three iris species (setosa, versicolor, virginica).</p>
+<p>We can fix that with <code>col=</code> argument, where <code>iris$Species</code> column is used as the factor by whose levels to color the dots (R will automatically order factor levels in alphabetical order: setosa, versicolor, virginica). <code>palette()</code> gives you the colors and their order, and it allows you to manipulate the color palette (see <code>?palette</code>).</p>
+<pre class="r"><code>plot(iris$Sepal.Length, iris$Sepal.Width, 
+     col = iris$Species, # dots are colored by species
+     pch = 16, # we use filled dots instead of default empty dots
+     las = 1) # horizontal y-axis labels
+palette()</code></pre>
+<pre><code>## [1] &quot;black&quot;   &quot;#DF536B&quot; &quot;#61D04F&quot; &quot;#2297E6&quot; &quot;#28E2E5&quot; &quot;#CD0BBC&quot; &quot;#F5C710&quot;
+## [8] &quot;gray62&quot;</code></pre>
+<pre class="r"><code>legend(&quot;topright&quot;, # we place legend to the top right corner of the plot
+       legend = levels(iris$Species), # species names in the legend
+       pch = 16, # dot shape
+       bty = &quot;n&quot;, # the type of box to be drawn around the legend: &quot;n&quot; no box
+       col = 1:3) # new colors are added with numbers 1 to 3. This will work like using a factor.</code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>We can plot all variable pairs into a single <strong>matrix of scatterplots</strong>:</p>
+<pre class="r"><code>pairs(iris[1:4], # same output can be achieved also by using just plot()
+      main = &quot;Iris Dataset&quot;,
+      pch = 21, # dots need to be big enough to display color
+      bg = iris$Species) # color by species</code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-6-1.png" width="672" /> <!-- `bg=` arguments gives us color for dots background. We can sample colors from colors 2:4 from default `palette()`: `c( "red","green3",  "blue")[unclass(iris$Species)]`. If we just use `iris$Species` then we get colors 1:3, which are "black, #DF536B, #61D04F". --></p>
+<p><strong>Matrix scatterplots can be created using the R formula interface</strong>, which allows better control over variables we want to explore. We use “Swiss Fertility and Socioeconomic Indicators (1888)” data as example.</p>
+<pre class="r"><code>head(swiss)</code></pre>
+<pre><code>##              Fertility Agriculture Examination Education Catholic
+## Courtelary        80.2        17.0          15        12     9.96
+## Delemont          83.1        45.1           6         9    84.84
+## Franches-Mnt      92.5        39.7           5         5    93.40
+## Moutier           85.8        36.5          12         7    33.77
+## Neuveville        76.9        43.5          17        15     5.16
+## Porrentruy        76.1        35.3           9         7    90.57
+##              Infant.Mortality
+## Courtelary               22.2
+## Delemont                 22.2
+## Franches-Mnt             20.2
+## Moutier                  20.3
+## Neuveville               20.6
+## Porrentruy               26.6</code></pre>
+<p>Here we plot matrix scatterplot using formula method from function example <code>?pairs</code>, if left hand side (dependent variable) of the formula is empty, we get all combinations of variables in the right hand side:</p>
+<pre class="r"><code>pairs(~ Fertility + Education + Catholic, data = swiss,
+      subset = Education &lt; 20, main = &quot;Swiss data, Education &lt; 20&quot;) # formula method from function example </code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><strong>Scatterplots are also ideal for visualising relationships between independent and dependent variables</strong>. We use R in-house dataset <code>CO2</code> showing carbon dioxide uptake in grass plants.</p>
+<!-- We first summarise the dataset by calculating mean uptake per conc and ignore the independent variables Plant, Type, and Treatment: -->
+<!-- ```{r} -->
+<!-- head(CO2) #  -->
+<!-- mean.uptake <- tapply(CO2$uptake, CO2$conc, mean) # we calculate mean for each conc ignoring variables Plant, Type, and Treatment. -->
+<!-- CO2 <- data.frame(conc = unique(CO2$conc), uptake = mean.uptake) # we overwrite original CO2 dataset -->
+<!-- ``` -->
+<p>We plot plant CO<sub>2</sub> uptake versus its concentration and add calculated linear model fit to the scatterplot:</p>
+<pre class="r"><code>plot(x = CO2$conc, y = CO2$uptake, # 
+     pch = 16, col = &quot;blue&quot;, # dot type and color
+     main = &quot;Carbon Dioxide Uptake in Grass Plants&quot;, # scatterplot
+     las = 1) # horizontal y-axis labels
+mod1 &lt;- lm(uptake~conc, data = CO2) # linear model fit
+abline(mod1, col = &quot;red&quot;, lty = 2, lwd = 2) # add lin model fit to the scatterplot
+
+coefs &lt;- coef(mod1) # linear model coefficients
+b0 &lt;- round(coefs[1], 2) # round for printing
+b1 &lt;- round(coefs[2], 2) # round for printing
+r2 &lt;- round(summary(mod1)$r.squared, 2) # r squared
+eqn &lt;- bquote(italic(y) == .(b0) + .(b1)*italic(x) * &quot;,&quot; ~~ r^2 == .(r2)) # formula and rsuared for printing
+text(750, 20, labels = eqn) # add equation to the plot</code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>As we can see in the upper plot, the linear model does not explain the relationship between conc and uptake very well. Therefore we fit exponential function, which seems to fit much better to these data.</p>
+<pre class="r"><code>plot(uptake ~ conc, 
+     data = CO2, 
+     pch = 16, col = &quot;blue&quot;,
+     main = &quot;Carbon Dioxide Uptake in Grass Plants&quot;,
+     las = 1) # horizontal y-axis labels
+lines(x = CO2$conc, y = predict(mod1), col = &quot;red&quot;, lty = 2, lwd = 2) # add linear model fitted line
+mod2 &lt;- nls(uptake ~ SSlogis(conc, Asym, xmid, scal), data = CO2) # nonlin fit using SSlogis selfstart model
+xvals &lt;- seq(from = 95, to = 1000, by = 3) # new x values for which we want model prediction
+lines(x = xvals, y = predict(mod2, list(conc = xvals)), col = &quot;green&quot;, lty = 2, lwd = 2) # add nonlin fit line
+legend(&quot;bottomright&quot;, legend = c(&quot;linear model&quot;, &quot;exponential model&quot;) , lty = 2, col = c(&quot;red&quot;, &quot;green&quot;), bty = &quot;n&quot;, lwd = 2) # add legend to the plot</code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="histogram" class="section level2">
+<h2>Histogram</h2>
+<p>To illustrate <code>hist</code> function we use 2013 Tartu cross-country skiing marathon 63 km times (<code>Aeg</code> in Estonian).</p>
+<pre class="r"><code>load(&quot;data/Tartu_Maraton_2013.RData&quot;)
+head(tm_2013)</code></pre>
+<pre><code>## # A tibble: 6 x 7
+##    Koht    Nr Nimi             Elukoht       Aeg     Vanuseklass Kuubik
+##   &lt;int&gt; &lt;int&gt; &lt;chr&gt;            &lt;chr&gt;         &lt;chr&gt;   &lt;chr&gt;        &lt;dbl&gt;
+## 1    NA     0 Laugal, Emil     Harju maakond &lt;NA&gt;    &lt;NA&gt;          0   
+## 2  5500  6083 Miezys, Audrius  Leedu         6:25:42 M50           0   
+## 3     1     4 Oestensen, Simen Norra         2:45:01 M21           1   
+## 4     2     1 Brink, Joergen   Rootsi        2:45:02 M35           1.00
+## 5     3     2 Aukland, Anders  Norra         2:45:02 M40           1.00
+## 6     4    50 Näss, Börre      Norra         2:45:02 M21           1.00</code></pre>
+<p>We first convert times in H:M:S format into periods using <code>hms()</code> function from <code>lubridate</code> package, then convert them to period objects with <code>as.duration</code> function (ibid.). <code>as.duration</code> gives us seconds, which we convert to decimal hours by dividing with 3600s (== 1h).</p>
+<pre class="r"><code>library(lubridate) # for easy time manipulation
+times &lt;- hms(tm_2013$Aeg[-1]) 
+times &lt;- unclass(as.duration(times))/3600 # unclass gives us numbers (time in seconds), which we further divide by 3600 to get time in hours</code></pre>
+<p>Lets have a look at <code>TP</code>-s finish time and convert it into decimal hours:</p>
+<pre class="r"><code>tm_2013[tm_2013$Nimi==&quot;Päll, Taavi&quot;,]$Aeg # TP-s time in H:M:S</code></pre>
+<pre><code>## [1] &quot;4:34:20&quot;</code></pre>
+<pre class="r"><code>tp_time &lt;- unclass(as.duration(hms(tm_2013[tm_2013$Nimi==&quot;Päll, Taavi&quot;,]$Aeg)))/3600 </code></pre>
+<p>Now we plot a histogram of Tartu skiing marathon times and add a vertical line at <code>TP</code>-s time:</p>
+<pre class="r"><code>hist(times, 
+     breaks = 100, # seems to be a good granularity
+     main = &quot;Tartu cross-country skiing\nmarathon 2013, 63 km&quot;, # plot title. Pro tip: &#39;\n&#39; works as enter.
+     xlab = &quot;Time, h&quot;, # x-axis label: time in seconds
+     las = 1) # horizontal y-axis labels
+abline(v = tp_time, col = &quot;red&quot;, lwd = 2) # add red vertical line</code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<pre class="r"><code>hist(times, breaks = seq(2, 10, by = 0.25)) # breaks after every 15 min</code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+</div>
+<div id="boxplot" class="section level2">
+<h2>Boxplot</h2>
+<p>Boxplots can be created, unsurprisingly, by <code>boxplot</code>:</p>
+<pre class="r"><code>boxplot(iris$Sepal.Length ~ iris$Species, 
+        las = 1,
+        xlab = &quot;Species&quot;,
+        ylab = &quot;Sepal Length&quot;,
+        main = &quot;Sepal Length by Species in Iris&quot;,
+        ylim = c(0, max(iris$Sepal.Length)))</code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<!-- With base graphics `boxplot` it is possible to use `plot = FALSE` argument to obtain boxplot stats for each group/plot without drawing the plot (**lower whisker, the lower hinge, the median, the upper hinge and the upper whisker**): -->
+<!-- ```{r} -->
+<!-- p <- boxplot(iris$Sepal.Length ~ iris$Species, plot = FALSE) -->
+<!-- p$stats # boxplot stats -->
+<!-- ``` -->
+<!-- Whereas, lower and upper whiskers show 1.5 IQR by default (can be adjusted with the argument `range=`) and any values which lie outside of extremes of whiskers can be accessed like this:  -->
+<!-- ```{r} -->
+<!-- p$out # possible outliers -->
+<!-- ``` -->
+</div>
+<div id="bargraphs" class="section level2">
+<h2>Bargraphs</h2>
+<p>This is <strong>no-brainer</strong>! Base graphics function <code>barplot</code> creates for us barplots with either vertical or horizontal bars:</p>
+<pre class="r"><code>load(&quot;data/Rio2016_medals.RData&quot;) # we use rio medals data </code></pre>
+<pre class="r"><code>barplot(medals$Total, 
+        names.arg = medals$country_un, # country abbreviations, x-axis labels
+        horiz = TRUE, # horozontal y-axis
+        cex.names = 0.5, # smaller labels
+        las = 1, # horizontal axis labels
+        col = 4, # fill color nr 4 from default palette = &quot;blue&quot;
+        xlab = &quot;Total number of medals&quot;, # x-axis label
+        main = &quot;Country ranking by Rio 2016 medals&quot;, # main title
+        sub = &quot;Ranking also takes into account the number of gold, silver and bronze medals.&quot;, # subtitle or ingraph caption
+        cex.sub = 0.5) # labels perpendicular to x-axis</code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-18-1.png" width="384" /></p>
+<!-- ### Dynamite plot -->
+<!-- Whenever you open scientific article in biomedical field there is a good chance that you encounter **barplots with errorbars** sticking out of them, these pests are also known as [dynamite plots](http://biostat.mc.vanderbilt.edu/wiki/pub/Main/TatsukiKoyama/Poster3.pdf). In order to blend into the crowd we also learn how to create these wonderful and frightening graphs. -->
+<!-- First we have to calculate summary statistics we want to put onto the graph -- mean (bar) and standard deviation (errorbar): -->
+<!-- ```{r} -->
+<!-- irissl_mean <- tapply(iris$Sepal.Length, iris$Species, mean) # mean for each species -->
+<!-- irissl_sd <- tapply(iris$Sepal.Length, iris$Species, sd) # standard deviation for each species -->
+<!-- ``` -->
+<!-- It might seem little bit complicated, but you can use `tapply` when you want to apply a function (mean or sd in our case) to subsets of a vector (`iris$Sepal.Length` by Species) and the subsets are defined by some other vector, usually a factor (`iris$Species`). -->
+<!-- `mapply` - when you have several data structures (e.g. lists) and you want to apply a function to the 1st elements of each, and then the 2nd elements of each, etc. -->
+<!-- ```{r} -->
+<!-- maxLim <- 1.1*max(mapply(sum, irissl_mean, irissl_sd)) # we find maximum sum of mean and sd in our dataset and multiply this number with 1.1 to give enough headroom for errorbars in our graph -->
+<!-- bp <- barplot(irissl_mean, # means of our groups -->
+<!--               names.arg = levels(iris$Species), # names for x-axis -->
+<!--               ylim = c(0, maxLim)) # we have to set y-axis limits manually -->
+<!-- arrows(x0 = bp, # coordinates of our groups on x-axis -->
+<!--        y0 = irissl_mean, # start of arrow -->
+<!--        y1 = irissl_mean + irissl_sd, # end of arrow -->
+<!--        angle = 90) # blunt end for arrows; default is 30deg -->
+<!-- ``` -->
+</div>
+<div id="combine-multiple-subplots" class="section level2">
+<h2>Combine multiple subplots</h2>
+<p>Here we show, how to combine multiple subplots into one overall graph in base R, using either the <code>par()</code> or <code>layout()</code> function. Plotting linear model fit object outputs four separate diagnostic plots – “Residuals vs Fitted”, “Normal Q-Q”, “Scale-Location” and “Residuals vs Leverage”:</p>
+<pre class="r"><code>plot(mod1)</code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-19-1.png" width="672" /><img src="A06-base-graphics_files/figure-html/unnamed-chunk-19-2.png" width="672" /><img src="A06-base-graphics_files/figure-html/unnamed-chunk-19-3.png" width="672" /><img src="A06-base-graphics_files/figure-html/unnamed-chunk-19-4.png" width="672" /></p>
+<p>By telling graphics device to create four slots, arranged 2x2, in our plot window, using <code>par</code> function argument <code>mfrow=c(nr, nc)</code>, we can tidy up all this information little bit:</p>
+<pre class="r"><code>par(mfrow=c(2,2))      # number of rows, number of columns
+plot(mod1) # plots are arranged into matrix in order of appearance</code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<pre class="r"><code>dev.off()</code></pre>
+<pre><code>## null device 
+##           1</code></pre>
+<p><code>layout()</code> function specifies graph layout using matrix. Here we create 2x2 layout specified by matrix – plots one and two will appear in the first column and third plot will be placed into second column and occupies two slots:</p>
+<pre class="r"><code>layout(matrix(c(1,2,3,3), 2, 2)) 
+plot(iris$Sepal.Length, iris$Sepal.Width, col = iris$Species, pch = 16, las = 1)
+plot(uptake ~ conc, data = CO2, pch = 16, col = &quot;blue&quot;, main = &quot;Carbon Dioxide Uptake in Grass Plants&quot;, las = 1)
+barplot(medals$Total, 
+        names.arg = medals$country_un, # country abbreviations, x-axis labels
+        horiz = TRUE, # horozontal y-axis
+        cex.names = 0.5, # smaller labels
+        las = 1, # horizontal axis labels
+        col = 4, # fill color nr 4 from default palette = &quot;blue&quot;
+        xlab = &quot;Total number of medals&quot;, # x-axis label
+        main = &quot;Country ranking by Rio 2016 medals&quot;, # main title
+        sub = &quot;Ranking also takes into account the number of gold, silver and bronze medals.&quot;, # subtitle or ingraph caption
+        cex.sub = 0.5)</code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<pre class="r"><code>dev.off()</code></pre>
+<pre><code>## null device 
+##           1</code></pre>
+<p>If you want to revert your <code>par(mfrow=...</code> to the original settings with single slot in graphics device, use following approach:</p>
+<p>Either run <code>par</code> again with <code>mfrow=c(1,1)</code> settings</p>
+<pre class="r"><code>par(mfrow=c(1,1))</code></pre>
+<p>Or assign original settings to object and after you have done your multiplot load these setting using <code>par</code>:</p>
+<pre class="r"><code>originalpars &lt;- par(mfrow=c(1,2)) # direct current mfrow to originalpars object
+hist(rnorm(100))
+plot(rnorm(100),rnorm(100))</code></pre>
+<p><img src="A06-base-graphics_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<pre class="r"><code>dev.off()</code></pre>
+<pre><code>## null device 
+##           1</code></pre>
+<pre class="r"><code>par(originalpars) # loads/restores previous parameters
+originalpars # we have only mfrow here </code></pre>
+<pre><code>## $mfrow
+## [1] 1 1</code></pre>
+</div>
+<div id="save-plots" class="section level2">
+<h2>Save plots</h2>
+<p>To save a plot into file you have to open the file and plot device first and then plot any graphics. Base R has graphics devices for BMP, JPEG, PNG and TIFF format bitmap files and for PDF.</p>
+<pre class="r"><code>png(filename = &quot;Rplot%03d.png&quot;,
+    width = 480, height = 480, units = &quot;px&quot;, pointsize = 12,
+     bg = &quot;white&quot;,  res = NA, ...,
+    type = c(&quot;cairo&quot;, &quot;cairo-png&quot;, &quot;Xlib&quot;, &quot;quartz&quot;), antialias)</code></pre>
+<p>We want to save our disposable output files to directory <code>output</code>, therefore we first check if we already have this directory, if not then we create it:</p>
+<pre class="r"><code>if(!dir.exists(&quot;output&quot;)) dir.create(&quot;output&quot;)</code></pre>
+<p>In case of .png:</p>
+<pre class="r"><code>png(file = &quot;output/iris_sepal.png&quot;, width = 1200, height = 800, res = 300)
+plot(iris$Sepal.Length, iris$Sepal.Width, col = iris$Species, pch = 16, las = 1)
+dev.off()</code></pre>
+<pre><code>## quartz_off_screen 
+##                 2</code></pre>
+<pre class="r"><code>pdf(file = if(onefile) &quot;Rplots.pdf&quot; else &quot;Rplot%03d.pdf&quot;,
+    width, height, onefile, family, title, fonts, version,
+    paper, encoding, bg, fg, pointsize, pagecentre, colormodel,
+    useDingbats, useKerning, fillOddEven, compress)</code></pre>
+<p>width, height – the width and height of the graphics region in inches. The default values are 7.</p>
+<pre class="r"><code>pdf(file = &quot;output/co2_uptake.pdf&quot;)
+plot(uptake ~ conc, data = CO2, pch = 16, col = &quot;blue&quot;, main = &quot;Carbon Dioxide Uptake in Grass Plants&quot;, las = 1)
+dev.off()</code></pre>
+<pre><code>## quartz_off_screen 
+##                 2</code></pre>
+<pre class="r"><code>list.files(&quot;output&quot;)</code></pre>
+<pre><code>## [1] &quot;co2_uptake.pdf&quot; &quot;iris_sepal.png&quot;</code></pre>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

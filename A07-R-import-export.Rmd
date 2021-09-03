@@ -4,7 +4,7 @@
 
 # Getting data in and out of R
 
-![You know nothing. Official promotion logo for Banksy's October 2013 artist residency in New York City. Photo: Banksy](https://upload.wikimedia.org/wikipedia/en/2/2c/Banksy_Better_Out_Than_In_New_York_City_2013.png)
+![Really? Photo: Banksy](https://upload.wikimedia.org/wikipedia/en/2/2c/Banksy_Better_Out_Than_In_New_York_City_2013.png)
 
 <!-- When planning to import your data from external files to R, then -->
 

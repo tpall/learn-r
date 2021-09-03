@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Functions</title>
+
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Reproducible Data Analysis in R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<div id="functions" class="section level1">
+<h1>Functions</h1>
+<p>author: Taavi Päll date: 2017-09-08 autosize: true</p>
+</div>
+<div id="a-piece-of-code" class="section level1">
+<h1>A piece of code</h1>
+<ul>
+<li>A function is a piece of code to carry out a specified task</li>
+<li>It may accept arguments (or not) and it may return zero to more values or objects.</li>
+</ul>
+</div>
+<div id="general-form-of-r-function" class="section level1">
+<h1>General form of R function</h1>
+<p>General form of R function is following:</p>
+<pre><code>function(argslist) expr</code></pre>
+<ul>
+<li><strong>arglist</strong> – empty or one or more ‘name’ or ‘name=expression’ terms.</li>
+<li><strong>expr</strong> – an R expression.</li>
+</ul>
+</div>
+<div id="a-piece-of-code-to-carry-out-a-specified-task" class="section level1">
+<h1>A piece of code to carry out a specified task</h1>
+<p>Example function with no arguments, doing only one thing:</p>
+<pre class="r"><code>dedication &lt;- function() {
+  cat(&quot;And Pierce Brosnan how dare you prescribe\n
+      Sad grief and bed wet pills&quot;)
+}
+dedication() # to run function</code></pre>
+<pre><code>And Pierce Brosnan how dare you prescribe
+
+      Sad grief and bed wet pills</code></pre>
+</div>
+<div id="function-interacting-with-your-computer" class="section level1">
+<h1>Function interacting with your computer</h1>
+<p>Updated function to insert your computer’s username into that line instead of that actor:</p>
+<pre class="r"><code>not_medication &lt;- function() cat(paste(&quot;And&quot;, system(&quot;whoami&quot;,T), &quot;how dare you prescribe\n
+Sad grief and bed wet pills&quot;))
+not_medication() # to run function</code></pre>
+<pre><code>And taavi how dare you prescribe
+
+Sad grief and bed wet pills</code></pre>
+</div>
+<div id="specify-arguments" class="section level1">
+<h1>Specify arguments</h1>
+<ul>
+<li>When calling a function you can specify arguments by position, by complete name, or by partial name.</li>
+</ul>
+<pre class="r"><code>myplot &lt;- function(xval, yval) {
+  plot(x = xval, y = yval)
+}
+myplot(rnorm(10), rnorm(10, 1, 1)) # by position</code></pre>
+<p><img src="Functions-figure/unnamed-chunk-4-1.png" title="plot of chunk unnamed-chunk-4" alt="plot of chunk unnamed-chunk-4" style="display: block; margin: auto;" /></p>
+<p>====================================================</p>
+<p>by complete name</p>
+<pre class="r"><code>myplot(xval = rnorm(10), yval = rnorm(10, 1, 1)) # by complete name</code></pre>
+<p><img src="Functions-figure/unnamed-chunk-5-1.png" title="plot of chunk unnamed-chunk-5" alt="plot of chunk unnamed-chunk-5" style="display: block; margin: auto;" /></p>
+<p>========================================================</p>
+<p>by partial name</p>
+<pre class="r"><code>myplot(xv = rnorm(10), y = rnorm(10, 1, 1)) # by partial name</code></pre>
+<p><img src="Functions-figure/unnamed-chunk-6-1.png" title="plot of chunk unnamed-chunk-6" alt="plot of chunk unnamed-chunk-6" style="display: block; margin: auto;" /></p>
+</div>
+<div id="naming-and-braces" class="section level1">
+<h1>Naming and braces</h1>
+<ul>
+<li>Function names must be concise, <a href="http://thefall.org/discography/data/album31.html">like in previous slides</a></li>
+<li>Multiline function’s body must be enclosed by braces <code>{}</code>.</li>
+</ul>
+<p>Onliners don’t need braces:</p>
+<pre class="r"><code>plusone &lt;- function(x) x + 1
+plusone(1)</code></pre>
+<pre><code>[1] 2</code></pre>
+</div>
+<div id="local-vs-global-environment" class="section level1">
+<h1>Local vs global environment</h1>
+<ul>
+<li>The objects in the function are in a local environment and won’t appear in your global environment</li>
+</ul>
+<pre class="r"><code>fun1 &lt;- function(x) {
+     x + 1 # function returns the result of this expression
+}
+fun1(1) </code></pre>
+<pre><code>[1] 2</code></pre>
+<p>================================</p>
+<p>Here, function directs the result into an object y within function environment:</p>
+<pre class="r"><code>fun2 &lt;- function(x) {
+    y &lt;- 3 * x - 1 
+}
+fun2(5)</code></pre>
+<p>No result is outputted! + <code>return()</code> can be used to pass the value of object created inside function to outside. Can you fix this function?</p>
+</div>
+<div id="default-arguments" class="section level1">
+<h1>Default arguments</h1>
+<ul>
+<li>Some arguments have default values specified</li>
+<li>Arguments without a default must have a value supplied</li>
+</ul>
+<pre class="r"><code>sum_stat &lt;- function(x, f = &quot;mean&quot;){
+  do.call(f, list(x))
+}
+
+v &lt;- rnorm(10)
+sum_stat(v) # by default this function calculates mean</code></pre>
+<pre><code>[1] -0.3210855</code></pre>
+</div>
+<div id="ellipsis" class="section level1">
+<h1>Ellipsis</h1>
+<ul>
+<li>… , or ellipsis, in the function definition allows other arguments to be passed into the function, and passed onto to another function:</li>
+</ul>
+<pre class="r"><code>myplot &lt;- function(xval, yval, ...) plot(x = xval, y = yval, ...)
+myplot(rnorm(10), rnorm(10, 1, 1), col = &quot;red&quot;, pch = 5) # we pass color and shape arguments to plot function</code></pre>
+<p><img src="Functions-figure/unnamed-chunk-11-1.png" title="plot of chunk unnamed-chunk-11" alt="plot of chunk unnamed-chunk-11" style="display: block; margin: auto;" /></p>
+</div>
+<div id="functional-sequence" class="section level1">
+<h1>Functional sequence</h1>
+<ul>
+<li><code>%&gt;%</code> also allows to produce functions</li>
+<li>sometimes the function is applied instantly and produces a result, and sometimes it is not, in which case the function itself is returned</li>
+<li>in this case, there is no initial value, so we replace that with the dot <code>.</code> placeholder</li>
+</ul>
+<p>===================================</p>
+<p>Functional sequence:</p>
+<pre class="r"><code>library(dplyr)
+mae &lt;- . %&gt;% abs %&gt;% mean(na.rm = TRUE)
+mae(rnorm(10))</code></pre>
+<pre><code>[1] 0.8701861</code></pre>
+<p>This is similar to following function:</p>
+<pre class="r"><code>mae &lt;- function(x) {
+  mean(abs(x), na.rm = TRUE)
+}</code></pre>
+</div>
+<div id="use-of-functional-sequence-inside-loop" class="section level1">
+<h1>Use of functional sequence inside loop</h1>
+<p>Common use case of these functional sequences is inside lapply/sapply:</p>
+<pre class="r"><code>library(dplyr)
+library(readr)
+library(reshape2)
+
+data &lt;- paths-to-csv-files %&gt;% 
+  lapply(. %&gt;% read_csv %&gt;% melt)</code></pre>
+</div>
+<div id="pipes-lambda-expressions" class="section level1">
+<h1>Pipes: lambda expressions</h1>
+<ul>
+<li>Sometimes there is needed more than one operation performed inside one step in pipe.</li>
+<li>You can define function outside the pipe OR perform these steps inside pipe:</li>
+</ul>
+<pre class="r"><code>value %&gt;%
+  foo %&gt;% {  
+    x &lt;- bar(.) 
+    y &lt;- baz(.)  
+    x * y 
+  } %&gt;%
+  and_so_on</code></pre>
+</div>
+<div id="concluding" class="section level1">
+<h1>Concluding</h1>
+<ul>
+<li>Try to keep your functions in separate sub directory lib in your project’s dir
+<ul>
+<li>load functions using load(“lib/cohens_d.R”)</li>
+</ul></li>
+<li>Good function is:
+<ul>
+<li>short</li>
+<li>performs one task</li>
+<li>has intuitive short name</li>
+</ul></li>
+</ul>
+</div>
+<div id="loops" class="section level1">
+<h1>Loops</h1>
+<ul>
+<li>‘Looping’, ‘cycling’, ‘iterating’ or just replicating instructions
+<ul>
+<li>grouping the parts that need to be repeated</li>
+<li>automating a multi-step process by organizing sequences of actions or ‘batch’ processes</li>
+</ul></li>
+</ul>
+<p>=================================</p>
+<p>Calculate col means of mtcars data using for loop:</p>
+<pre class="r"><code>means &lt;- c(1:ncol(mtcars))
+for(i in seq_along(mtcars)){
+  means[[i]] &lt;- mean(mtcars[[i]], na.rm = TRUE)
+}
+head(means)</code></pre>
+<pre><code>[1]  20.090625   6.187500 230.721875 146.687500   3.596563   3.217250</code></pre>
+<p>When we want <strong>medians</strong>, we need to repeat all these lines, but replace mean with median. Not very efficient.</p>
+</div>
+<div id="apply-sapply-lapply" class="section level1">
+<h1>Apply-sapply-lapply</h1>
+<ul>
+<li>Functions to manipulate slices of data from matrices, arrays, lists and dataframes in a repetitive way</li>
+<li>crossing the data in a number of ways and avoid explicit use of loop constructs</li>
+</ul>
+<p>=====================================</p>
+<p>Lets replace for loop with apply to calculate col means of mtcars:</p>
+<pre class="r"><code>apply(mtcars[,1:5], 2, mean, na.rm = TRUE) </code></pre>
+<pre><code>       mpg        cyl       disp         hp       drat 
+ 20.090625   6.187500 230.721875 146.687500   3.596563 </code></pre>
+<p>Note, second argument to apply function specifies subscript which the function is applied over. For a matrix <strong>1 indicates rows, 2 indicates columns</strong>.</p>
+<p>===================================== Define your own functions:</p>
+<pre class="r"><code>apply(mtcars, 2, function(x) length(x[x&lt;6]))</code></pre>
+<pre><code> mpg  cyl disp   hp drat   wt qsec   vs   am gear carb 
+   0   11    0    0   32   32    0   32   32   32   30 </code></pre>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

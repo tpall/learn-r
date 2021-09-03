@@ -3,9 +3,9 @@
 ---
 
 # Base graphics
+
 Some say that R base graphics is only good for **quick and dirty** data exploration, but not very straightforward for creating polished publication quality graphs (but you can master it if you really dive into it). 
 
-![Base R graphics has mojo too, and massive strength. Photo: [wikipedia](https://en.wikipedia.org/wiki/Fat_Bastard_(character)). ](https://upload.wikimedia.org/wikipedia/en/7/73/Fat_bastard.jpeg)
 
 ```{r}
 library(help = "graphics") # complete list of functions
@@ -17,7 +17,9 @@ par() # set or look at the available graphical parameters
 ```
 
 ## Scatterplot
+
 Scatterplots can be created using `plot()`. If we use `plot()` command with only one variable, we get graph with values versus index. We can use this representation to find out where we have gross outliers in our variable.
+
 ```{r}
 plot(iris$Sepal.Length)
 ```
@@ -209,40 +211,8 @@ barplot(medals$Total,
 <!--        angle = 90) # blunt end for arrows; default is 30deg -->
 <!-- ``` -->
 
-## Add second y-axis
-Sometimes it's necessary to compare trends in two (or more) timeseries with very different scales. This can be solved by plotting these timeseries using separate y-axes for each of them. 
-To illustrate addition of second y-axis to the plot, we use stockmarket data, which can be easily accessed via `quantmod` library. First we download stock data:
-```{r, message=FALSE}
-library(quantmod)
-getSymbols(c("AAPL","GOOG")) # download stock data in xts format
-```
-
-Stock data are in xts (time series) format, we convert this data into conventional data.frame:
-```{r}
-# base plot of time series prior to xts
-# get the data in data.frame format rather than xts
-apple <- data.frame(Date = index(AAPL), coredata(AAPL), stringsAsFactors=FALSE
-)
-head(apple)
-google <- data.frame(Date = index(GOOG), coredata(GOOG), stringsAsFactors=FALSE)
-```
-
-
-```{r}
-par(mar = c(5, 4, 4, 4))
-plot(apple$Date, apple$AAPL.Adjusted, type = "l", col = "blue", ylab = NA, xlab = NA)
-par(new = TRUE)
-plot(google$Date, google$GOOG.Adjusted, type = "l", col = "red", axes = FALSE, ylab = NA, xlab = "Date")
-axis(side = 4)
-mtext(side = 4, line = 2.5, col = "red", "Google")
-mtext(side = 2, line = 2.5, col = "blue", "Apple")
-```
-
 
 ## Combine multiple subplots
-Some say, that **every normal person** should arrange figure panels in a **vector graphics** tool like `Inkscape` (freeware) or `Adobe Illustrator` (nonfree). However, from the point of view of reproducibility, you can also very easily assemble your article's figures 'automatically' on-the-fly using R code. For this purpose, we can use R base graphics or by using grid graphics libraries `grid` and `gridExtra`. We introduce `gridExtra` in later lectures.
-
-![Normal persons. Are you on the picture? Images: google image.](graphs/normal_person.png)
 
 Here we show, how to combine multiple subplots into one overall graph in base R, using either the `par()` or `layout()` function. 
 Plotting linear model fit object outputs four separate diagnostic plots -- "Residuals vs Fitted", "Normal Q-Q", "Scale-Location" and "Residuals vs Leverage":

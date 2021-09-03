@@ -42,8 +42,8 @@ When you open a project in RStudio several actions are taken:
 MyProject/
   |-- scripts/ # contains R script
   |-- data/ # contains raw data, read only
-  |-- output or results/ # contains R functions (R scipts defining functions)
-  |-- plots, graphs or figures/ # output graphs
+  |-- output/ or results/ # modified data, rendered documents/reports 
+  |-- plots/, graphs/ or figures/ # output graphs
   |-- report.Rmd # expected to be in project root
 ```
 

@@ -215,13 +215,12 @@ cohensd(bp$placebo, bp$drug) # to input treatment groups as vectors
 ```
 Because our function arguments are two vectors x1 and x2 and we had data frame in the long format, we had to split data frame into vectors. [Can we embed these two vectors into data frame in the long format (two cols - one col per vector)?] 
 
-We can try to wrap this function into another function to use our data frame:
+We can try to wrap this function into another function to use on our data frame:
 ```{r}
 cohens_d <- function(data, values, group){
   v <- split(data[[values]], data[[group]])
   cohensd(v[[1]], v[[2]])
 }
-save(cohens_d, file = "lib/cohens_d.R") # save your function into lib folder
 ```
 
 ```{r}
