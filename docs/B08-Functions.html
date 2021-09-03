@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>B08-Functions.knit</title>
+
+<script src="site_libs/header-attrs-2.9/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Reproducible Data Analysis in R</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+
+</div>
+
+
+<div id="functions" class="section level1">
+<h1>Functions</h1>
+<p>A function is a piece of code to carry out a specified task, e.g. calculate mean, split data frame. It may accept arguments (or not) and it may return zero to more values or objects.</p>
+<p>General form of R function is following:</p>
+<pre><code>
+function(argslist) expr
+</code></pre>
+<p>Where, <code>argslist</code> is either empty or one to more <code>name</code> or <code>name=expression</code> terms. When calling a function you can specify arguments by position, by complete name, or by partial name.</p>
+<p>Example function with no arguments, doing only one thing:</p>
+<pre class="r"><code>dedication &lt;- function() {
+  cat(&quot;And Pierce Brosnan how dare you prescribe\n
+      Sad grief and bed wet pills&quot;)
+}</code></pre>
+<p>Above defined function prints cryptic lyrics (Credit: ME Smith)</p>
+<pre class="r"><code>dedication()</code></pre>
+<pre><code>## And Pierce Brosnan how dare you prescribe
+## 
+##       Sad grief and bed wet pills</code></pre>
+<p>But we can tune above function to insert your computer’s username into that line instead of that actor:</p>
+<pre class="r"><code>not_medication &lt;- function() cat(paste(&quot;And&quot;, system(&quot;whoami&quot;,T), &quot;how dare you prescribe\n
+Sad grief and bed wet pills&quot;))</code></pre>
+<pre class="r"><code>not_medication()</code></pre>
+<pre><code>## And taavi how dare you prescribe
+## 
+## Sad grief and bed wet pills</code></pre>
+<ul>
+<li>Function names must be concise, <a href="http://thefall.org/discography/data/album31.html">like above</a></li>
+<li>Note that, when writing a multiline function, braces <code>{}</code> must be used to enclose the body of the function.</li>
+</ul>
+<p>Onliners like this does not need braces:</p>
+<pre class="r"><code>plusone &lt;- function(x) x + 1
+plusone(1)</code></pre>
+<pre><code>## [1] 2</code></pre>
+<div id="default-arguments" class="section level2">
+<h2>Default arguments</h2>
+<p>Some arguments have default values specified, as shown below. Arguments without a default must have a value supplied for the function to run. You do not need to provide a value for those arguments with a default, as the function will use the default value:</p>
+<pre class="r"><code>sum_stat &lt;- function(x, f = &quot;mean&quot;){
+  do.call(f, list(x))
+}
+
+v &lt;- rnorm(10)
+sum_stat(v) # by default this function calculates mean</code></pre>
+<pre><code>## [1] -0.07499496</code></pre>
+<p>But we can also calculate median, if we change f argument:</p>
+<pre class="r"><code>sum_stat(v, f = &quot;median&quot;) # </code></pre>
+<pre><code>## [1] 0.09194788</code></pre>
+</div>
+<div id="ellipsis" class="section level2">
+<h2>Ellipsis</h2>
+<p>The addition of <code>...</code>, or <strong>ellipsis</strong>, in the function definition allows other arguments to be passed into the function, and passed onto to another function:</p>
+<pre class="r"><code># Let&#39;s redifine sum_stat function with ellipsis to pass additional arguments to summary function
+sum_stat2 &lt;- function(x, f = &quot;mean&quot;, ...){
+  do.call(f, list(x, ...)) # do.call constructs and executes a function call from a function and a list of arguments to be passed to it
+}
+
+v2 &lt;- c(NA, v, NA, NA)
+sum_stat2(v2) # NA-s start to give trouble, as mean fun has na.rm = FALSE argument</code></pre>
+<pre><code>## [1] NA</code></pre>
+<pre class="r"><code>sum_stat2(v2, na.rm = TRUE) # here we pass na.rm = TRUE to our function and voila!</code></pre>
+<pre><code>## [1] -0.07499496</code></pre>
+</div>
+<div id="function-environment" class="section level2">
+<h2>Function environment</h2>
+<p>By default, function returns result from last expression:</p>
+<pre class="r"><code>logit &lt;- function(p) {
+ odds &lt;- p/(1-p)
+ log(odds)
+}
+
+logit(0.5)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<p>Importantly, objects that are created within the function are local to the environment of the function. If you direct your last expression into an object inside function, you need to explicitly <code>return()</code> the value of that object:</p>
+<pre class="r"><code># look what happens
+logit2 &lt;- function(p) {
+ odds &lt;- p/(1-p)
+ log_odds &lt;- log(odds) # last expression&#39;s value is assigned to log_odds object inside function
+}
+logit2(0.5) # nothing is returned
+
+## use of return()
+logit3 &lt;- function(p) {
+ odds &lt;- p/(1-p)
+ log_odds &lt;- log(odds) # last expression&#39;s value is assigned to log_odds object inside function
+ return(log_odds) # return object log_odds value
+ }
+logit3(0.5) </code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>## use of return()
+logit4 &lt;- function(p) {
+ odds &lt;- p/(1-p)
+ log_odds &lt;- log(odds) # last expression&#39;s value is assigned to log_odds object inside function
+ return(list(odds = odds, log_odds = log_odds)) # return two objects from function environment as named list
+}
+
+logit4(0.5) </code></pre>
+<pre><code>## $odds
+## [1] 1
+## 
+## $log_odds
+## [1] 0</code></pre>
+</div>
+<div id="anonymous-function-inside-for-loop" class="section level2">
+<h2>Anonymous function inside for loop</h2>
+<p><code>lapply()</code>/<code>sapply()</code> takes a function, applies it to each element in a list/vector, and returns the results in the form of a list. Its easy to use when you want to calculate eg. mean of each list element. But what if you need to do something more specific with your data:</p>
+<pre class="r"><code>let &lt;- c(&quot;a&quot;,&quot;z&quot;,&quot;x&quot;,&quot;u&quot;,&quot;b&quot;) # we have a list of letters
+sapply(let, function(x) grep(x, letters)) # we need to know the position of each letter in alphabet</code></pre>
+<pre><code>##  a  z  x  u  b 
+##  1 26 24 21  2</code></pre>
+</div>
+<div id="functional-sequence" class="section level2">
+<h2>Functional sequence</h2>
+<p><code>magrittr</code> allows to use <code>%&gt;%</code> piping operator not only to produce values but also <a href="https://blog.rstudio.org/2014/12/01/magrittr-1-5/">to produce functions</a>. This kind of functional sequences denote input with <code>.</code> dot:</p>
+<pre class="r"><code>library(magrittr)</code></pre>
+<pre><code>## 
+## Attaching package: &#39;magrittr&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:tidyr&#39;:
+## 
+##     extract</code></pre>
+<pre class="r"><code>mae &lt;- . %&gt;% abs %&gt;% mean(na.rm = TRUE)
+mae(rnorm(10))</code></pre>
+<pre><code>## [1] 0.7333631</code></pre>
+<p>This is similar to following function:</p>
+<pre class="r"><code>mae &lt;- function(x) {
+  mean(abs(x), na.rm = TRUE)
+}</code></pre>
+<p>Quite common use case of these functional sequences is inside lapply/sapply:</p>
+<pre class="r"><code>library(dplyr)
+library(readr)
+library(reshape2)
+data &lt;- paths-to-csv-files %&gt;% lapply(. %&gt;% read_csv %&gt;% melt)</code></pre>
+<p>It’s cool that you can subset these functional sequences and use only parts of them when necessary:</p>
+<pre class="r"><code>mae[2](rnorm(5))</code></pre>
+<pre><code>## [1] -0.267042</code></pre>
+<pre class="r"><code>mae[1](rnorm(10))</code></pre>
+<pre><code>##  [1] 0.06540236 0.90603759 0.22038954 0.72656178 2.67252536 0.37682935
+##  [7] 1.39409029 0.10591437 1.25042811 0.12026626</code></pre>
+<div id="another-example" class="section level4">
+<h4>Another example</h4>
+<p>Let’s create function to calculate <strong>standardised effect size, Cohen’s d</strong>. First let’s simulate some toy data of blood pressure readings from patients with high systolic bp, treated either with drug or placebo:</p>
+<pre class="r"><code>library(ggplot2)
+probs_h &lt;- pnorm(70:190, 150, 7) 
+probs_n &lt;- pnorm(70:190, 130, 7)
+m &lt;- data.frame(bp = c(sample(70:190, 56, replace = T, prob = probs_h), 
+                sample(70:190, 60, replace = T, prob = probs_n)), 
+                tr = c(rep(&quot;placebo&quot;, 56), rep(&quot;drug&quot;, 60)))</code></pre>
+<p>This is how our dummy dataset looks like:</p>
+<pre class="r"><code>ggplot(m, aes(tr, bp)) + geom_boxplot() + geom_jitter(width = 0.5)</code></pre>
+<p><img src="B08-Functions_files/figure-html/unnamed-chunk-17-1.png" width="288" /></p>
+<p><a href="https://en.wikipedia.org/wiki/Effect_size">Cohen’s d is defined</a> as the difference between two means divided by a standard deviation for the data:</p>
+<p><span class="math display">\[d = \frac{\bar{x}_1-\bar{x}_2}{s}\]</span></p>
+<p><span class="math inline">\(s\)</span> is pooled standard deviation:</p>
+<p><span class="math display">\[s = \sqrt{\frac{(n_1-1){s_1}^2+(n_2-1){s_2}^2}{n_1+n_2-2}}\]</span></p>
+<p>Using above equations, we define function:</p>
+<pre class="r"><code>cohensd &lt;- function(x1, x2){ # &#39;{}&#39; because our function is spread on multiple lines
+  
+  n1 &lt;- length(x1) - 1
+  n2 &lt;- length(x2) - 1
+  
+  # mean difference
+  md  &lt;- abs(mean(x1, na.rm = T) - mean(x2, na.rm = T))        
+  
+  # common sd
+  s &lt;- n1 * var(x1, na.rm = T) + n2 * var(x2, na.rm = T)
+  s &lt;- s/(n1 + n2)
+  s &lt;- sqrt(s)                     
+  
+  # calculate Cohen&#39;s d
+  md/s # last expression&#39;s result is returned
+}</code></pre>
+<p>Cohen’s d is interpreted that d values of 0.2, 0.5, and 0.8 represent small, medium, and large effect sizes respectively:</p>
+<pre class="r"><code>bp &lt;- split(m$bp, m$tr) # to split data frame into two vectors
+cohensd(bp$placebo, bp$drug) # to input treatment groups as vectors</code></pre>
+<pre><code>## [1] 0.6949508</code></pre>
+<p>Because our function arguments are two vectors x1 and x2 and we had data frame in the long format, we had to split data frame into vectors. [Can we embed these two vectors into data frame in the long format (two cols - one col per vector)?]</p>
+<p>We can try to wrap this function into another function to use on our data frame:</p>
+<pre class="r"><code>cohens_d &lt;- function(data, values, group){
+  v &lt;- split(data[[values]], data[[group]])
+  cohensd(v[[1]], v[[2]])
+}</code></pre>
+<pre class="r"><code>cd &lt;- cohens_d(m, &quot;bp&quot;, &quot;tr&quot;)
+cd</code></pre>
+<pre><code>## [1] 0.6949508</code></pre>
+<p>Now we can create function to insert word explaining the size of the effect into text:</p>
+<pre class="r"><code>mansplain_cohensd &lt;- function(x) {
+  if(x&lt;=0.2) return(&quot;small&quot;) 
+  if(x&gt;=0.2&amp;x&lt;=0.5) return(&quot;medium&quot;)
+  if(x&gt;0.5&amp;x&lt;Inf) return(&quot;large&quot;)
+  if(x==Inf) return(&quot;cosmos&quot;)
+}
+
+cdv &lt;- mansplain_cohensd(cd)
+cdv</code></pre>
+<pre><code>## [1] &quot;large&quot;</code></pre>
+<pre><code>Seems that the standardised effect size for the drug treatment effect on blood pressure is **` r round(cd, 2)`**, which means it&#39;s **` r mansplain_cohensd(cd)`**.</code></pre>
+<p>Whitch produces following output:</p>
+<p>Seems that the standardised effect size for the drug treatment effect on blood pressure is <strong>0.69</strong>, which means it’s <strong>large</strong>.</p>
+<hr />
+<ul>
+<li>Try to keep your functions in separate sub directory <code>lib</code> in your project’s dir</li>
+<li>load functions using <code>load(lib/cohens_d.R)</code></li>
+</ul>
+<p>Good function is:</p>
+<ul>
+<li>short</li>
+<li>performs one task</li>
+<li>has intuitive short name</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

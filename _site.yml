@@ -1,4 +1,5 @@
 name: "reproducible-data-analysis-R"
+output_dir: "docs"
 navbar:
   title: "Reproducible Data Analysis in R"
   left:
@@ -6,3 +7,4 @@ navbar:
       href: index.html
     - text: "About"
       href: about.html
+  
